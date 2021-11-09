@@ -78,7 +78,6 @@ app.listen(port, () => {
 */
 
 app.get('/users', (req, res) =>{
-    res.send('users endpoint!')
 });
 
 
