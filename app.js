@@ -45,7 +45,7 @@ app.use('/assets', express.static(path.join(__dirname, 'public')));
 //DB
 const { Db } = require('mongodb');
 const mongoose = require('mongoose');
-const uri = "mongodb+srv://"+process.env.DB+"/Cluster0?retryWrites=true&w=majority"
+const uri = "mongodb+srv://"+ process.env.DB +"@cluster0.hwczx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => console.log("connected to db..."))
     .catch((err) => console.log(err));
