@@ -115,9 +115,9 @@ app.get('/users/:id', (req, res) =>{
 
 /** 
  * @swagger
- * /users/:id/posts:
+ * /users/:id/post:
  *  get:
- *    description: return all the user posts
+ *    description: return all the user post
  *    parameters:
  *      - in: Header
  *        Bearer: token
@@ -133,7 +133,7 @@ app.get('/users/:id', (req, res) =>{
 */
 
 
-app.get('/users/:id/posts', (req, res) =>{
+app.get('/users/:id/post', (req, res) =>{
     User.findOne({ "email": req.params.email })
         .then((result) => {
             if (result.password === req.body.password) {
@@ -227,11 +227,34 @@ app.put('/users/:id', (req, res) =>{
         })
 });
 
+
 /** 
  * @swagger
- * /posts:
+ * /users/:id:
+ *  delete:
+ *    description: delete an existing user
+ *    parameters:
+ *      - in: Query
+ *        Bearer: token
+ *        description: token 
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
+
+app.delete('/users/:id', (req, res) =>{
+
+});
+
+
+/** 
+ * @swagger
+ * /post:
  *  get:
- *    description: return all the posts in the database
+ *    description: return all the post in the database
  *    parameters:
  *      - in: Query
  *        Bearer: token
@@ -250,7 +273,7 @@ app.put('/users/:id', (req, res) =>{
  *        description: bad data request
 */
 
-app.get('/posts', (req, res) =>{
+app.get('/post', (req, res) =>{
     Session.findOne({ "id_session": req.params.id })
         .then((result) => {
             res.send(result)
@@ -261,7 +284,7 @@ app.get('/posts', (req, res) =>{
 
 /** 
  * @swagger
- * /posts/:id:
+ * /post/:id:
  *  get:
  *    description: return the specified post
  *    parameters:
@@ -278,7 +301,7 @@ app.get('/posts', (req, res) =>{
  *        description: invalid token or not recieved
 */
 
-app.get('/posts/:id', (req, res) =>{
+app.get('/post/:id', (req, res) =>{
     Session.findOne({ "id_session": req.params.id })
         .then((result) => {
             res.send(result)
@@ -289,7 +312,7 @@ app.get('/posts/:id', (req, res) =>{
 
 /** 
  * @swagger
- * /posts:
+ * /post:
  *  post:
  *    description: create post
  *    parameters:
@@ -303,7 +326,7 @@ app.get('/posts/:id', (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.post('/posts', (req, res) => {
+app.post('/post', (req, res) => {
     Session.find()
     const session = new Session({
         id_session: contador,
@@ -321,7 +344,7 @@ app.post('/posts', (req, res) => {
 
 /** 
  * @swagger
- * /posts/:id:
+ * /post/:id:
  *  put:
  *    description: update the post
  *    parameters:
@@ -335,7 +358,7 @@ app.post('/posts', (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.put('/posts/:id', (req, res) => {
+app.put('/post/:id', (req, res) => {
     Session.findOne({ "id_session": req.params.id })
         .then((result) => {
             const array = result.messages;
@@ -350,11 +373,34 @@ app.put('/posts/:id', (req, res) => {
         })
 });
 
+
 /** 
  * @swagger
- * /groups:
+ * /post/:id:
+ *  delete:
+ *    description: delete an existing user
+ *    parameters:
+ *      - in: Query
+ *        Bearer: token
+ *        description: token 
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
+
+app.delete('/post/:id', (req, res) =>{
+
+});
+
+
+/** 
+ * @swagger
+ * /group:
  *  get:
- *    description: return all groups
+ *    description: return all group
  *    parameters:
  *      - in: Query
  *        Bearer: token
@@ -371,7 +417,7 @@ app.put('/posts/:id', (req, res) => {
  *        description: invalid token
 */
 
-app.get('/groups', (req, res) =>{
+app.get('/group', (req, res) =>{
     Session.findOne({ "id_session": req.params.id })
         .then((result) => {
             res.send(result)
@@ -381,7 +427,7 @@ app.get('/groups', (req, res) =>{
 
 /** 
  * @swagger
- * /groups/:id:
+ * /group/:id:
  *  get:
  *    description: return the specific group
  *    parameters:
@@ -398,7 +444,7 @@ app.get('/groups', (req, res) =>{
  *        description: invalid token or not recieved
 */
 
-app.get('/groups/:id', (req, res) =>{
+app.get('/group/:id', (req, res) =>{
     Session.findOne({ "id_session": req.params.id })
         .then((result) => {
             res.send(result)
@@ -408,9 +454,9 @@ app.get('/groups/:id', (req, res) =>{
 
 /** 
  * @swagger
- * /groups/:id/posts:
+ * /group/:id/post:
  *  get:
- *    description: return all the posts of a specific group
+ *    description: return all the post of a specific group
  *    parameters:
  *      - in: Query
  *        Bearer: token
@@ -425,12 +471,12 @@ app.get('/groups/:id', (req, res) =>{
  *        description: invalid token or not recieved
 */
 
-app.get('/groups/:id/posts', (req, res) =>{});
+app.get('/group/:id/post', (req, res) =>{});
 
 
 /** 
  * @swagger
- * /groups:
+ * /group:
  *  post:
  *    description: create group
  *    parameters:
@@ -444,7 +490,7 @@ app.get('/groups/:id/posts', (req, res) =>{});
  *      400:
  *        description: bad data request
 */
-app.post('/groups', (req, res) => {
+app.post('/group', (req, res) => {
     Session.find()
     const session = new Session({
         id_session: contador,
@@ -462,7 +508,7 @@ app.post('/groups', (req, res) => {
 
 /** 
  * @swagger
- * /groups/:id:
+ * /group/:id:
  *  put:
  *    description: update the group
  *    parameters:
@@ -489,6 +535,28 @@ app.put('/group/:id', (req, res) => {
                 return res.send('Succesfully saved.');
             });
         })
+});
+
+
+/** 
+ * @swagger
+ * /group/:id:
+ *  delete:
+ *    description: delete an existing user
+ *    parameters:
+ *      - in: Query
+ *        Bearer: token
+ *        description: token 
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
+
+app.delete('/group/:id', (req, res) =>{
+
 });
 
 app.use(router);
