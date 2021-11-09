@@ -101,7 +101,17 @@ app.get('/users', (req, res) =>{
  *        description: invalid token or not recieved
 */
 
-app.get('/users/:id', (req, res) =>{});
+app.get('/users/:id', (req, res) =>{
+    User.findOne({ "email": req.params.email })
+        .then((result) => {
+            if (result.password === req.body.password) {
+                res.send(result)
+            } else {
+                res.send("Error")
+            }
+        })
+        .catch((err) => console.log(err));
+});
 
 /** 
  * @swagger
@@ -123,8 +133,17 @@ app.get('/users/:id', (req, res) =>{});
 */
 
 
-app.get('/users/:id/posts', (req, res) =>{});
-
+app.get('/users/:id/posts', (req, res) =>{
+    User.findOne({ "email": req.params.email })
+        .then((result) => {
+            if (result.password === req.body.password) {
+                res.send(result)
+            } else {
+                res.send("Error")
+            }
+        })
+        .catch((err) => console.log(err));
+});
 
 /** 
  * @swagger
@@ -152,14 +171,26 @@ app.get('/users/:id/posts', (req, res) =>{});
 */
 
 app.post('/users', (req, res) =>{
-    res.send('create user endpoint');
-});
+    console.log(req.body.email);
+    console.log(req.body.password);
+    const user = new User({
+        email: req.body.email,
+        password: req.body.password
+    });
+
+    user.save()
+        .then((result => {
+            res.send(result);
+        })
+        )
+        .catch((err) => console.log(err))
+})
 
 
 /** 
  * @swagger
  * /users/:id:
- *  post:
+ *  put:
  *    description: update an existing user
  *    parameters:
  *      - in: Query
@@ -182,7 +213,18 @@ app.post('/users', (req, res) =>{
 */
 
 app.put('/users/:id', (req, res) =>{
-    res.send('update user endpoint!');
+    Session.findOne({ "id_session": req.params.id })
+        .then((result) => {
+            const array = result.messages;
+            array.push(req.body)
+            result.messages = array;
+            result.url = "http://127.0.0.1:3000/session/" + req.params.id;
+
+            Session.findOneAndUpdate({ "id_session": req.params.id }, result, { upsert: true }, function (err, doc) {
+                if (err) return res.send(500, { error: err });
+                return res.send('Succesfully saved.');
+            });
+        })
 });
 
 /** 
@@ -209,7 +251,11 @@ app.put('/users/:id', (req, res) =>{
 */
 
 app.get('/posts', (req, res) =>{
-    res.send('get sessions');
+    Session.findOne({ "id_session": req.params.id })
+        .then((result) => {
+            res.send(result)
+        })
+        .catch((err) => console.log(err))
 });
 
 
@@ -232,7 +278,77 @@ app.get('/posts', (req, res) =>{
  *        description: invalid token or not recieved
 */
 
-app.get('/posts/:id', (req, res) =>{});
+app.get('/posts/:id', (req, res) =>{
+    Session.findOne({ "id_session": req.params.id })
+        .then((result) => {
+            res.send(result)
+        })
+        .catch((err) => console.log(err))
+});
+
+
+/** 
+ * @swagger
+ * /posts:
+ *  post:
+ *    description: create post
+ *    parameters:
+ *      - in: body
+ *        name: name
+ *        description: post name
+ *        type: string  
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
+app.post('/posts', (req, res) => {
+    Session.find()
+    const session = new Session({
+        id_session: contador,
+        name: req.body.name
+    });
+    contador++;
+    
+    session.save()
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((err) => console.log(err))
+});
+
+
+/** 
+ * @swagger
+ * /posts/:id:
+ *  put:
+ *    description: update the post
+ *    parameters:
+ *      - in: body
+ *        name: message
+ *        description: the content of the message
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
+app.put('/posts/:id', (req, res) => {
+    Session.findOne({ "id_session": req.params.id })
+        .then((result) => {
+            const array = result.messages;
+            array.push(req.body)
+            result.messages = array;
+            result.url = "http://127.0.0.1:3000/session/" + req.params.id;
+
+            Session.findOneAndUpdate({ "id_session": req.params.id }, result, { upsert: true }, function (err, doc) {
+                if (err) return res.send(500, { error: err });
+                return res.send('Succesfully saved.');
+            });
+        })
+});
 
 /** 
  * @swagger
@@ -256,7 +372,11 @@ app.get('/posts/:id', (req, res) =>{});
 */
 
 app.get('/groups', (req, res) =>{
-    res.send('users endpoint!')
+    Session.findOne({ "id_session": req.params.id })
+        .then((result) => {
+            res.send(result)
+        })
+        .catch((err) => console.log(err))
 });
 
 /** 
@@ -278,8 +398,13 @@ app.get('/groups', (req, res) =>{
  *        description: invalid token or not recieved
 */
 
-app.get('/groups/:id', (req, res) =>{});
-
+app.get('/groups/:id', (req, res) =>{
+    Session.findOne({ "id_session": req.params.id })
+        .then((result) => {
+            res.send(result)
+        })
+        .catch((err) => console.log(err))
+});
 
 /** 
  * @swagger
@@ -302,6 +427,69 @@ app.get('/groups/:id', (req, res) =>{});
 
 app.get('/groups/:id/posts', (req, res) =>{});
 
+
+/** 
+ * @swagger
+ * /groups:
+ *  post:
+ *    description: create group
+ *    parameters:
+ *      - in: body
+ *        name: name
+ *        description: group name
+ *        type: string  
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
+app.post('/groups', (req, res) => {
+    Session.find()
+    const session = new Session({
+        id_session: contador,
+        name: req.body.name
+    });
+    contador++;
+    
+    session.save()
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((err) => console.log(err))
+});
+
+
+/** 
+ * @swagger
+ * /groups/:id:
+ *  put:
+ *    description: update the group
+ *    parameters:
+ *      - in: body
+ *        name: message
+ *        description: the content of the message
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
+app.put('/group/:id', (req, res) => {
+    Session.findOne({ "id_session": req.params.id })
+        .then((result) => {
+            const array = result.messages;
+            array.push(req.body)
+            result.messages = array;
+            result.url = "http://127.0.0.1:3000/session/" + req.params.id;
+
+            Session.findOneAndUpdate({ "id_session": req.params.id }, result, { upsert: true }, function (err, doc) {
+                if (err) return res.send(500, { error: err });
+                return res.send('Succesfully saved.');
+            });
+        })
+});
 
 app.use(router);
 app.use('/api', apiRoutes);
