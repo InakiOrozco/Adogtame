@@ -2,32 +2,33 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const router = express.Router();
-const apiRoutes = require('./src/routes');
-const Session = require('./src/models/session');
-const User = require('./src/models/user');
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUI = require('swagger-ui-express');
-var contador = 1;
-
+//DB
+const { Db } = require('mongodb');
+const mongoose = require('mongoose');
+// Schemas
+const Users = require('./src/models/Users');
+const Groups = require('./src/models/Groups');
+const UsersSessions = require('./src/models/UsersSessions');
 
 require('dotenv').config();
-
 
 //Puerto
 const port = process.env.PORT || 3000;
 
 //Swagger
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');
 const swaggerOptions = {
     swaggerDefinition: {
         swagger: "2.0",
         info: {
-            title: "Swagger Test API",
-            description: "test api for swagger documentation",
+            title: "Adogtame API",
+            description: "Documentation for Adogtame API",
             version: "1.0.0",
             servers: ['http://localhost:' + port],
             contact: {
-                name: "ISOG",
-                correo: "greenvana14@gmail.com"
+                name: "ITESO",
+                correo: "main@iteso.mx"
             }
         }
     },
@@ -39,18 +40,12 @@ app.use('/swagger-ui', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json())
-app.use('/assets', express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
 
-//DB
-const { Db } = require('mongodb');
-const mongoose = require('mongoose');
-const uri = "mongodb+srv://"+ process.env.DB +"@cluster0.hwczx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+const uri = "mongodb+srv://" + process.env.DB + "@cluster0.hwczx.mongodb.net/adogtame_production?retryWrites=true&w=majority"
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => console.log("connected to db..."))
     .catch((err) => console.log(err));
-
-
 app.listen(port, () => {
     console.log('App is listening in port: ' + port);
 });
@@ -77,8 +72,7 @@ app.listen(port, () => {
  *        description: invalid token
 */
 
-app.get('/users', (req, res) =>{
-});
+app.get('/users', (req, res) => { });
 
 
 /** 
@@ -100,17 +94,7 @@ app.get('/users', (req, res) =>{
  *        description: invalid token or not recieved
 */
 
-app.get('/users/:id', (req, res) =>{
-    User.findOne({ "email": req.params.email })
-        .then((result) => {
-            if (result.password === req.body.password) {
-                res.send(result)
-            } else {
-                res.send("Error")
-            }
-        })
-        .catch((err) => console.log(err));
-});
+app.get('/users/:id', (req, res) => { });
 
 /** 
  * @swagger
@@ -132,17 +116,7 @@ app.get('/users/:id', (req, res) =>{
 */
 
 
-app.get('/users/:id/post', (req, res) =>{
-    User.findOne({ "email": req.params.email })
-        .then((result) => {
-            if (result.password === req.body.password) {
-                res.send(result)
-            } else {
-                res.send("Error")
-            }
-        })
-        .catch((err) => console.log(err));
-});
+app.get('/users/:id/post', (req, res) => { });
 
 /** 
  * @swagger
@@ -169,21 +143,7 @@ app.get('/users/:id/post', (req, res) =>{
  *        description: bad data request
 */
 
-app.post('/users', (req, res) =>{
-    console.log(req.body.email);
-    console.log(req.body.password);
-    const user = new User({
-        email: req.body.email,
-        password: req.body.password
-    });
-
-    user.save()
-        .then((result => {
-            res.send(result);
-        })
-        )
-        .catch((err) => console.log(err))
-})
+app.post('/users', (req, res) => { });
 
 
 /** 
@@ -211,20 +171,7 @@ app.post('/users', (req, res) =>{
  *        description: bad data request
 */
 
-app.put('/users/:id', (req, res) =>{
-    Session.findOne({ "id_session": req.params.id })
-        .then((result) => {
-            const array = result.messages;
-            array.push(req.body)
-            result.messages = array;
-            result.url = "http://127.0.0.1:3000/session/" + req.params.id;
-
-            Session.findOneAndUpdate({ "id_session": req.params.id }, result, { upsert: true }, function (err, doc) {
-                if (err) return res.send(500, { error: err });
-                return res.send('Succesfully saved.');
-            });
-        })
-});
+app.put('/users/:id', (req, res) => { });
 
 
 /** 
@@ -244,9 +191,7 @@ app.put('/users/:id', (req, res) =>{
  *        description: bad data request
 */
 
-app.delete('/users/:id', (req, res) =>{
-
-});
+app.delete('/users/:id', (req, res) => { });
 
 
 /** 
@@ -272,13 +217,7 @@ app.delete('/users/:id', (req, res) =>{
  *        description: bad data request
 */
 
-app.get('/post', (req, res) =>{
-    Session.findOne({ "id_session": req.params.id })
-        .then((result) => {
-            res.send(result)
-        })
-        .catch((err) => console.log(err))
-});
+app.get('/post', (req, res) => { });
 
 
 /** 
@@ -300,13 +239,7 @@ app.get('/post', (req, res) =>{
  *        description: invalid token or not recieved
 */
 
-app.get('/post/:id', (req, res) =>{
-    Session.findOne({ "id_session": req.params.id })
-        .then((result) => {
-            res.send(result)
-        })
-        .catch((err) => console.log(err))
-});
+app.get('/post/:id', (req, res) => { });
 
 
 /** 
@@ -325,20 +258,7 @@ app.get('/post/:id', (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.post('/post', (req, res) => {
-    Session.find()
-    const session = new Session({
-        id_session: contador,
-        name: req.body.name
-    });
-    contador++;
-    
-    session.save()
-        .then((result) => {
-            res.send(result);
-        })
-        .catch((err) => console.log(err))
-});
+app.post('/post', (req, res) => { });
 
 
 /** 
@@ -358,18 +278,7 @@ app.post('/post', (req, res) => {
  *        description: bad data request
 */
 app.put('/post/:id', (req, res) => {
-    Session.findOne({ "id_session": req.params.id })
-        .then((result) => {
-            const array = result.messages;
-            array.push(req.body)
-            result.messages = array;
-            result.url = "http://127.0.0.1:3000/session/" + req.params.id;
 
-            Session.findOneAndUpdate({ "id_session": req.params.id }, result, { upsert: true }, function (err, doc) {
-                if (err) return res.send(500, { error: err });
-                return res.send('Succesfully saved.');
-            });
-        })
 });
 
 
@@ -390,7 +299,7 @@ app.put('/post/:id', (req, res) => {
  *        description: bad data request
 */
 
-app.delete('/post/:id', (req, res) =>{
+app.delete('/post/:id', (req, res) => {
 
 });
 
@@ -416,13 +325,7 @@ app.delete('/post/:id', (req, res) =>{
  *        description: invalid token
 */
 
-app.get('/group', (req, res) =>{
-    Session.findOne({ "id_session": req.params.id })
-        .then((result) => {
-            res.send(result)
-        })
-        .catch((err) => console.log(err))
-});
+app.get('/group', (req, res) => { });
 
 /** 
  * @swagger
@@ -443,13 +346,7 @@ app.get('/group', (req, res) =>{
  *        description: invalid token or not recieved
 */
 
-app.get('/group/:id', (req, res) =>{
-    Session.findOne({ "id_session": req.params.id })
-        .then((result) => {
-            res.send(result)
-        })
-        .catch((err) => console.log(err))
-});
+app.get('/group/:id', (req, res) => { });
 
 /** 
  * @swagger
@@ -470,7 +367,7 @@ app.get('/group/:id', (req, res) =>{
  *        description: invalid token or not recieved
 */
 
-app.get('/group/:id/post', (req, res) =>{});
+app.get('/group/:id/post', (req, res) => { });
 
 
 /** 
@@ -489,20 +386,7 @@ app.get('/group/:id/post', (req, res) =>{});
  *      400:
  *        description: bad data request
 */
-app.post('/group', (req, res) => {
-    Session.find()
-    const session = new Session({
-        id_session: contador,
-        name: req.body.name
-    });
-    contador++;
-    
-    session.save()
-        .then((result) => {
-            res.send(result);
-        })
-        .catch((err) => console.log(err))
-});
+app.post('/group', (req, res) => { });
 
 
 /** 
@@ -521,20 +405,7 @@ app.post('/group', (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.put('/group/:id', (req, res) => {
-    Session.findOne({ "id_session": req.params.id })
-        .then((result) => {
-            const array = result.messages;
-            array.push(req.body)
-            result.messages = array;
-            result.url = "http://127.0.0.1:3000/session/" + req.params.id;
-
-            Session.findOneAndUpdate({ "id_session": req.params.id }, result, { upsert: true }, function (err, doc) {
-                if (err) return res.send(500, { error: err });
-                return res.send('Succesfully saved.');
-            });
-        })
-});
+app.put('/group/:id', (req, res) => { });
 
 
 /** 
@@ -554,9 +425,4 @@ app.put('/group/:id', (req, res) => {
  *        description: bad data request
 */
 
-app.delete('/group/:id', (req, res) =>{
-
-});
-
-app.use(router);
-app.use('/api', apiRoutes);
+app.delete('/group/:id', (req, res) => { });
