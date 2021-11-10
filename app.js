@@ -39,7 +39,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const uri = "mongodb+srv://" + process.env.DB + "@cluster0.hwczx.mongodb.net/adogtame_production?retryWrites=true&w=majority"
+const uri = "mongodb+srv://" + process.env.DB + "?retryWrites=true&w=majority"
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => {
         console.log("connected to db...")
