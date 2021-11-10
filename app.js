@@ -5,10 +5,7 @@ const router = express.Router();
 //DB
 const { Db } = require('mongodb');
 const mongoose = require('mongoose');
-// Schemas
-const Users = require('./src/models/Users');
-const Groups = require('./src/models/Groups');
-const UsersSessions = require('./src/models/UsersSessions');
+
 
 require('dotenv').config();
 
@@ -44,12 +41,25 @@ app.use(bodyParser.json());
 
 const uri = "mongodb+srv://" + process.env.DB + "@cluster0.hwczx.mongodb.net/adogtame_production?retryWrites=true&w=majority"
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then((result) => console.log("connected to db..."))
+    .then((result) => {
+        console.log("connected to db...")
+        app.listen(port, () => {
+            console.log('App is listening in port: ' + port);
+            console.log('http://localhost:' + port);
+            console.log('Swagger Docs: ' + 'http://localhost:' + port + '/swagger-ui');
+        });
+    })
     .catch((err) => console.log(err));
-app.listen(port, () => {
-    console.log('App is listening in port: ' + port);
-});
+// Schemas
+const Users = require('./src/models/Users');
+const UsersSessions = require('./src/models/UserSessions');
+const Groups = require('./src/models/Groups');
+const Posts = require('./src/models/Posts');
+const GroupUser = require('./src/models/GroupUser');
+const GroupPost = require('./src/models/GroupPost');
+const Comments = require('./src/models/Comments');
 
+app.get('/', (req, res) => { res.send('Adogtame API') });
 
 /** 
  * @swagger
@@ -72,7 +82,7 @@ app.listen(port, () => {
  *        description: invalid token
 */
 
-app.get('/users', (req, res) => { });
+app.get('/users', (req, res) => { res.send('/users endpoint') });
 
 
 /** 
@@ -94,11 +104,11 @@ app.get('/users', (req, res) => { });
  *        description: invalid token or not recieved
 */
 
-app.get('/users/:id', (req, res) => { });
+app.get('/users/:id', (req, res) => { res.send('/users/:id endpoint') });
 
 /** 
  * @swagger
- * /users/:id/post:
+ * /users/:id/posts:
  *  get:
  *    description: return all the user post
  *    parameters:
@@ -116,7 +126,7 @@ app.get('/users/:id', (req, res) => { });
 */
 
 
-app.get('/users/:id/post', (req, res) => { });
+app.get('/users/:id/posts', (req, res) => { res.send('/users/:id/posts endpoint') });
 
 /** 
  * @swagger
@@ -196,7 +206,7 @@ app.delete('/users/:id', (req, res) => { });
 
 /** 
  * @swagger
- * /post:
+ * /posts:
  *  get:
  *    description: return all the post in the database
  *    parameters:
@@ -217,12 +227,12 @@ app.delete('/users/:id', (req, res) => { });
  *        description: bad data request
 */
 
-app.get('/post', (req, res) => { });
+app.get('/posts', (req, res) => { res.send('/posts endpoint') });
 
 
 /** 
  * @swagger
- * /post/:id:
+ * /posts/:id:
  *  get:
  *    description: return the specified post
  *    parameters:
@@ -239,12 +249,12 @@ app.get('/post', (req, res) => { });
  *        description: invalid token or not recieved
 */
 
-app.get('/post/:id', (req, res) => { });
+app.get('/posts/:id', (req, res) => { res.send('/posts/:id endpoint') });
 
 
 /** 
  * @swagger
- * /post:
+ * /posts:
  *  post:
  *    description: create post
  *    parameters:
@@ -258,12 +268,12 @@ app.get('/post/:id', (req, res) => { });
  *      400:
  *        description: bad data request
 */
-app.post('/post', (req, res) => { });
+app.post('/posts', (req, res) => { });
 
 
 /** 
  * @swagger
- * /post/:id:
+ * /posts/:id:
  *  put:
  *    description: update the post
  *    parameters:
@@ -277,14 +287,12 @@ app.post('/post', (req, res) => { });
  *      400:
  *        description: bad data request
 */
-app.put('/post/:id', (req, res) => {
-
-});
+app.put('/posts/:id', (req, res) => { });
 
 
 /** 
  * @swagger
- * /post/:id:
+ * /posts/:id:
  *  delete:
  *    description: delete an existing user
  *    parameters:
@@ -299,14 +307,12 @@ app.put('/post/:id', (req, res) => {
  *        description: bad data request
 */
 
-app.delete('/post/:id', (req, res) => {
-
-});
+app.delete('/postss/:id', (req, res) => { });
 
 
 /** 
  * @swagger
- * /group:
+ * /groups:
  *  get:
  *    description: return all group
  *    parameters:
@@ -325,11 +331,11 @@ app.delete('/post/:id', (req, res) => {
  *        description: invalid token
 */
 
-app.get('/group', (req, res) => { });
+app.get('/groups', (req, res) => { res.send('/groups endpoint') });
 
 /** 
  * @swagger
- * /group/:id:
+ * /groups/:id:
  *  get:
  *    description: return the specific group
  *    parameters:
@@ -346,11 +352,11 @@ app.get('/group', (req, res) => { });
  *        description: invalid token or not recieved
 */
 
-app.get('/group/:id', (req, res) => { });
+app.get('/groups/:id', (req, res) => { res.send('/groups/:id endpoint') });
 
 /** 
  * @swagger
- * /group/:id/post:
+ * /groups/:id/posts:
  *  get:
  *    description: return all the post of a specific group
  *    parameters:
@@ -367,12 +373,12 @@ app.get('/group/:id', (req, res) => { });
  *        description: invalid token or not recieved
 */
 
-app.get('/group/:id/post', (req, res) => { });
+app.get('/group/:id/posts', (req, res) => { res.send('/groups/:id/posts endpoint') });
 
 
 /** 
  * @swagger
- * /group:
+ * /groups:
  *  post:
  *    description: create group
  *    parameters:
@@ -386,12 +392,12 @@ app.get('/group/:id/post', (req, res) => { });
  *      400:
  *        description: bad data request
 */
-app.post('/group', (req, res) => { });
+app.post('/groups', (req, res) => { });
 
 
 /** 
  * @swagger
- * /group/:id:
+ * /groups/:id:
  *  put:
  *    description: update the group
  *    parameters:
@@ -405,12 +411,12 @@ app.post('/group', (req, res) => { });
  *      400:
  *        description: bad data request
 */
-app.put('/group/:id', (req, res) => { });
+app.put('/groups/:id', (req, res) => { });
 
 
 /** 
  * @swagger
- * /group/:id:
+ * /groups/:id:
  *  delete:
  *    description: delete an existing user
  *    parameters:
@@ -425,4 +431,4 @@ app.put('/group/:id', (req, res) => { });
  *        description: bad data request
 */
 
-app.delete('/group/:id', (req, res) => { });
+app.delete('/groups/:id', (req, res) => { });

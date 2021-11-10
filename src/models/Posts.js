@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const post_schema = new Schema({
 	IdPost: mongoose.ObjectId,
-	IdUser: String,
+	IdUser: mongoose.ObjectId,
 	Title: String,
 	Information: String,
 	Photo: String,
@@ -13,5 +13,5 @@ const post_schema = new Schema({
 	Resolved: Boolean
 }, { timestamps: true });
 
-const post = mongoose.model('user', post_schema);
+const post = mongoose.model('Posts', post_schema);
 module.exports = post;
