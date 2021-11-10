@@ -7,5 +7,5 @@ const groups_schema = new Schema({
 	Description: String
 }, { timestamps: true });
 
-const groups = mongoose.model('user', groups_schema);
+const groups = mongoose.model('Groups', groups_schema);
 module.exports = groups;

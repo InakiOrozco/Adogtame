@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
-const groups_schema = new Schema({
-    IdGroup: mongoose.ObjectId,
-    Name: String,
-    Description: String
+const usser_sessions = new Schema({
+    IdUsserSession: mongoose.ObjectId,
+    IdUser: mongoose.ObjectId,
+    Token: String
 }, { timestamps: true });
 
-const groups = mongoose.model('user', groups_schema);
-module.exports = groups;
+const usersSessions = mongoose.model('UsersSessions', usser_sessions);
+module.exports = usersSessions;
