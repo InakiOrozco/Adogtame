@@ -131,7 +131,9 @@ app.get('/users/:id', async (req, res) => {
 */
 
 
-app.get('/users/:id/posts', (req, res) => { res.send('/users/:id/posts endpoint') });
+app.get('/users/:id/posts', async (req, res) => {
+    res.send(await Posts.find({ IdUser: req.params.id }));
+});
 
 /** 
  * @swagger
