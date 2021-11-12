@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
 const group_user_schema = new Schema({
-	IdGroup: String,
-	IdUser: String,
+	IdGroup: mongoose.ObjectId,
+	IdUser: mongoose.ObjectId,
 	Permissions: String
 }, { timestamps: true });
 

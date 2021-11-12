@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
 const usser_sessions = new Schema({
-    IdUsserSession: String,
-    IdUser: String,
+    _id: mongoose.ObjectId,
+    IdUser: mongoose.ObjectId,
     Token: String
 }, { timestamps: true });
 
