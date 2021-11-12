@@ -84,6 +84,8 @@ app.get('/', (req, res) => { res.send('Adogtame API') });
 
 app.get('/users', (req, res) => {
     res.send(Users.find({}).getFilter())
+app.get('/users', async (req, res) => {
+    res.send(await Users.find({}))
 });
 
 
