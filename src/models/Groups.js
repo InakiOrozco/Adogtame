@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
 const groups_schema = new Schema({
-	IdGroup: mongoose.ObjectId,
+	IdGroup: String,
 	Name: String,
 	Description: String
 }, { timestamps: true });
