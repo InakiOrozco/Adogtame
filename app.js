@@ -82,7 +82,9 @@ app.get('/', (req, res) => { res.send('Adogtame API') });
  *        description: invalid token
 */
 
-app.get('/users', (req, res) => { res.send('/users endpoint') });
+app.get('/users', (req, res) => {
+    res.send(Users.find({}).getFilter())
+});
 
 
 /** 
