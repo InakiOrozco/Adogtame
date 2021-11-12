@@ -153,6 +153,8 @@ app.get('/users/:id/posts', (req, res) => { res.send('/users/:id/posts endpoint'
  *      - in: body
  *        name: password
  *        description: users password
+ *        name: email,password,name,last_name,phone_number
+ *        description: users email
  *        type: string
  *    responses:
  *      200:
@@ -162,6 +164,27 @@ app.get('/users/:id/posts', (req, res) => { res.send('/users/:id/posts endpoint'
 */
 
 app.post('/users', (req, res) => { });
+app.post('/users', async (req, res) => {
+    const exist = await Users.findOne({ email: req.body.email });
+    if (!exist) {
+        bcrypt.genSalt(10, function (err, salt) {
+            bcrypt.hash(req.body.password, salt, function (err, hash) {
+                Users.create({
+                    Email: req.body.email,
+                    Password: hash,
+                    Name: req.body.name,
+                    LastName: req.body.last_name,
+                    PhoneNumber: req.body.phone_number
+                }).then((nose) => {
+                    res.send(nose);
+                })
+            });
+        });
+    }
+    else {
+        res.send('Not valid data')
+    }
+});
 
 
 /** 
