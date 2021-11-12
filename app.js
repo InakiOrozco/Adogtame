@@ -83,8 +83,6 @@ app.get('/', (req, res) => { res.send('Adogtame API') });
  *        description: invalid token
 */
 
-app.get('/users', (req, res) => {
-    res.send(Users.find({}).getFilter())
 app.get('/users', async (req, res) => {
     res.send(await Users.find({}))
 });
@@ -109,7 +107,6 @@ app.get('/users', async (req, res) => {
  *        description: invalid token or not recieved
 */
 
-app.get('/users/:id', (req, res) => { res.send('/users/:id endpoint') });
 app.get('/users/:id', async (req, res) => {
     res.send(await Users.findOne({ _id: req.params.id }));
 });
@@ -147,12 +144,6 @@ app.get('/users/:id/posts', (req, res) => { res.send('/users/:id/posts endpoint'
  *        description: token 
  *        type: string
  *      - in: body
- *        name: username
- *        description: email of the user
- *        type: string
- *      - in: body
- *        name: password
- *        description: users password
  *        name: email,password,name,last_name,phone_number
  *        description: users email
  *        type: string
