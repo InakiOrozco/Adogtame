@@ -154,7 +154,6 @@ app.get('/users/:id/posts', (req, res) => { res.send('/users/:id/posts endpoint'
  *        description: bad data request
 */
 
-app.post('/users', (req, res) => { });
 app.post('/users', async (req, res) => {
     const exist = await Users.findOne({ email: req.body.email });
     if (!exist) {
