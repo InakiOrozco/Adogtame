@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
 const comments_schema = new Schema({
-	IdPost: mongoose.ObjectId,
-	IdUser: mongoose.ObjectId,
+	IdPost: String,
+	IdUser: String,
 	Comment: String
 }, { timestamps: true });
 
