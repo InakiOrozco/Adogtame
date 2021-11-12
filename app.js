@@ -109,6 +109,9 @@ app.get('/users', async (req, res) => {
 */
 
 app.get('/users/:id', (req, res) => { res.send('/users/:id endpoint') });
+app.get('/users/:id', async (req, res) => {
+    res.send(await Users.findOne({ _id: req.params.id }));
+});
 
 /** 
  * @swagger
