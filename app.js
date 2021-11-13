@@ -156,13 +156,13 @@ app.get('/users/:id/posts', async (req, res) => {
 */
 
 app.post('/users', async (req, res) => {
-    const exist = await Users.findOne({ Email: req.body.email });
+    const exist = await Users.findOne({ email: req.body.email });
     if (!exist) {
         bcrypt.genSalt(10, function (err, salt) {
             bcrypt.hash(req.body.password, salt, function (err, hash) {
                 Users.create({
                     email: req.body.email,
-                    password: req.body.password,
+                    password: hash,
                     name: req.body.name,
                     last_name: req.body.last_name,
                     date_birth: req.body.date_birth,
@@ -176,7 +176,7 @@ app.post('/users', async (req, res) => {
         });
     }
     else {
-        res.send('Not valid data')
+        res.send('Not valid data');
     }
 });
 
@@ -525,5 +525,6 @@ app.delete('/groups/:id', async (req, res) => {
         await Comments.deleteMany({ id_post: element._id.str });
     });
     await Posts.deleteMany({ id_group: req.params.id });
-    await Groups.findAndDelete({ _id: req.params.id })
+    await Groups.findOneAndDelete({ _id: req.params.id })
+    res.send("Group deleted")
 });
