@@ -211,9 +211,9 @@ app.put('/users/:id', (req, res) => {
         req.params.id,
         req.body,
         { new: true },
-        (err, todo) => {
+        (err, userUpdated) => {
             if (err) return res.status(500).send(err);
-            return res.send(todo);
+            return res.send(userUpdated);
         }
     )
 });
@@ -323,8 +323,8 @@ app.post('/posts', async (req, res) => {
         contact_info: req.body.contact_info,
         pet_type: req.body.pet_type,
         resolved: false
-    }).then((nose) => {
-        res.send(nose);
+    }).then((createdPost) => {
+        res.send(createdPost);
     })
 });
 
@@ -349,9 +349,9 @@ app.put('/posts/:id', (req, res) => {
         req.params.id,
         req.body,
         { new: true },
-        (err, todo) => {
+        (err, updatedPost) => {
             if (err) return res.status(500).send(err);
-            return res.send(todo);
+            return res.send(updatedPost);
         }
     )
 });
@@ -499,9 +499,9 @@ app.put('/groups/:id', (req, res) => {
         req.params.id,
         req.body,
         { new: true },
-        (err, todo) => {
+        (err, updatedGroup) => {
             if (err) return res.status(500).send(err);
-            return res.send(todo);
+            return res.send(updatedGroup);
         }
     )
 });
