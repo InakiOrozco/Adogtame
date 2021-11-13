@@ -647,3 +647,40 @@ app.delete('/groups/:id', async (req, res) => {
     await Posts.deleteMany({ id_group: req.params.id });
     await Groups.findAndDelete({ _id: req.params.id })
 });
+
+
+app.get('/group/:id/permissions', async (req, res) =>{
+
+});
+
+app.post('/group/:id/permissions', async (req, res) =>{
+
+});
+
+app.delete('/group/:id/permissions', async (req, res) =>{
+
+});
+
+app.post('/group/:id/subscribe', async (req, res) =>{
+
+});
+
+app.delete('/group/:id/subscribe', async (req, res) =>{
+
+});
+
+app.get('/posts/:id/comments', async (req, res) =>{
+
+});
+
+app.post('/posts/:id/comments', async (req, res) =>{
+
+});
+
+app.get('/posts/:id/comments/:id', async (req, res) =>{
+
+});
+
+app.delete('/posts/:id/comments/:id', async (req, res) =>{
+
+});
