@@ -57,7 +57,6 @@ const UsersSessions = require('./src/models/UserSessions');
 const Groups = require('./src/models/Groups');
 const Posts = require('./src/models/Posts');
 const GroupUser = require('./src/models/GroupUser');
-const GroupPost = require('./src/models/GroupPost');
 const Comments = require('./src/models/Comments');
 
 app.get('/', (req, res) => { res.send('Adogtame API') });
@@ -132,7 +131,7 @@ app.get('/users/:id', async (req, res) => {
 
 
 app.get('/users/:id/posts', async (req, res) => {
-    res.send(await Posts.find({ IdUser: req.params.id }));
+    res.send(await Posts.find({ id_user: req.params.id }));
 });
 
 /** 
@@ -157,18 +156,21 @@ app.get('/users/:id/posts', async (req, res) => {
 */
 
 app.post('/users', async (req, res) => {
-    const exist = await Users.findOne({ email: req.body.email });
+    const exist = await Users.findOne({ Email: req.body.email });
     if (!exist) {
         bcrypt.genSalt(10, function (err, salt) {
             bcrypt.hash(req.body.password, salt, function (err, hash) {
                 Users.create({
-                    Email: req.body.email,
-                    Password: hash,
-                    Name: req.body.name,
-                    LastName: req.body.last_name,
-                    PhoneNumber: req.body.phone_number
-                }).then((nose) => {
-                    res.send(nose);
+                    email: req.body.email,
+                    password: req.body.password,
+                    name: req.body.name,
+                    last_name: req.body.last_name,
+                    date_birth: req.body.date_birth,
+                    tags: req.body.tags,
+                    phone_number: req.body.phone_number,
+                    profile_picture: req.body.profile_picture
+                }).then((createdUser) => {
+                    res.send(createdUser);
                 })
             });
         });
@@ -204,7 +206,17 @@ app.post('/users', async (req, res) => {
  *        description: bad data request
 */
 
-app.put('/users/:id', (req, res) => { });
+app.put('/users/:id', (req, res) => {
+    Users.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true },
+        (err, userUpdated) => {
+            if (err) return res.status(500).send(err);
+            return res.send(userUpdated);
+        }
+    )
+});
 
 
 /** 
@@ -223,8 +235,9 @@ app.put('/users/:id', (req, res) => { });
  *      400:
  *        description: bad data request
 */
-
-app.delete('/users/:id', (req, res) => { });
+app.delete('/users/:id', async (req, res) => {
+    res.send(await Users.findOneAndDelete({ _id: req.params.id }));
+});
 
 
 /** 
@@ -250,8 +263,9 @@ app.delete('/users/:id', (req, res) => { });
  *        description: bad data request
 */
 
-app.get('/posts', (req, res) => { res.send('/posts endpoint') });
-
+app.get('/posts', async (req, res) => {
+    res.send(await Posts.find({}))
+});
 
 /** 
  * @swagger
@@ -272,8 +286,9 @@ app.get('/posts', (req, res) => { res.send('/posts endpoint') });
  *        description: invalid token or not recieved
 */
 
-app.get('/posts/:id', (req, res) => { res.send('/posts/:id endpoint') });
-
+app.get('/posts/:id', async (req, res) => {
+    res.send(await Posts.find({ _id: req.params.id }));
+});
 
 /** 
  * @swagger
@@ -291,8 +306,21 @@ app.get('/posts/:id', (req, res) => { res.send('/posts/:id endpoint') });
  *      400:
  *        description: bad data request
 */
-app.post('/posts', (req, res) => { });
-
+app.post('/posts', async (req, res) => {
+    Posts.create({
+        id_user: req.body.id_user,
+        id_group: req.body.id_group,
+        title: req.body.title,
+        information: req.body.information,
+        photo: req.body.photo,
+        location: req.body.location,
+        contact_info: req.body.contact_info,
+        pet_type: req.body.pet_type,
+        resolved: false
+    }).then((createdPost) => {
+        res.send(createdPost);
+    })
+});
 
 /** 
  * @swagger
@@ -310,8 +338,17 @@ app.post('/posts', (req, res) => { });
  *      400:
  *        description: bad data request
 */
-app.put('/posts/:id', (req, res) => { });
-
+app.put('/posts/:id', (req, res) => {
+    Posts.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true },
+        (err, updatedPost) => {
+            if (err) return res.status(500).send(err);
+            return res.send(updatedPost);
+        }
+    )
+});
 
 /** 
  * @swagger
@@ -330,14 +367,17 @@ app.put('/posts/:id', (req, res) => { });
  *        description: bad data request
 */
 
-app.delete('/postss/:id', (req, res) => { });
-
+app.delete('/posts/:id', async (req, res) => {
+    await Comments.deleteMany({ id_post: req.params.id });
+    await Posts.findOneAndDelete({ _id: req.params.id });
+    res.send('Deleted')
+});
 
 /** 
  * @swagger
  * /groups:
  *  get:
- *    description: return all group
+ *    description: return all groups
  *    parameters:
  *      - in: Query
  *        Bearer: token
@@ -354,7 +394,9 @@ app.delete('/postss/:id', (req, res) => { });
  *        description: invalid token
 */
 
-app.get('/groups', (req, res) => { res.send('/groups endpoint') });
+app.get('/groups', async (req, res) => {
+    res.send(await Groups.find({}))
+});
 
 /** 
  * @swagger
@@ -374,8 +416,9 @@ app.get('/groups', (req, res) => { res.send('/groups endpoint') });
  *      401:
  *        description: invalid token or not recieved
 */
-
-app.get('/groups/:id', (req, res) => { res.send('/groups/:id endpoint') });
+app.get('/groups/:id', async (req, res) => {
+    res.send(await Groups.find({ _id: req.params.id }));
+});
 
 /** 
  * @swagger
@@ -395,8 +438,9 @@ app.get('/groups/:id', (req, res) => { res.send('/groups/:id endpoint') });
  *      401:
  *        description: invalid token or not recieved
 */
-
-app.get('/group/:id/posts', (req, res) => { res.send('/groups/:id/posts endpoint') });
+app.get('/groups/:id/posts', async (req, res) => {
+    res.send(await Posts.find({ id_group: req.params.id }));
+});
 
 
 /** 
@@ -415,8 +459,19 @@ app.get('/group/:id/posts', (req, res) => { res.send('/groups/:id/posts endpoint
  *      400:
  *        description: bad data request
 */
-app.post('/groups', (req, res) => { });
-
+app.post('/groups', async (req, res) => {
+    const exist = await Groups.findOne({ name: req.body.name });
+    if (!exist) {
+        Groups.create({
+            name: req.body.name,
+            description: req.body.description,
+        }).then((createdGroup) => {
+            res.send(createdGroup);
+        })
+    } else {
+        res.send("Group already exists");
+    }
+});
 
 /** 
  * @swagger
@@ -434,8 +489,17 @@ app.post('/groups', (req, res) => { });
  *      400:
  *        description: bad data request
 */
-app.put('/groups/:id', (req, res) => { });
-
+app.put('/groups/:id', (req, res) => {
+    Groups.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true },
+        (err, updatedGroup) => {
+            if (err) return res.status(500).send(err);
+            return res.send(updatedGroup);
+        }
+    )
+});
 
 /** 
  * @swagger
@@ -454,4 +518,12 @@ app.put('/groups/:id', (req, res) => { });
  *        description: bad data request
 */
 
-app.delete('/groups/:id', (req, res) => { });
+app.delete('/groups/:id', async (req, res) => {
+    await GroupUser.deleteMany({ id_group: req.params.id });
+    const posts = await Posts.find({ id_group: req.params.id });
+    posts.forEach(async (element) => {
+        await Comments.deleteMany({ id_post: element._id.str });
+    });
+    await Posts.deleteMany({ id_group: req.params.id });
+    await Groups.findAndDelete({ _id: req.params.id })
+});
