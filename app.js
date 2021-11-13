@@ -61,19 +61,16 @@ const Comments = require('./src/models/Comments');
 
 app.get('/', (req, res) => { res.send('Adogtame API') });
 
+
 /** 
  * @swagger
  * /users:
  *  get:
  *    description: return all users
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
- *        type: string
- *      - in: Query
- *        Params: string
- *        description: query params
  *        type: string
  *    responses:
  *      200:
@@ -81,7 +78,6 @@ app.get('/', (req, res) => { res.send('Adogtame API') });
  *      401:
  *        description: invalid token
 */
-
 app.get('/users', async (req, res) => {
     res.send(await Users.find({}))
 });
@@ -89,7 +85,7 @@ app.get('/users', async (req, res) => {
 
 /** 
  * @swagger
- * /users/:id:
+ * /users/{id}:
  *  get:
  *    description: return the user specified
  *    parameters:
@@ -97,6 +93,10 @@ app.get('/users', async (req, res) => {
  *        Bearer: token
  *        description: token 
  *        type: string
+ *      - in: path
+ *        name: id
+ *        description: user id 
+ *        type: string
  *    responses:
  *      200:
  *        description: success response
@@ -105,14 +105,14 @@ app.get('/users', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-
 app.get('/users/:id', async (req, res) => {
     res.send(await Users.findOne({ _id: req.params.id }));
 });
 
+
 /** 
  * @swagger
- * /users/:id/posts:
+ * /users/{id}/posts:
  *  get:
  *    description: return all the user post
  *    parameters:
@@ -120,6 +120,10 @@ app.get('/users/:id', async (req, res) => {
  *        Bearer: token
  *        description: token 
  *        type: string
+ *      - in: path
+ *        name: id
+ *        description: user id 
+ *        type: string
  *    responses:
  *      200:
  *        description: success response
@@ -128,11 +132,10 @@ app.get('/users/:id', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-
-
 app.get('/users/:id/posts', async (req, res) => {
     res.send(await Posts.find({ id_user: req.params.id }));
 });
+
 
 /** 
  * @swagger
@@ -140,21 +143,37 @@ app.get('/users/:id/posts', async (req, res) => {
  *  post:
  *    description: add an user
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
  *      - in: body
- *        name: email,password,name,last_name,phone_number
- *        description: users email
- *        type: string
+ *        name: params
+ *        description: user email, user password, user name, user last name and user phone number
+ *        type: object
+ *        properties:
+ *          email:
+ *            type: string
+ *          password: 
+ *            type: string
+ *          name: 
+ *            type: string
+ *          last_name:
+ *            type: string
+ *          phone_number:
+ *            type: string
+ *          tags:
+ *            type: string
+ *          date_birth:
+ *            type: string
+ *          profile_picture:
+ *            type: string
  *    responses:
  *      200:
  *        description: success response
  *      400:
  *        description: bad data request
 */
-
 app.post('/users', async (req, res) => {
     const exist = await Users.findOne({ email: req.body.email });
     if (!exist) {
@@ -183,22 +202,39 @@ app.post('/users', async (req, res) => {
 
 /** 
  * @swagger
- * /users/:id:
+ * /users/{id}:
  *  put:
  *    description: update an existing user
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
- *      - in: body
- *        name: username
- *        description: email of the user
+ *      - in: path
+ *        name: id
+ *        description: user id 
  *        type: string
  *      - in: body
- *        name: password
- *        description: users password
- *        type: string
+ *        name: params
+ *        description: (optional) user email, (optional) user password, (optional) user name, (optional) user last name and (optional) user phone number
+ *        type: object
+ *        properties:
+ *          email:
+ *            type: string
+ *          password: 
+ *            type: string
+ *          name: 
+ *            type: string
+ *          last_name:
+ *            type: string
+ *          phone_number:
+ *            type: string
+ *          tags:
+ *            type: string
+ *          date_birth:
+ *            type: string
+ *          profile_picture:
+ *            type: string
  *    responses:
  *      200:
  *        description: success response
@@ -221,13 +257,17 @@ app.put('/users/:id', (req, res) => {
 
 /** 
  * @swagger
- * /users/:id:
+ * /users/{id}:
  *  delete:
  *    description: delete an existing user
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
+ *        type: string
+ *      - in: path
+ *        name: id
+ *        description: user id 
  *        type: string
  *    responses:
  *      200:
@@ -246,13 +286,9 @@ app.delete('/users/:id', async (req, res) => {
  *  get:
  *    description: return all the post in the database
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
- *        type: string
- *      - in: Query
- *        QueryParams: string
- *        description: query params
  *        type: string
  *    responses:
  *      200:
@@ -269,13 +305,17 @@ app.get('/posts', async (req, res) => {
 
 /** 
  * @swagger
- * /posts/:id:
+ * /posts/{id}:
  *  get:
  *    description: return the specified post
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
+ *        type: string
+ *      - in: path
+ *        name: id
+ *        description: post id 
  *        type: string
  *    responses:
  *      200:
@@ -296,10 +336,31 @@ app.get('/posts/:id', async (req, res) => {
  *  post:
  *    description: create post
  *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
  *      - in: body
- *        name: name
- *        description: post name
- *        type: string  
+ *        name: params
+ *        description: user id, group id, post title, post information, post photo, post location, post contact info, post pet type
+ *        type: object
+ *        properties:
+ *          id_user:
+ *            type: string
+ *          id_group: 
+ *            type: string
+ *          title: 
+ *            type: string
+ *          information:
+ *            type: string
+ *          photo:
+ *            type: string
+ *          location:
+ *            type: string
+ *          contact_info:
+ *            type: string
+ *          pet_type:
+ *            type: string 
  *    responses:
  *      200:
  *        description: success response
@@ -324,14 +385,39 @@ app.post('/posts', async (req, res) => {
 
 /** 
  * @swagger
- * /posts/:id:
+ * /posts/{id}:
  *  put:
  *    description: update the post
  *    parameters:
- *      - in: body
- *        name: message
- *        description: the content of the message
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
  *        type: string
+ *      - in: path
+ *        name: id
+ *        description: post id 
+ *        type: string
+ *      - in: body
+ *        name: params
+ *        description: (optional) user id, (optional) group id, (optional) post title, (optional) post information, (optional) post photo, (optional) post location, (optional) post contact info, (optional) post pet type
+ *        type: object
+ *        properties:
+ *          id_user:
+ *            type: string
+ *          id_group: 
+ *            type: string
+ *          title: 
+ *            type: string
+ *          information:
+ *            type: string
+ *          photo:
+ *            type: string
+ *          location:
+ *            type: string
+ *          contact_info:
+ *            type: string
+ *          pet_type:
+ *            type: string 
  *    responses:
  *      200:
  *        description: success response
@@ -352,13 +438,17 @@ app.put('/posts/:id', (req, res) => {
 
 /** 
  * @swagger
- * /posts/:id:
+ * /posts/{id}:
  *  delete:
  *    description: delete an existing user
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
+ *        type: string
+ *      - in: path
+ *        name: id
+ *        description: post id 
  *        type: string
  *    responses:
  *      200:
@@ -379,13 +469,9 @@ app.delete('/posts/:id', async (req, res) => {
  *  get:
  *    description: return all groups
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
- *        type: string
- *      - in: Query
- *        QueryParams: string
- *        description: query params
  *        type: string
  *    responses:
  *      200:
@@ -400,13 +486,17 @@ app.get('/groups', async (req, res) => {
 
 /** 
  * @swagger
- * /groups/:id:
+ * /groups/{id}:
  *  get:
  *    description: return the specific group
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
+ *        type: string
+ *      - in: path
+ *        name: id
+ *        description: group id 
  *        type: string
  *    responses:
  *      200:
@@ -422,13 +512,17 @@ app.get('/groups/:id', async (req, res) => {
 
 /** 
  * @swagger
- * /groups/:id/posts:
+ * /groups/{id}/posts:
  *  get:
  *    description: return all the post of a specific group
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
+ *        type: string
+ *      - in: path
+ *        name: id
+ *        description: group id 
  *        type: string
  *    responses:
  *      200:
@@ -449,10 +543,19 @@ app.get('/groups/:id/posts', async (req, res) => {
  *  post:
  *    description: create group
  *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
  *      - in: body
- *        name: name
- *        description: group name
- *        type: string  
+ *        name: params
+ *        description: group name, group description
+ *        type: object
+ *        properties:
+ *          name:
+ *            type: string
+ *          description: 
+ *            type: string
  *    responses:
  *      200:
  *        description: success response
@@ -475,14 +578,27 @@ app.post('/groups', async (req, res) => {
 
 /** 
  * @swagger
- * /groups/:id:
+ * /groups/{id}:
  *  put:
- *    description: update the group
+ *    description: create group
  *    parameters:
- *      - in: body
- *        name: message
- *        description: the content of the message
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
  *        type: string
+ *      - in: path
+ *        name: id
+ *        description: group id 
+ *        type: string
+ *      - in: body
+ *        name: params
+ *        description: (optional) group name, (optional) group description
+ *        type: object
+ *        properties:
+ *          name:
+ *            type: string
+ *          description: 
+ *            type: string
  *    responses:
  *      200:
  *        description: success response
@@ -503,13 +619,17 @@ app.put('/groups/:id', (req, res) => {
 
 /** 
  * @swagger
- * /groups/:id:
+ * /groups/{id}:
  *  delete:
  *    description: delete an existing user
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
+ *        type: string
+ *      - in: path
+ *        name: id
+ *        description: group id 
  *        type: string
  *    responses:
  *      200:
