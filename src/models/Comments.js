@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
 const comments_schema = new Schema({
-	IdPost: String,
-	IdUser: String,
-	Comment: String
+	id_post: String,
+	id_user: String,
+	comment: String
 }, { timestamps: true });
 
 const groups = mongoose.model('Comments', comments_schema);

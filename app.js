@@ -132,7 +132,7 @@ app.get('/users/:id', async (req, res) => {
 
 
 app.get('/users/:id/posts', async (req, res) => {
-    res.send(await Posts.find({ IdUser: req.params.id }));
+    res.send(await Posts.find({ id_user: req.params.id }));
 });
 
 /** 
@@ -437,7 +437,7 @@ app.get('/group/:id/posts', (req, res) => { res.send('/groups/:id/posts endpoint
  *        description: bad data request
 */
 app.post('/groups', async (req, res) => {
-    const exist = await Groups.findOne({ Name: req.body.Name });
+    const exist = await Groups.findOne({ name: req.body.name });
     if (!exist) {
         Groups.create({
             Name: req.body.Name,
