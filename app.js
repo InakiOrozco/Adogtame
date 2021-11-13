@@ -420,7 +420,7 @@ app.get('/groups', async (req, res) => {
  *        description: invalid token or not recieved
 */
 app.get('/groups/:id', async (req, res) => { 
-    res.send(await Groups.find({ id_group: req.params.id }));
+    res.send(await Groups.find({ _id: req.params.id }));
 });
 
 /** 
