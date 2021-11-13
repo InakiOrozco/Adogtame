@@ -157,7 +157,8 @@ app.get('/users/:id/posts', async (req, res) => {
 */
 
 app.post('/users', async (req, res) => {
-    const exist = await Users.findOne({ email: req.body.email });
+    const exist = await Users.findOne({ Email: req.body.Email });
+    console.log(exist)
     if (!exist) {
         bcrypt.genSalt(10, function (err, salt) {
             bcrypt.hash(req.body.password, salt, function (err, hash) {
@@ -223,8 +224,9 @@ app.put('/users/:id', (req, res) => { });
  *      400:
  *        description: bad data request
 */
-
-app.delete('/users/:id', (req, res) => { });
+app.delete('/users/:id', async (req, res) => {
+    res.send(await Users.findOneAndDelete({ _id: req.params.id }));
+});
 
 
 /** 
@@ -250,8 +252,9 @@ app.delete('/users/:id', (req, res) => { });
  *        description: bad data request
 */
 
-app.get('/posts', (req, res) => { res.send('/posts endpoint') });
-
+app.get('/posts', async (req, res) => {
+    res.send(await Posts.find({}))
+});
 
 /** 
  * @swagger
@@ -272,8 +275,9 @@ app.get('/posts', (req, res) => { res.send('/posts endpoint') });
  *        description: invalid token or not recieved
 */
 
-app.get('/posts/:id', (req, res) => { res.send('/posts/:id endpoint') });
-
+app.get('/posts/:id', async (req, res) => { 
+    res.send(await Posts.find({ IdPost: req.params.id }));
+});
 
 /** 
  * @swagger
@@ -291,8 +295,20 @@ app.get('/posts/:id', (req, res) => { res.send('/posts/:id endpoint') });
  *      400:
  *        description: bad data request
 */
-app.post('/posts', (req, res) => { });
-
+app.post('/posts', async (req, res) => {
+    Posts.create({
+        IdUser: req.body.IdUser,
+        Title: req.body.Title,
+        Information: req.body.Information,
+        Photo: req.body.Photo,
+        Location: req.body.Location,
+        ContactInfo: req.body.ContactInfo,
+        PetType: req.body.PetType,
+        Resolved: false
+    }).then((nose) => {
+        res.send(nose);
+    })
+});
 
 /** 
  * @swagger
@@ -310,8 +326,9 @@ app.post('/posts', (req, res) => { });
  *      400:
  *        description: bad data request
 */
-app.put('/posts/:id', (req, res) => { });
+app.put('/posts/:id', (req, res) => {
 
+});
 
 /** 
  * @swagger
@@ -330,14 +347,15 @@ app.put('/posts/:id', (req, res) => { });
  *        description: bad data request
 */
 
-app.delete('/postss/:id', (req, res) => { });
-
+app.delete('/posts/:id', async (req, res) => {
+    res.send(await Posts.findOneAndDelete({ _id: req.params.id }));
+});
 
 /** 
  * @swagger
  * /groups:
  *  get:
- *    description: return all group
+ *    description: return all groups
  *    parameters:
  *      - in: Query
  *        Bearer: token
@@ -354,7 +372,9 @@ app.delete('/postss/:id', (req, res) => { });
  *        description: invalid token
 */
 
-app.get('/groups', (req, res) => { res.send('/groups endpoint') });
+app.get('/groups', async (req, res) => {
+    res.send(await Groups.find({}))
+});
 
 /** 
  * @swagger
@@ -375,8 +395,9 @@ app.get('/groups', (req, res) => { res.send('/groups endpoint') });
  *        description: invalid token or not recieved
 */
 
-app.get('/groups/:id', (req, res) => { res.send('/groups/:id endpoint') });
-
+app.get('/groups/:id', async (req, res) => { 
+    res.send(await Groups.find({ IdGroup: req.params.id }));
+});
 /** 
  * @swagger
  * /groups/:id/posts:
@@ -415,8 +436,19 @@ app.get('/group/:id/posts', (req, res) => { res.send('/groups/:id/posts endpoint
  *      400:
  *        description: bad data request
 */
-app.post('/groups', (req, res) => { });
-
+app.post('/groups', async (req, res) => {
+    const exist = await Groups.findOne({ Name: req.body.Name });
+    if (!exist) {
+        Groups.create({
+            Name: req.body.Name,
+            Description: req.body.Description,
+        }).then((nose) => {
+            res.send(nose);
+        })
+    }else{
+        res.send("Group already exists");
+    }
+});
 
 /** 
  * @swagger
@@ -454,4 +486,6 @@ app.put('/groups/:id', (req, res) => { });
  *        description: bad data request
 */
 
-app.delete('/groups/:id', (req, res) => { });
+app.delete('/groups/:id', async (req, res) => {
+    res.send(await Groups.findOneAndDelete({ _id: req.params.id }));
+});
