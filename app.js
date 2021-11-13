@@ -67,13 +67,9 @@ app.get('/', (req, res) => { res.send('Adogtame API') });
  *  get:
  *    description: return all users
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
- *        type: string
- *      - in: Query
- *        Params: string
- *        description: query params
  *        type: string
  *    responses:
  *      200:
@@ -81,7 +77,6 @@ app.get('/', (req, res) => { res.send('Adogtame API') });
  *      401:
  *        description: invalid token
 */
-
 app.get('/users', async (req, res) => {
     res.send(await Users.find({}))
 });
@@ -105,7 +100,6 @@ app.get('/users', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-
 app.get('/users/:id', async (req, res) => {
     res.send(await Users.findOne({ _id: req.params.id }));
 });
@@ -128,8 +122,6 @@ app.get('/users/:id', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-
-
 app.get('/users/:id/posts', async (req, res) => {
     res.send(await Posts.find({ id_user: req.params.id }));
 });
@@ -140,7 +132,7 @@ app.get('/users/:id/posts', async (req, res) => {
  *  post:
  *    description: add an user
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
@@ -154,7 +146,6 @@ app.get('/users/:id/posts', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-
 app.post('/users', async (req, res) => {
     const exist = await Users.findOne({ Email: req.body.email });
     if (!exist) {
@@ -187,7 +178,7 @@ app.post('/users', async (req, res) => {
  *  put:
  *    description: update an existing user
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
@@ -225,7 +216,7 @@ app.put('/users/:id', (req, res) => {
  *  delete:
  *    description: delete an existing user
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
@@ -246,7 +237,7 @@ app.delete('/users/:id', async (req, res) => {
  *  get:
  *    description: return all the post in the database
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
@@ -273,7 +264,7 @@ app.get('/posts', async (req, res) => {
  *  get:
  *    description: return the specified post
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
@@ -356,7 +347,7 @@ app.put('/posts/:id', (req, res) => {
  *  delete:
  *    description: delete an existing user
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
@@ -379,7 +370,7 @@ app.delete('/posts/:id', async (req, res) => {
  *  get:
  *    description: return all groups
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
@@ -404,7 +395,7 @@ app.get('/groups', async (req, res) => {
  *  get:
  *    description: return the specific group
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
@@ -426,7 +417,7 @@ app.get('/groups/:id', async (req, res) => {
  *  get:
  *    description: return all the post of a specific group
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
@@ -507,7 +498,7 @@ app.put('/groups/:id', (req, res) => {
  *  delete:
  *    description: delete an existing user
  *    parameters:
- *      - in: Query
+ *      - in: Header
  *        Bearer: token
  *        description: token 
  *        type: string
