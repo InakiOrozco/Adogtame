@@ -205,7 +205,17 @@ app.post('/users', async (req, res) => {
  *        description: bad data request
 */
 
-app.put('/users/:id', (req, res) => { });
+app.put('/users/:id', (req, res) => {
+    Users.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {new:true},
+        (err, todo) => {
+        if(err) return res.status(500).send(err);
+        return res.send(todo);
+        }
+    )
+ });
 
 
 /** 
@@ -296,14 +306,28 @@ app.get('/posts/:id', async (req, res) => {
  *        description: bad data request
 */
 app.post('/posts', async (req, res) => {
+    if(req.body.in_group){
+        const id_post = GroupPosts.findById({id_group: req.body.id_group}).id_post;
+        GroupPost.findByIdAndUpdate(
+            req.body.id_group,
+            id_post.append(req.body.id_post),
+            {new:true},
+            (err, todo) => {
+            if(err) return res.status(500).send(err);
+            return res.send(todo);
+            }
+        )
+    }
     Posts.create({
-        id_user: req.body.IdUser,
-        title: req.body.Title,
-        information: req.body.Information,
-        photo: req.body.Photo,
-        location: req.body.Location,
-        contact_info: req.body.ContactInfo,
-        pet_type: req.body.PetType,
+        id_user: req.body.id_user,
+        in_group: req.body.in_group,
+        id_group: req.body.id_group,
+        title: req.body.title,
+        information: req.body.information,
+        photo: req.body.photo,
+        location: req.body.location,
+        contact_info: req.body.contact_info,
+        pet_type: req.body.pet_type,
         resolved: false
     }).then((nose) => {
         res.send(nose);
@@ -327,8 +351,16 @@ app.post('/posts', async (req, res) => {
  *        description: bad data request
 */
 app.put('/posts/:id', (req, res) => {
-
-});
+    Posts.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {new:true},
+        (err, todo) => {
+        if(err) return res.status(500).send(err);
+        return res.send(todo);
+        }
+    )
+ });
 
 /** 
  * @swagger
@@ -394,10 +426,10 @@ app.get('/groups', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-
 app.get('/groups/:id', async (req, res) => { 
     res.send(await Groups.find({ IdGroup: req.params.id }));
 });
+
 /** 
  * @swagger
  * /groups/:id/posts:
@@ -416,8 +448,10 @@ app.get('/groups/:id', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-
-app.get('/group/:id/posts', (req, res) => { res.send('/groups/:id/posts endpoint') });
+app.get('/group/:id/posts', (req, res) => { 
+    const id = GroupPost.findOne({id_group: req.params.id});
+    console.log(id);
+});
 
 
 /** 
@@ -466,8 +500,17 @@ app.post('/groups', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.put('/groups/:id', (req, res) => { });
-
+app.put('/groups/:id', (req, res) => {
+    Groups.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {new:true},
+        (err, todo) => {
+        if(err) return res.status(500).send(err);
+        return res.send(todo);
+        }
+    )
+ });
 
 /** 
  * @swagger
