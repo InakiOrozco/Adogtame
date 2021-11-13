@@ -277,6 +277,8 @@ app.get('/posts', async (req, res) => {
 
 app.get('/posts/:id', async (req, res) => { 
     res.send(await Posts.find({ IdPost: req.params.id }));
+app.get('/posts/:id', async (req, res) => {
+    res.send(await Posts.find({ _id: req.params.id }));
 });
 
 /** 
@@ -395,8 +397,8 @@ app.get('/groups', async (req, res) => {
  *        description: invalid token or not recieved
 */
 
-app.get('/groups/:id', async (req, res) => { 
-    res.send(await Groups.find({ IdGroup: req.params.id }));
+app.get('/groups/:id', async (req, res) => {
+    res.send(await Groups.find({ _id: req.params.id }));
 });
 /** 
  * @swagger
