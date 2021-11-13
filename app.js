@@ -519,5 +519,11 @@ app.put('/groups/:id', (req, res) => {
 */
 
 app.delete('/groups/:id', async (req, res) => {
-    res.send(await Groups.findAndDelete({ _id: req.params.id }));
+    await GroupUser.deleteMany({ id_group: req.params.id });
+    const posts = await Posts.find({ id_group: req.params.id });
+    posts.forEach(async (element) => {
+        await Comments.deleteMany({ id_post: element._id.str });
+    });
+    await Posts.deleteMany({ id_group: req.params.id });
+    await Groups.findAndDelete({ _id: req.params.id })
 });
