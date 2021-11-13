@@ -132,7 +132,7 @@ app.get('/users/:id', async (req, res) => {
 
 
 app.get('/users/:id/posts', async (req, res) => {
-    res.send(await Posts.find({ IdUser: req.params.id }));
+    res.send(await Posts.find({ id_user: req.params.id }));
 });
 
 /** 
@@ -157,17 +157,17 @@ app.get('/users/:id/posts', async (req, res) => {
 */
 
 app.post('/users', async (req, res) => {
-    const exist = await Users.findOne({ Email: req.body.Email });
+    const exist = await Users.findOne({ email: req.body.email });
     console.log(exist)
     if (!exist) {
         bcrypt.genSalt(10, function (err, salt) {
             bcrypt.hash(req.body.password, salt, function (err, hash) {
                 Users.create({
-                    Email: req.body.email,
-                    Password: hash,
-                    Name: req.body.name,
-                    LastName: req.body.last_name,
-                    PhoneNumber: req.body.phone_number
+                    email: req.body.email,
+                    password: hash,
+                    name: req.body.name,
+                    last_name: req.body.last_name,
+                    phone_number: req.body.phone_number
                 }).then((nose) => {
                     res.send(nose);
                 })
@@ -276,7 +276,7 @@ app.get('/posts', async (req, res) => {
 */
 
 app.get('/posts/:id', async (req, res) => { 
-    res.send(await Posts.find({ IdPost: req.params.id }));
+    res.send(await Posts.find({ id_post: req.params.id }));
 });
 
 /** 
@@ -297,14 +297,14 @@ app.get('/posts/:id', async (req, res) => {
 */
 app.post('/posts', async (req, res) => {
     Posts.create({
-        IdUser: req.body.IdUser,
-        Title: req.body.Title,
-        Information: req.body.Information,
-        Photo: req.body.Photo,
-        Location: req.body.Location,
-        ContactInfo: req.body.ContactInfo,
-        PetType: req.body.PetType,
-        Resolved: false
+        id_user: req.body.IdUser,
+        title: req.body.Title,
+        information: req.body.Information,
+        photo: req.body.Photo,
+        location: req.body.Location,
+        contact_info: req.body.ContactInfo,
+        pet_type: req.body.PetType,
+        resolved: false
     }).then((nose) => {
         res.send(nose);
     })
@@ -437,11 +437,11 @@ app.get('/group/:id/posts', (req, res) => { res.send('/groups/:id/posts endpoint
  *        description: bad data request
 */
 app.post('/groups', async (req, res) => {
-    const exist = await Groups.findOne({ Name: req.body.Name });
+    const exist = await Groups.findOne({ name: req.body.name });
     if (!exist) {
         Groups.create({
-            Name: req.body.Name,
-            Description: req.body.Description,
+            name: req.body.Name,
+            description: req.body.Description,
         }).then((nose) => {
             res.send(nose);
         })
