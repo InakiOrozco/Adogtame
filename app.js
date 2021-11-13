@@ -307,16 +307,9 @@ app.get('/posts/:id', async (req, res) => {
 */
 app.post('/posts', async (req, res) => {
     if(req.body.in_group){
-        const id_post = GroupPosts.findById({id_group: req.body.id_group}).id_post;
-        GroupPost.findByIdAndUpdate(
-            req.body.id_group,
-            id_post.append(req.body.id_post),
-            {new:true},
-            (err, todo) => {
-            if(err) return res.status(500).send(err);
-            return res.send(todo);
-            }
-        )
+        GroupPost.create({
+            id_group: req.body.id_group
+        })
     }
     Posts.create({
         id_user: req.body.id_user,
@@ -448,8 +441,8 @@ app.get('/groups/:id', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-app.get('/group/:id/posts', (req, res) => { 
-    const id = GroupPost.findOne({id_group: req.params.id});
+app.get('/group/:id/posts', async (req, res) => { 
+    const id = await GroupPost.findOne({id_group: req.params.id});
     console.log(id);
 });
 
