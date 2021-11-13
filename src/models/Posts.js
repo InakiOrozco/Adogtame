@@ -3,8 +3,7 @@ const Schema = mongoose.Schema
 
 const post_schema = new Schema({
 	id_user: String,
-	in_group: Boolean,
-	id_group: String, 
+	id_group: String,
 	title: String,
 	information: String,
 	photo: String,

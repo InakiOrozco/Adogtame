@@ -57,7 +57,6 @@ const UsersSessions = require('./src/models/UserSessions');
 const Groups = require('./src/models/Groups');
 const Posts = require('./src/models/Posts');
 const GroupUser = require('./src/models/GroupUser');
-const GroupPost = require('./src/models/GroupPost');
 const Comments = require('./src/models/Comments');
 
 app.get('/', (req, res) => { res.send('Adogtame API') });
@@ -209,13 +208,13 @@ app.put('/users/:id', (req, res) => {
     Users.findByIdAndUpdate(
         req.params.id,
         req.body,
-        {new:true},
+        { new: true },
         (err, todo) => {
-        if(err) return res.status(500).send(err);
-        return res.send(todo);
+            if (err) return res.status(500).send(err);
+            return res.send(todo);
         }
     )
- });
+});
 
 
 /** 
@@ -306,7 +305,7 @@ app.get('/posts/:id', async (req, res) => {
  *        description: bad data request
 */
 app.post('/posts', async (req, res) => {
-    if(req.body.in_group){
+    if (req.body.in_group) {
         GroupPost.create({
             id_group: req.body.id_group
         })
@@ -347,13 +346,13 @@ app.put('/posts/:id', (req, res) => {
     Posts.findByIdAndUpdate(
         req.params.id,
         req.body,
-        {new:true},
+        { new: true },
         (err, todo) => {
-        if(err) return res.status(500).send(err);
-        return res.send(todo);
+            if (err) return res.status(500).send(err);
+            return res.send(todo);
         }
     )
- });
+});
 
 /** 
  * @swagger
@@ -373,7 +372,7 @@ app.put('/posts/:id', (req, res) => {
 */
 
 app.delete('/posts/:id', async (req, res) => {
-    res.send(await Posts.findOneAndDelete({ _id: req.params.id }), await GroupPosts.findAndDelete({ id_posts: req.params.id}));
+    res.send(await Posts.findOneAndDelete({ _id: req.params.id }), await GroupPosts.findAndDelete({ id_posts: req.params.id }));
 });
 
 /** 
@@ -419,7 +418,7 @@ app.get('/groups', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-app.get('/groups/:id', async (req, res) => { 
+app.get('/groups/:id', async (req, res) => {
     res.send(await Groups.find({ _id: req.params.id }));
 });
 
@@ -441,8 +440,8 @@ app.get('/groups/:id', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-app.get('/group/:id/posts', async (req, res) => { 
-    const id = await GroupPost.findOne({id_group: req.params.id});
+app.get('/group/:id/posts', async (req, res) => {
+    const id = await GroupPost.findOne({ id_group: req.params.id });
     console.log(id);
 });
 
@@ -497,13 +496,13 @@ app.put('/groups/:id', (req, res) => {
     Groups.findByIdAndUpdate(
         req.params.id,
         req.body,
-        {new:true},
+        { new: true },
         (err, todo) => {
-        if(err) return res.status(500).send(err);
-        return res.send(todo);
+            if (err) return res.status(500).send(err);
+            return res.send(todo);
         }
     )
- });
+});
 
 /** 
  * @swagger
