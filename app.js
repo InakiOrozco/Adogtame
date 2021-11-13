@@ -157,16 +157,18 @@ app.get('/users/:id/posts', async (req, res) => {
 
 app.post('/users', async (req, res) => {
     const exist = await Users.findOne({ Email: req.body.email });
-    console.log(exist)
     if (!exist) {
         bcrypt.genSalt(10, function (err, salt) {
             bcrypt.hash(req.body.password, salt, function (err, hash) {
                 Users.create({
-                    Email: req.body.email,
-                    Password: hash,
-                    Name: req.body.name,
-                    LastName: req.body.last_name,
-                    PhoneNumber: req.body.phone_number
+                    email: req.body.email,
+                    password: req.body.password,
+                    name: req.body.name,
+                    last_name: req.body.last_name,
+                    date_birth: req.body.date_birth,
+                    tags: req.body.tags,
+                    phone_number: req.body.phone_number,
+                    profile_picture: req.body.profile_picture
                 }).then((createdUser) => {
                     res.send(createdUser);
                 })
