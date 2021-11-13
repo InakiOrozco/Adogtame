@@ -447,7 +447,7 @@ app.post('/groups', async (req, res) => {
         }).then((createdGroup) => {
             res.send(createdGroup);
         })
-    }else{
+    } else {
         res.send("Group already exists");
     }
 });
