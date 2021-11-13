@@ -293,6 +293,10 @@ app.get('/posts', async (req, res) => {
  *        Bearer: token
  *        description: token 
  *        type: string
+ *      - in: Query
+ *        _id: id
+ *        description: posts id 
+ *        type: string
  *    responses:
  *      200:
  *        description: success response
@@ -312,10 +316,31 @@ app.get('/posts/:id', async (req, res) => {
  *  post:
  *    description: create post
  *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
  *      - in: body
- *        name: name
- *        description: post name
- *        type: string  
+ *        name: params
+ *        description: user id, group id, post title, post information, post photo, post location, post contact info, post pet type
+ *        type: object
+ *        properties:
+ *          id_user:
+ *            type: string
+ *          id_group: 
+ *            type: string
+ *          title: 
+ *            type: string
+ *          information:
+ *            type: string
+ *          photo:
+ *            type: string
+ *          location:
+ *            type: string
+ *          contact_info:
+ *            type: string
+ *          pet_type:
+ *            type: string 
  *    responses:
  *      200:
  *        description: success response
@@ -344,10 +369,31 @@ app.post('/posts', async (req, res) => {
  *  put:
  *    description: update the post
  *    parameters:
- *      - in: body
- *        name: message
- *        description: the content of the message
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
  *        type: string
+ *      - in: body
+ *        name: params
+ *        description: (optional) user id, (optional) group id, (optional) post title, (optional) post information, (optional) post photo, (optional) post location, (optional) post contact info, (optional) post pet type
+ *        type: object
+ *        properties:
+ *          id_user:
+ *            type: string
+ *          id_group: 
+ *            type: string
+ *          title: 
+ *            type: string
+ *          information:
+ *            type: string
+ *          photo:
+ *            type: string
+ *          location:
+ *            type: string
+ *          contact_info:
+ *            type: string
+ *          pet_type:
+ *            type: string 
  *    responses:
  *      200:
  *        description: success response
