@@ -373,7 +373,7 @@ app.put('/posts/:id', (req, res) => {
 */
 
 app.delete('/posts/:id', async (req, res) => {
-    res.send(await Posts.findOneAndDelete({ _id: req.params.id }));
+    res.send(await Posts.findOneAndDelete({ _id: req.params.id }), await GroupPosts.findAndDelete({ id_posts: req.params.id}));
 });
 
 /** 
@@ -523,5 +523,5 @@ app.put('/groups/:id', (req, res) => {
 */
 
 app.delete('/groups/:id', async (req, res) => {
-    res.send(await Groups.findOneAndDelete({ _id: req.params.id }));
+    res.send(await Groups.findAndDelete({ _id: req.params.id }));
 });
