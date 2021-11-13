@@ -157,7 +157,7 @@ app.get('/users/:id/posts', async (req, res) => {
 */
 
 app.post('/users', async (req, res) => {
-    const exist = await Users.findOne({ Email: req.body.Email });
+    const exist = await Users.findOne({ Email: req.body.email });
     console.log(exist)
     if (!exist) {
         bcrypt.genSalt(10, function (err, salt) {
