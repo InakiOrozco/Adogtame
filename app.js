@@ -368,7 +368,9 @@ app.put('/posts/:id', (req, res) => {
 */
 
 app.delete('/posts/:id', async (req, res) => {
-    res.send(await Posts.findOneAndDelete({ _id: req.params.id }), await GroupPosts.findAndDelete({ id_posts: req.params.id }));
+    await Comments.deleteMany({ id_post: req.params.id });
+    await Posts.findOneAndDelete({ _id: req.params.id });
+    res.send('Deleted')
 });
 
 /** 
