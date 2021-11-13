@@ -460,8 +460,8 @@ app.post('/groups', async (req, res) => {
     const exist = await Groups.findOne({ name: req.body.name });
     if (!exist) {
         Groups.create({
-            Name: req.body.Name,
-            Description: req.body.Description,
+            name: req.body.name,
+            description: req.body.description,
         }).then((createdGroup) => {
             res.send(createdGroup);
         })
