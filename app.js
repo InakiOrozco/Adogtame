@@ -157,19 +157,19 @@ app.get('/users/:id/posts', async (req, res) => {
 */
 
 app.post('/users', async (req, res) => {
-    const exist = await Users.findOne({ email: req.body.email });
+    const exist = await Users.findOne({ Email: req.body.email });
     console.log(exist)
     if (!exist) {
         bcrypt.genSalt(10, function (err, salt) {
             bcrypt.hash(req.body.password, salt, function (err, hash) {
                 Users.create({
-                    email: req.body.email,
-                    password: hash,
-                    name: req.body.name,
-                    last_name: req.body.last_name,
-                    phone_number: req.body.phone_number
-                }).then((nose) => {
-                    res.send(nose);
+                    Email: req.body.email,
+                    Password: hash,
+                    Name: req.body.name,
+                    LastName: req.body.last_name,
+                    PhoneNumber: req.body.phone_number
+                }).then((createdUser) => {
+                    res.send(createdUser);
                 })
             });
         });
@@ -275,8 +275,8 @@ app.get('/posts', async (req, res) => {
  *        description: invalid token or not recieved
 */
 
-app.get('/posts/:id', async (req, res) => { 
-    res.send(await Posts.find({ id_post: req.params.id }));
+app.get('/posts/:id', async (req, res) => {
+    res.send(await Posts.find({ _id: req.params.id }));
 });
 
 /** 
@@ -297,16 +297,16 @@ app.get('/posts/:id', async (req, res) => {
 */
 app.post('/posts', async (req, res) => {
     Posts.create({
-        id_user: req.body.IdUser,
-        title: req.body.Title,
-        information: req.body.Information,
-        photo: req.body.Photo,
-        location: req.body.Location,
-        contact_info: req.body.ContactInfo,
-        pet_type: req.body.PetType,
-        resolved: false
-    }).then((nose) => {
-        res.send(nose);
+        IdUser: req.body.IdUser, // este se debe de obtener del usuario autentificado
+        Title: req.body.title,
+        Information: req.body.information,
+        Photo: req.body.photo,
+        Location: req.body.location,
+        ContactInfo: req.body.contact_info,
+        PetType: req.body.pet_type,
+        Resolved: false
+    }).then((createdPost) => {
+        res.send(createdPost);
     })
 });
 
@@ -395,8 +395,8 @@ app.get('/groups', async (req, res) => {
  *        description: invalid token or not recieved
 */
 
-app.get('/groups/:id', async (req, res) => { 
-    res.send(await Groups.find({ IdGroup: req.params.id }));
+app.get('/groups/:id', async (req, res) => {
+    res.send(await Groups.find({ _id: req.params.id }));
 });
 /** 
  * @swagger
@@ -440,12 +440,12 @@ app.post('/groups', async (req, res) => {
     const exist = await Groups.findOne({ name: req.body.name });
     if (!exist) {
         Groups.create({
-            name: req.body.Name,
-            description: req.body.Description,
-        }).then((nose) => {
-            res.send(nose);
+            Name: req.body.Name,
+            Description: req.body.Description,
+        }).then((createdGroup) => {
+            res.send(createdGroup);
         })
-    }else{
+    } else {
         res.send("Group already exists");
     }
 });
