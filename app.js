@@ -445,10 +445,6 @@ app.delete('/posts/:id', async (req, res) => {
  *        Bearer: token
  *        description: token 
  *        type: string
- *      - in: Query
- *        QueryParams: string
- *        description: query params
- *        type: string
  *    responses:
  *      200:
  *        description: success response
@@ -469,6 +465,10 @@ app.get('/groups', async (req, res) => {
  *      - in: Header
  *        Bearer: token
  *        description: token 
+ *        type: string
+ *      - in: Query
+ *        _id: id
+ *        description: group id 
  *        type: string
  *    responses:
  *      200:
@@ -492,6 +492,10 @@ app.get('/groups/:id', async (req, res) => {
  *        Bearer: token
  *        description: token 
  *        type: string
+ *      - in: Query
+ *        _id: id
+ *        description: group id 
+ *        type: string
  *    responses:
  *      200:
  *        description: success response
@@ -511,10 +515,19 @@ app.get('/groups/:id/posts', async (req, res) => {
  *  post:
  *    description: create group
  *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
  *      - in: body
- *        name: name
- *        description: group name
- *        type: string  
+ *        name: params
+ *        description: group name, group description
+ *        type: object
+ *        properties:
+ *          name:
+ *            type: string
+ *          description: 
+ *            type: string
  *    responses:
  *      200:
  *        description: success response
@@ -539,12 +552,21 @@ app.post('/groups', async (req, res) => {
  * @swagger
  * /groups/:id:
  *  put:
- *    description: update the group
+ *    description: create group
  *    parameters:
- *      - in: body
- *        name: message
- *        description: the content of the message
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
  *        type: string
+ *      - in: body
+ *        name: params
+ *        description: (optional) group name, (optional) group description
+ *        type: object
+ *        properties:
+ *          name:
+ *            type: string
+ *          description: 
+ *            type: string
  *    responses:
  *      200:
  *        description: success response
