@@ -275,8 +275,6 @@ app.get('/posts', async (req, res) => {
  *        description: invalid token or not recieved
 */
 
-app.get('/posts/:id', async (req, res) => { 
-    res.send(await Posts.find({ IdPost: req.params.id }));
 app.get('/posts/:id', async (req, res) => {
     res.send(await Posts.find({ _id: req.params.id }));
 });
