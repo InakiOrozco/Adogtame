@@ -297,13 +297,13 @@ app.get('/posts/:id', async (req, res) => {
 */
 app.post('/posts', async (req, res) => {
     Posts.create({
-        IdUser: req.body.IdUser,
-        Title: req.body.Title,
-        Information: req.body.Information,
-        Photo: req.body.Photo,
-        Location: req.body.Location,
-        ContactInfo: req.body.ContactInfo,
-        PetType: req.body.PetType,
+        IdUser: req.body.IdUser, // este se debe de obtener del usuario autentificado
+        Title: req.body.title,
+        Information: req.body.information,
+        Photo: req.body.photo,
+        Location: req.body.location,
+        ContactInfo: req.body.contact_info,
+        PetType: req.body.pet_type,
         Resolved: false
     }).then((createdPost) => {
         res.send(createdPost);
