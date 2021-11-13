@@ -307,14 +307,8 @@ app.get('/posts/:id', async (req, res) => {
  *        description: bad data request
 */
 app.post('/posts', async (req, res) => {
-    if (req.body.in_group) {
-        GroupPost.create({
-            id_group: req.body.id_group
-        })
-    }
     Posts.create({
         id_user: req.body.id_user,
-        in_group: req.body.in_group,
         id_group: req.body.id_group,
         title: req.body.title,
         information: req.body.information,
@@ -443,8 +437,6 @@ app.get('/groups/:id', async (req, res) => {
  *        description: invalid token or not recieved
 */
 app.get('/group/:id/posts', async (req, res) => {
-    const id = await GroupPost.findOne({ id_group: req.params.id });
-    console.log(id);
 });
 
 
