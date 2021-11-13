@@ -168,8 +168,8 @@ app.post('/users', async (req, res) => {
                     Name: req.body.name,
                     LastName: req.body.last_name,
                     PhoneNumber: req.body.phone_number
-                }).then((nose) => {
-                    res.send(nose);
+                }).then((createdUser) => {
+                    res.send(createdUser);
                 })
             });
         });
@@ -305,8 +305,8 @@ app.post('/posts', async (req, res) => {
         ContactInfo: req.body.ContactInfo,
         PetType: req.body.PetType,
         Resolved: false
-    }).then((nose) => {
-        res.send(nose);
+    }).then((createdPost) => {
+        res.send(createdPost);
     })
 });
 
@@ -442,8 +442,8 @@ app.post('/groups', async (req, res) => {
         Groups.create({
             Name: req.body.Name,
             Description: req.body.Description,
-        }).then((nose) => {
-            res.send(nose);
+        }).then((createdGroup) => {
+            res.send(createdGroup);
         })
     }else{
         res.send("Group already exists");
