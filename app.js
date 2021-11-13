@@ -61,6 +61,7 @@ const Comments = require('./src/models/Comments');
 
 app.get('/', (req, res) => { res.send('Adogtame API') });
 
+
 /** 
  * @swagger
  * /users:
@@ -92,6 +93,10 @@ app.get('/users', async (req, res) => {
  *        Bearer: token
  *        description: token 
  *        type: string
+ *      - in: Query
+ *        _id: id
+ *        description: user id 
+ *        type: string
  *    responses:
  *      200:
  *        description: success response
@@ -103,6 +108,7 @@ app.get('/users', async (req, res) => {
 app.get('/users/:id', async (req, res) => {
     res.send(await Users.findOne({ _id: req.params.id }));
 });
+
 
 /** 
  * @swagger
@@ -126,6 +132,7 @@ app.get('/users/:id/posts', async (req, res) => {
     res.send(await Posts.find({ id_user: req.params.id }));
 });
 
+
 /** 
  * @swagger
  * /users:
@@ -137,9 +144,20 @@ app.get('/users/:id/posts', async (req, res) => {
  *        description: token 
  *        type: string
  *      - in: body
- *        name: email,password,name,last_name,phone_number
- *        description: users email
- *        type: string
+ *        name: params
+ *        description: user email, user password, user name, user last name and user phone number
+ *        type: object
+ *        properties:
+ *          email:
+ *            type: string
+ *          password: 
+ *            type: string
+ *          name: 
+ *            type: string
+ *          last_name:
+ *            type: string
+ *          phone_number:
+ *            type: string
  *    responses:
  *      200:
  *        description: success response
@@ -183,13 +201,20 @@ app.post('/users', async (req, res) => {
  *        description: token 
  *        type: string
  *      - in: body
- *        name: username
- *        description: email of the user
- *        type: string
- *      - in: body
- *        name: password
- *        description: users password
- *        type: string
+ *        name: params
+ *        description: (optional) user email, (optional) user password, (optional) user name, (optional) user last name and (optional) user phone number
+ *        type: object
+ *        properties:
+ *          email:
+ *            type: string
+ *          password: 
+ *            type: string
+ *          name: 
+ *            type: string
+ *          last_name:
+ *            type: string
+ *          phone_number:
+ *            type: string
  *    responses:
  *      200:
  *        description: success response
@@ -220,6 +245,10 @@ app.put('/users/:id', (req, res) => {
  *        Bearer: token
  *        description: token 
  *        type: string
+ *      - in: Query
+ *        _id: id
+ *        description: user id 
+ *        type: string
  *    responses:
  *      200:
  *        description: success response
@@ -240,10 +269,6 @@ app.delete('/users/:id', async (req, res) => {
  *      - in: Header
  *        Bearer: token
  *        description: token 
- *        type: string
- *      - in: Query
- *        QueryParams: string
- *        description: query params
  *        type: string
  *    responses:
  *      200:
