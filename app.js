@@ -333,7 +333,13 @@ app.get('/posts', async (req, res) => {
 */
 
 app.get('/posts/:id', async (req, res) => {
-    res.send(await Posts.find({ _id: req.params.id }));
+    res.send(await Posts.find({ _id: req.params.id }, function(err, Post){
+        if(err){
+            res.send("No existe ese post");
+        }else{
+            res.send(Post);
+        }
+    }));
 });
 
 /** 
