@@ -727,7 +727,13 @@ app.post('/posts/:id/comments', async (req, res) =>{
 });
 
 app.delete('/posts/:id/comments/:id_comment', async (req, res) =>{
-    await Comments.delete({id_post: req.params.id_post} & {_id: req.params.id_comment});
+    await Comments.findOneAndDelete({id_post: req.params.id}, {_id: req.params.id_comment}, function(err, comment){
+        if(err){
+            res.send("No se ha podido eliminar el comentario");
+        }else{
+            res.send("Eliminado correctamente");
+        }
+    });
 });
 
 /*
