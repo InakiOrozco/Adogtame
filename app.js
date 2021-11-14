@@ -753,8 +753,38 @@ app.post('/group/:id/permissions', async (req, res) =>{
     });    
 });
 
-app.delete('/group/:id/permissions/', async (req, res) =>{
-
+/** 
+ * @swagger
+ * /group/{id}/permissions/{id_permission}:
+ *  delete:
+ *    description: delete an existing permission
+ *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
+ *      - in: path
+ *        name: id
+ *        description: post id 
+ *        type: string
+ *      - in: path
+ *        name: id_permission
+ *        description: permission id 
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
+app.delete('/group/:id/permissions/:id_permission', async (req, res) =>{
+    await GroupUser.findOneAndDelete({id_post: req.params.id}, {_id: req.params.id_permission}, function(err, permissions){
+        if(err){
+            res.send("No se ha podido eliminar el permiso");
+        }else{
+            res.send("Eliminado correctamente");
+        }
+    });
 });
 
 app.post('/group/:id/subscribe', async (req, res) =>{
