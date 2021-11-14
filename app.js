@@ -773,6 +773,30 @@ app.post('/posts/:id/comments', async (req, res) =>{
     });
 });
 
+/** 
+ * @swagger
+ * /posts/{id}/comments/{id_comment}:
+ *  delete:
+ *    description: delete an existing comment
+ *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
+ *      - in: path
+ *        name: id
+ *        description: post id 
+ *        type: string
+ *      - in: path
+ *        name: id_comment
+ *        description: comment id 
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
 app.delete('/posts/:id/comments/:id_comment', async (req, res) =>{
     await Comments.findOneAndDelete({id_post: req.params.id}, {_id: req.params.id_comment}, function(err, comment){
         if(err){
