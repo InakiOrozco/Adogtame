@@ -686,6 +686,28 @@ GET /posts/:id/comments/:id
 DELETE /posts/:id/comments/:id
 */
 
+/** 
+ * @swagger
+ * /groups/{id}/permissions:
+ *  get:
+ *    description: return all the permissions of a group
+ *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
+ *      - in: path
+ *        name: id
+ *        description: group id 
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      204:
+ *        description: user doesn't exist in database
+ *      401:
+ *        description: invalid token or not recieved
+*/
 app.get('/group/:id/permissions', async (req, res) =>{
     res.send(await GroupUser.find({id_group: req.params.id}));
 });
