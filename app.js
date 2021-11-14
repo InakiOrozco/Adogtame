@@ -563,17 +563,18 @@ app.get('/groups/:id/posts', async (req, res) => {
  *        description: bad data request
 */
 app.post('/groups', async (req, res) => {
-    const exist = await Groups.findOne({ name: req.body.name });
-    if (!exist) {
-        Groups.create({
-            name: req.body.name,
-            description: req.body.description,
-        }).then((createdGroup) => {
-            res.send(createdGroup);
-        })
-    } else {
-        res.send("Group already exists");
-    }
+    await Groups.findOne({ name: req.body.name }, function (err, docs){
+        if(err){
+            Groups.create({
+                name: req.body.name,
+                description: req.body.description,
+            }).then((createdGroup) => {
+                res.send(createdGroup);
+            })
+        }else{
+            res.send("Group already exists");
+        }
+    });
 });
 
 /** 
