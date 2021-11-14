@@ -806,13 +806,3 @@ app.delete('/posts/:id/comments/:id_comment', async (req, res) =>{
         }
     });
 });
-
-/*
-Una vista general, en la que ves todos los posts de los grupos que eres parte, ordenados por fecha de creacion
-Puedes dar click y ver un grupo en concreto, si no estas subscrito, no puedes postear, hay un boton para subscribirte o dessubscribirte
-Vista del grupo, en el que muestra primero la informacion del grupo, luego todos los posts, con 3 comentarios maximo el post, si tiene mas se muestran en la vista del post
-Vista del post, esta muestra la informacion del post y todos los comentarios de este.
-Vista de usuario, puedes ver cualquier usuario, pero solo en tu usuario podras editar informacion.
-vista de creacion de grupo y de post
-*/
-
