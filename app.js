@@ -648,6 +648,25 @@ app.delete('/groups/:id', async (req, res) => {
     await Groups.findAndDelete({ _id: req.params.id })
 });
 
+/*
+GET /group/:id/permissions
+	Nos regresa los permisos del usuario logged en ese grupo
+POST /group/:id/permissions
+	body {userid, permissions}
+	Nos permite añadir permisos a un unsuario en el grupo, si el usuario logged tiene permisos para hacerlos
+DELETE /group/:id/permissions
+	Nos permite eliminar permisos a un usuario en el grupo, si el usuario logged tiene permisos para hacerlos
+
+POST /group/:id/subscribe
+	Añade a el usuario loggeado al grupo, con permisos basicos (groupuser collection)
+DELETE /group/:id/subscribe
+	Elimina al usuario loggeado del grupo (groupuser collection)
+
+GET /posts/:id/comments
+POST /posts/:id/comments
+GET /posts/:id/comments/:id
+DELETE /posts/:id/comments/:id
+*/
 
 app.get('/group/:id/permissions', async (req, res) =>{
 
@@ -657,7 +676,7 @@ app.post('/group/:id/permissions', async (req, res) =>{
 
 });
 
-app.delete('/group/:id/permissions', async (req, res) =>{
+app.delete('/group/:id/permissions/', async (req, res) =>{
 
 });
 
@@ -670,11 +689,11 @@ app.delete('/group/:id/subscribe', async (req, res) =>{
 });
 
 app.get('/posts/:id/comments', async (req, res) =>{
-
+    res.send(await Comments.find({id_post: req.params.id}))
 });
 
 app.post('/posts/:id/comments', async (req, res) =>{
-
+    
 });
 
 app.get('/posts/:id/comments/:id', async (req, res) =>{
@@ -684,3 +703,13 @@ app.get('/posts/:id/comments/:id', async (req, res) =>{
 app.delete('/posts/:id/comments/:id', async (req, res) =>{
 
 });
+
+/*
+Una vista general, en la que ves todos los posts de los grupos que eres parte, ordenados por fecha de creacion
+Puedes dar click y ver un grupo en concreto, si no estas subscrito, no puedes postear, hay un boton para subscribirte o dessubscribirte
+Vista del grupo, en el que muestra primero la informacion del grupo, luego todos los posts, con 3 comentarios maximo el post, si tiene mas se muestran en la vista del post
+Vista del post, esta muestra la informacion del post y todos los comentarios de este.
+Vista de usuario, puedes ver cualquier usuario, pero solo en tu usuario podras editar informacion.
+vista de creacion de grupo y de post
+*/
+
