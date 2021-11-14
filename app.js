@@ -706,6 +706,28 @@ app.delete('/group/:id/subscribe', async (req, res) =>{
 
 });
 
+/** 
+ * @swagger
+ * /posts/{id}/comments:
+ *  get:
+ *    description: return all the post of a specific group
+ *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
+ *      - in: path
+ *        name: id
+ *        description: post id 
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      204:
+ *        description: user doesn't exist in database
+ *      401:
+ *        description: invalid token or not recieved
+*/
 app.get('/posts/:id/comments', async (req, res) =>{
     res.send(await Comments.find({id_post: req.params.id}));
 });
