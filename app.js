@@ -787,12 +787,20 @@ app.delete('/group/:id/permissions/:id_permission', async (req, res) =>{
     });
 });
 
+//Pendiente
 app.post('/group/:id/subscribe', async (req, res) =>{
 
 });
 
+//Pendiente
 app.delete('/group/:id/subscribe', async (req, res) =>{
-
+    await UserSessions.findOneAndDelete({id_post: req.params.id}, {id_user: req.body.id_user}, function(err, comment){
+        if(err){
+            res.send("No se ha podido eliminar la sucripción");
+        }else{
+            res.send("Eliminado correctamente");
+        }
+    });
 });
 
 /** 
