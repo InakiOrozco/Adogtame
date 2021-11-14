@@ -519,7 +519,13 @@ app.get('/groups', async (req, res) => {
  *        description: invalid token or not recieved
 */
 app.get('/groups/:id', async (req, res) => {
-    res.send(await Groups.find({ _id: req.params.id }));
+    res.send(await Groups.find({ _id: req.params.id }, function(err, group){
+        if(err){
+            res.send("No existe ese grupo");
+        }else{
+            res.send(group);
+        }
+    }));
 });
 
 /** 
@@ -575,18 +581,17 @@ app.get('/groups/:id/posts', async (req, res) => {
  *        description: bad data request
 */
 app.post('/groups', async (req, res) => {
-    await Groups.findOne({ name: req.body.name }, function (err, docs){
-        if(err){
-            Groups.create({
-                name: req.body.name,
-                description: req.body.description,
-            }).then((createdGroup) => {
-                res.send(createdGroup);
-            })
-        }else{
-            res.send("Group already exists");
-        }
-    });
+    const exist = await Groups.findOne({ name: req.body.name });
+    if (!exist) {
+        Groups.create({
+            name: req.body.name,
+            description: req.body.description,
+        }).then((createdGroup) => {
+            res.send(createdGroup);
+        })
+    } else {
+        res.send("Group already exists");
+    }
 });
 
 /** 
