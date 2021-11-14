@@ -799,7 +799,7 @@ app.delete('/group/:id/subscribe', async (req, res) =>{
  * @swagger
  * /posts/{id}/comments:
  *  get:
- *    description: return all the post of a specific group
+ *    description: return all the comments
  *    parameters:
  *      - in: Header
  *        Bearer: token
