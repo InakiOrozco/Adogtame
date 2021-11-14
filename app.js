@@ -732,6 +732,31 @@ app.get('/posts/:id/comments', async (req, res) =>{
     res.send(await Comments.find({id_post: req.params.id}));
 });
 
+/** 
+ * @swagger
+ * /posts/{id}/comments:
+ *  post:
+ *    description: create group
+ *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
+ *      - in: body
+ *        name: params
+ *        description: user id, comment
+ *        type: object
+ *        properties:
+ *          id_user:
+ *            type: string
+ *          comment: 
+ *            type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
 app.post('/posts/:id/comments', async (req, res) =>{
     await Posts.findOne({ _id: req.params.id }, function(err, User){
         if(err){
