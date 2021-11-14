@@ -53,7 +53,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch((err) => console.log(err));
 // Schemas
 const Users = require('./src/models/Users');
-const UsersSessions = require('./src/models/UserSessions');
+const UserSessions = require('./src/models/UserSessions');
 const Groups = require('./src/models/Groups');
 const Posts = require('./src/models/Posts');
 const GroupUser = require('./src/models/GroupUser');
