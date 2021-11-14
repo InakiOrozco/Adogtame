@@ -707,19 +707,27 @@ app.delete('/group/:id/subscribe', async (req, res) =>{
 });
 
 app.get('/posts/:id/comments', async (req, res) =>{
-    res.send(await Comments.find({id_post: req.params.id}))
+    res.send(await Comments.find({id_post: req.params.id}));
 });
 
 app.post('/posts/:id/comments', async (req, res) =>{
-    
+    await Posts.findOne({ _id: req.params.id }, function(err, User){
+        if(err){
+            res.send("No existe ese post");
+        }else{
+            Comments.create({
+                id_post: req.params.id,
+                id_user: req.body.id_user,
+                comment: req.body.comment
+            }).then((createdComment) => {
+                res.send(createdComment);
+            })
+        }
+    });
 });
 
-app.get('/posts/:id/comments/:id', async (req, res) =>{
-
-});
-
-app.delete('/posts/:id/comments/:id', async (req, res) =>{
-
+app.delete('/posts/:id/comments/:id_comment', async (req, res) =>{
+    await Comments.delete({id_post: req.params.id_post} & {_id: req.params.id_comment});
 });
 
 /*
