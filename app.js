@@ -106,7 +106,13 @@ app.get('/users', async (req, res) => {
  *        description: invalid token or not recieved
 */
 app.get('/users/:id', async (req, res) => {
-    res.send(await Users.findOne({ _id: req.params.id }));
+    res.send(await Users.findOne({ _id: req.params.id }, function(err, User){
+        if(err){
+            res.send("No existe ese usuario");
+        }else{
+            res.send(User);
+        }
+    }));
 });
 
 
