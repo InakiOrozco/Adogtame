@@ -712,8 +712,45 @@ app.get('/group/:id/permissions', async (req, res) =>{
     res.send(await GroupUser.find({id_group: req.params.id}));
 });
 
+/** 
+ * @swagger
+ * /group/{id}/permissions:
+ *  post:
+ *    description: create a new permission on a group
+ *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
+ *      - in: body
+ *        name: params
+ *        description: user id
+ *        type: object
+ *        properties:
+ *          id_user:
+ *            type: string
+ *          permission: 
+ *            type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
 app.post('/group/:id/permissions', async (req, res) =>{
-
+    await GroupUser.findOne({ id_group: req.params.id }, function(err, User){
+        if(err){
+            res.send("No existe ese grupo");
+        }else{
+            GroupUser.create({
+                id_group: req.params.id,
+                id_user: req.body.id_user,
+                permission: req.body.id_user
+            }).then((createdComment) => {
+                res.send(createdComment);
+            })
+        }
+    });    
 });
 
 app.delete('/group/:id/permissions/', async (req, res) =>{
