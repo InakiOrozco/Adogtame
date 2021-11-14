@@ -687,7 +687,7 @@ DELETE /posts/:id/comments/:id
 */
 
 app.get('/group/:id/permissions', async (req, res) =>{
-
+    res.send(await GroupUser.find({id_group: req.params.id}));
 });
 
 app.post('/group/:id/permissions', async (req, res) =>{
