@@ -725,7 +725,7 @@ app.post('/groups/:id/permissions', async (req, res) =>{
             GroupUser.create({
                 id_group: req.params.id,
                 id_user: req.body.id_user,
-                permission: req.body.id_user
+                permission: true
             }).then((createdComment) => {
                 res.send(createdComment);
             })
