@@ -303,7 +303,6 @@ app.delete('/users/:id', async (req, res) => {
             }
         });
     } catch {
-        console.log("User doesnt exist in database");
     }
 });
 
