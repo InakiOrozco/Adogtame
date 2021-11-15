@@ -802,20 +802,19 @@ app.get('/groups/:id/permissions', async (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.post('/groups/:id/permissions', async (req, res) =>{
-    await GroupUser.findOne({ id_group: req.params.id }, function(err, User){
-        if(err){
-            res.send("No existe ese grupo");
-        }else{
-            GroupUser.create({
-                id_group: req.params.id,
-                id_user: req.body.id_user,
-                permission: true
-            }).then((createdComment) => {
-                res.send(createdComment);
-            })
-        }
-    });    
+app.post('/groups/:id/permissions/:id_user', async (req, res) =>{
+    const exist = await GroupUser.findOne({id_group: req.params.id }, {id_user: req.params.id_user});
+    if (!exist) {
+        GroupUser.create({
+            id_group: req.params.id,
+            id_user: req.body.id_user,
+            permissions: true
+        }).then((createdComment) => {
+            res.send(createdComment);
+        })
+    } else {
+        res.send("GroupUser already exists");
+    }
 });
 
 /** 
