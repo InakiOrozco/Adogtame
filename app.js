@@ -79,17 +79,17 @@ app.get('/', (req, res) => { res.send('Adogtame API') });
  *        description: invalid token
 */
 app.get('/users', async (req, res) => {
-    try{
-        await Users.find({}, function(err, User){
-            if(err || User==null){
-                res.status(204).json({error:'User doesnt exist in database'});
-            }else{
+    try {
+        await Users.find({}, function (err, User) {
+            if (err || User == null) {
+                res.status(204).json({ error: 'User doesnt exist in database' });
+            } else {
                 res.status(200).json(User);
             }
         });
     } catch {
     }
-    });
+});
 
 
 /** 
@@ -116,10 +116,10 @@ app.get('/users', async (req, res) => {
 */
 app.get('/users/:id', async (req, res) => {
     try {
-        await Users.findOne({ _id: req.params.id }, function(err, User){
-            if(err || User==null){
-                res.status(204).json({error:'User doesnt exist in database'});
-            }else{
+        await Users.findOne({ _id: req.params.id }, function (err, User) {
+            if (err || User == null) {
+                res.status(204).json({ error: 'User doesnt exist in database' });
+            } else {
                 res.status(200).json(User);
             }
         });
@@ -294,11 +294,11 @@ app.put('/users/:id', (req, res) => {
  *        description: bad data request
 */
 app.delete('/users/:id', async (req, res) => {
-    try{
-        await Users.findOneAndDelete({ _id: req.params.id }, function(err, User){
-            if(err || User==null){
-                res.status(204).json({error:'User doesnt exist in database'});
-            }else{
+    try {
+        await Users.findOneAndDelete({ _id: req.params.id }, function (err, User) {
+            if (err || User == null) {
+                res.status(204).json({ error: 'User doesnt exist in database' });
+            } else {
                 res.status(200).json(User);
             }
         });
@@ -327,11 +327,11 @@ app.delete('/users/:id', async (req, res) => {
 */
 
 app.get('/posts', async (req, res) => {
-    try{
-        await Posts.find({}, function(err, User){
-            if(err || User==null){
-                res.status(204).json({error:'Post doesnt exist in database'});
-            }else{
+    try {
+        await Posts.find({}, function (err, User) {
+            if (err || User == null) {
+                res.status(204).json({ error: 'Post doesnt exist in database' });
+            } else {
                 res.status(200).json(User);
             }
         });
@@ -363,11 +363,11 @@ app.get('/posts', async (req, res) => {
 */
 
 app.get('/posts/:id', async (req, res) => {
-    try{
-       await Posts.find({ _id: req.params.id }, function(err, Post){
-            if(err || Post==null){
-                res.status(204).json({error:'Post doesnt exist in database'});
-            }else{
+    try {
+        await Posts.find({ _id: req.params.id }, function (err, Post) {
+            if (err || Post == null) {
+                res.status(204).json({ error: 'Post doesnt exist in database' });
+            } else {
                 res.status(200).json(Post);
             }
         });
@@ -526,11 +526,11 @@ app.delete('/posts/:id', async (req, res) => {
 */
 
 app.get('/groups', async (req, res) => {
-    try{
-        await Groups.find({}, function(err, Group){
-            if(err || Group==null){
-                res.status(204).json({error:'Group doesnt exist in database'});
-            }else{
+    try {
+        await Groups.find({}, function (err, Group) {
+            if (err || Group == null) {
+                res.status(204).json({ error: 'Group doesnt exist in database' });
+            } else {
                 res.status(200).json(Group);
             }
         });
@@ -561,11 +561,11 @@ app.get('/groups', async (req, res) => {
  *        description: invalid token or not recieved
 */
 app.get('/groups/:id', async (req, res) => {
-    try{
-        await Groups.find({ _id: req.params.id }, function(err, Group){
-            if(err || Group==null){
-                res.status(204).json({error:'Group doesnt exist in database'});
-            }else{
+    try {
+        await Groups.find({ _id: req.params.id }, function (err, Group) {
+            if (err || Group == null) {
+                res.status(204).json({ error: 'Group doesnt exist in database' });
+            } else {
                 res.status(200).json(Group);
             }
         });
@@ -597,11 +597,11 @@ app.get('/groups/:id', async (req, res) => {
  *        description: invalid token or not recieved
 */
 app.get('/groups/:id/posts', async (req, res) => {
-    try{
-        await Posts.find({ id_group: req.params.id }, function(err, Group){
-            if(err || Group==null){
-                res.status(204).json({error:'Group doesnt exist in database'});
-            }else{
+    try {
+        await Posts.find({ id_group: req.params.id }, function (err, Group) {
+            if (err || Group == null) {
+                res.status(204).json({ error: 'Group doesnt exist in database' });
+            } else {
                 res.status(200).json(Group);
             }
         });
@@ -712,11 +712,11 @@ app.put('/groups/:id', (req, res) => {
 */
 
 app.delete('/groups/:id', async (req, res) => {
-    try{
-            await GroupUser.deleteMany({ id_group: req.params.id }, function(err, Group){
-            if(err || Group==null){
-                res.status(204).json({error:'Group doesnt exist in database'});
-            }else{
+    try {
+        await GroupUser.deleteMany({ id_group: req.params.id }, function (err, Group) {
+            if (err || Group == null) {
+                res.status(204).json({ error: 'Group doesnt exist in database' });
+            } else {
                 res.status(200).json(Group);
             }
         });
@@ -724,17 +724,17 @@ app.delete('/groups/:id', async (req, res) => {
         posts.forEach(async (element) => {
             await Comments.deleteMany({ id_post: element._id.str });
         });
-        await Posts.deleteMany({ id_group: req.params.id }, function(err, Post){
-            if(err || Post==null){
-                res.status(204).json({error:'Post doesnt exist in database'});
-            }else{
+        await Posts.deleteMany({ id_group: req.params.id }, function (err, Post) {
+            if (err || Post == null) {
+                res.status(204).json({ error: 'Post doesnt exist in database' });
+            } else {
                 res.status(200).json(Post);
             }
         });
-        await Groups.findByIdAndDelete({ _id: req.params.id }, function(err, Group){
-            if(err || Group==null){
-                res.status(204).json({error:'Group doesnt exist in database'});
-            }else{
+        await Groups.findByIdAndDelete({ _id: req.params.id }, function (err, Group) {
+            if (err || Group == null) {
+                res.status(204).json({ error: 'Group doesnt exist in database' });
+            } else {
                 res.status(200).json(Group);
             }
         });
@@ -764,12 +764,12 @@ app.delete('/groups/:id', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-app.get('/groups/:id/permissions', async (req, res) =>{
-    try{
-        await GroupUser.find({id_group: req.params.id}, function(err, Group){
-            if(err || Group==null){
-                res.status(204).json({error:'Group doesnt exist in database'});
-            }else{
+app.get('/groups/:id/permissions', async (req, res) => {
+    try {
+        await GroupUser.find({ id_group: req.params.id }, function (err, Group) {
+            if (err || Group == null) {
+                res.status(204).json({ error: 'Group doesnt exist in database' });
+            } else {
                 res.status(200).json(Group);
             }
         });
@@ -802,8 +802,8 @@ app.get('/groups/:id/permissions', async (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.post('/groups/:id/permissions/:id_user', async (req, res) =>{
-    const exist = await GroupUser.findOne({id_group: req.params.id }, {id_user: req.params.id_user});
+app.post('/groups/:id/permissions/:id_user', async (req, res) => {
+    const exist = await GroupUser.findOne({ id_group: req.params.id }, { id_user: req.params.id_user });
     if (!exist) {
         GroupUser.create({
             id_group: req.params.id,
@@ -841,12 +841,12 @@ app.post('/groups/:id/permissions/:id_user', async (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.delete('/groups/:id/permissions/:id_permission', async (req, res) =>{
-    try{
-        await GroupUser.findOneAndDelete({id_post: req.params.id}, {_id: req.params.id_permission}, function(err, comment){
-            if(err){
+app.delete('/groups/:id/permissions/:id_permission', async (req, res) => {
+    try {
+        await GroupUser.findOneAndDelete({ id_post: req.params.id }, { _id: req.params.id_permission }, function (err, comment) {
+            if (err) {
                 res.send("No se ha podido eliminar el permiso");
-            }else{
+            } else {
                 res.send("Eliminado correctamente");
             }
         });
@@ -879,8 +879,8 @@ app.delete('/groups/:id/permissions/:id_permission', async (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.post('/groups/:id/subscribe/:id_user', async (req, res) =>{
-    const exist = await GroupUser.findOne({id_group: req.params.id }, {id_user: req.params.id_user});
+app.post('/groups/:id/subscribe/:id_user', async (req, res) => {
+    const exist = await GroupUser.findOne({ id_group: req.params.id }, { id_user: req.params.id_user });
     if (!exist) {
         GroupUser.create({
             id_group: req.params.id,
@@ -918,12 +918,12 @@ app.post('/groups/:id/subscribe/:id_user', async (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.delete('/groups/:id/subscribe/:id_permission', async (req, res) =>{
-    try{
-        await GroupUser.findOneAndDelete({id_post: req.params.id}, {_id: req.params.id_permission}, function(err, comment){
-            if(err){
+app.delete('/groups/:id/subscribe/:id_permission', async (req, res) => {
+    try {
+        await GroupUser.findOneAndDelete({ id_post: req.params.id }, { _id: req.params.id_permission }, function (err, comment) {
+            if (err) {
                 res.send("No se ha podido eliminar el permiso");
-            }else{
+            } else {
                 res.send("Eliminado correctamente");
             }
         });
@@ -953,12 +953,12 @@ app.delete('/groups/:id/subscribe/:id_permission', async (req, res) =>{
  *      401:
  *        description: invalid token or not recieved
 */
-app.get('/posts/:id/comments', async (req, res) =>{
-    try{
-        await Comments.find({id_post: req.params.id}, function(err, Post){
-            if(err || Post==null){
-                res.status(204).json({error:'Group doesnt exist in database'});
-            }else{
+app.get('/posts/:id/comments', async (req, res) => {
+    try {
+        await Comments.find({ id_post: req.params.id }, function (err, Post) {
+            if (err || Post == null) {
+                res.status(204).json({ error: 'Group doesnt exist in database' });
+            } else {
                 res.status(200).json(Post);
             }
         });
@@ -991,11 +991,11 @@ app.get('/posts/:id/comments', async (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.post('/posts/:id/comments', async (req, res) =>{
-    await Posts.findOne({ _id: req.params.id }, function(err, User){
-        if(err){
+app.post('/posts/:id/comments', async (req, res) => {
+    await Posts.findOne({ _id: req.params.id }, function (err, User) {
+        if (err) {
             res.send("No existe ese post");
-        }else{
+        } else {
             Comments.create({
                 id_post: req.params.id,
                 id_user: req.body.id_user,
@@ -1031,12 +1031,12 @@ app.post('/posts/:id/comments', async (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.delete('/posts/:id/comments/:id_comment', async (req, res) =>{
-    try{
-        Comments.findOneAndDelete({id_post: req.params.id}, {_id: req.params.id_comment}, function(err, Group){
-            if(err || Group==null){
-                res.status(204).json({error:'Group doesnt exist in database'});
-            }else{
+app.delete('/posts/:id/comments/:id_comment', async (req, res) => {
+    try {
+        Comments.findOneAndDelete({ id_post: req.params.id }, { _id: req.params.id_comment }, function (err, Group) {
+            if (err || Group == null) {
+                res.status(204).json({ error: 'Group doesnt exist in database' });
+            } else {
                 res.status(200).json(Group);
             }
         });
