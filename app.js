@@ -193,7 +193,7 @@ app.get('/users/:id/posts', async (req, res) => {
  *        description: bad data request
 */
 app.post('/users', async (req, res) => {
-    const exist = await Users.findOne({ Email: req.body.email });
+    const exist = await Users.findOne({ email: req.body.email });
     if (!exist) {
         bcrypt.genSalt(10, function (err, salt) {
             bcrypt.hash(req.body.password, salt, function (err, hash) {
