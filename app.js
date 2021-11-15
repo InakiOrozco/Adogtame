@@ -808,9 +808,32 @@ app.post('/groups/:id/subscribe', async (req, res) =>{
     });    
 });
 
-//Pendiente
-app.delete('/group/:id/subscribe', async (req, res) =>{
-    await UserSessions.findOneAndDelete({id_post: req.params.id}, {id_user: req.body.id_user}, function(err, comment){
+/** 
+ * @swagger
+ * /groups/{id}/permissions/{id_permission}:
+ *  delete:
+ *    description: delete an existing permission
+ *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
+ *      - in: path
+ *        name: id
+ *        description: post id 
+ *        type: string
+ *      - in: path
+ *        name: id_permission
+ *        description: permission id 
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
+app.delete('/groups/:id/subscribe/:user_id', async (req, res) =>{
+    await GroupUser.findOneAndDelete({id_post: req.params.id}, {id_user: req.body.id_user}, function(err, comment){
         if(err){
             res.send("No se ha podido eliminar la sucripción");
         }else{
