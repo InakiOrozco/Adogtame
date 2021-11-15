@@ -779,7 +779,7 @@ app.get('/groups/:id/permissions', async (req, res) =>{
 
 /** 
  * @swagger
- * /groups/{id}/permissions:
+ * /groups/{id}/permissions/{id_user}:
  *  post:
  *    description: create a new permission on a group
  *    parameters:
