@@ -2,11 +2,13 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const router = express.Router();
-const bcrypt = require('bcrypt');
 //DB
-const { Db } = require('mongodb');
 const mongoose = require('mongoose');
 
+
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const auth = require('./src/middlewares/auth');
 
 require('dotenv').config();
 
@@ -77,19 +79,14 @@ app.get('/', (req, res) => { res.send('Adogtame API') });
  *      401:
  *        description: invalid token
 */
-app.get('/users', async (req, res) => {
+app.get('/users', auth, async (req, res) => {
     try {
-        await Users.find({}, function (err, User) {
-            if (err || User == null) {
-                res.status(204).json({ error: 'User doesnt exist in database' });
-            } else {
-                res.status(200).json(User);
-            }
-        });
-    } catch {
+        const users = await Users.find({});
+        res.json(users);
+    } catch (err) {
+        console.error(err);
     }
 });
-
 
 /** 
  * @swagger
@@ -107,25 +104,22 @@ app.get('/users', async (req, res) => {
  *        type: string
  *    responses:
  *      200:
- *        description: success response
- *      204:
- *        description: user doesn't exist in database
- *      401:
- *        description: invalid token or not recieved
+ *        description: Success response
+ *      400:
+ *        description: There is no user with this id
 */
-app.get('/users/:id', async (req, res) => {
+app.get('/users/:id', auth, async (req, res) => {
     try {
-        await Users.findOne({ _id: req.params.id }, function (err, User) {
-            if (err || User == null) {
-                res.status(204).json({ error: 'User doesnt exist in database' });
-            } else {
-                res.status(200).json(User);
-            }
-        });
-    } catch {
+        const user = await Users.findById(req.params.id);
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(400).json({ code: 400, error: "There is no user with this id" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
-
 
 /** 
  * @swagger
@@ -149,8 +143,13 @@ app.get('/users/:id', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-app.get('/users/:id/posts', async (req, res) => {
-    res.send(await Posts.find({ id_user: req.params.id }));
+app.get('/users/:id/posts', auth, async (req, res) => {
+    try {
+        const posts = await Posts.find({ id_user: req.params.id });
+        res.json(posts);
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 
@@ -192,30 +191,78 @@ app.get('/users/:id/posts', async (req, res) => {
  *        description: bad data request
 */
 app.post('/users', async (req, res) => {
-    const exist = await Users.findOne({ email: req.body.email });
-    if (!exist) {
-        bcrypt.genSalt(10, function (err, salt) {
-            bcrypt.hash(req.body.password, salt, function (err, hash) {
-                Users.create({
-                    email: req.body.email,
-                    password: req.body.password,
-                    name: req.body.name,
-                    last_name: req.body.last_name,
-                    date_birth: req.body.date_birth,
-                    tags: req.body.tags,
-                    phone_number: req.body.phone_number,
-                    profile_picture: req.body.profile_picture
-                }).then((createdUser) => {
-                    res.send(createdUser);
-                })
+    try {
+        const { name, email, password, last_name, date_birth, tags, phone_number, profile_picture } = req.body;
+        if (!(name && email && password)) {
+            res.status(400).json({ code: 400, error: "You need at least: name, email, and password" });
+        }
+        const userExist = await Users.findOne({ email });
+        if (userExist) {
+            res.status(409).json({ code: 400, error: "There is a username, with this email, try login in" });
+        } else {
+            const encryptedPassword = await bcrypt.hash(password, 10);
+            const newUser = await Users.create({
+                name,
+                email: email.toLowerCase(),
+                password: encryptedPassword,
+                last_name,
+                date_birth,
+                tags, phone_number,
+                profile_picture
             });
-        });
-    }
-    else {
-        res.send('Not valid data')
+
+            const token = await jwt.sign({
+                id: newUser._id, email
+            }, process.env.TOKEN_KEY);
+            newUser.token = token;
+            res.status(201).json(newUser);
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
+/** 
+ * @swagger
+ * /users/login:
+ *  post:
+ *    description: login
+ *    parameters:
+ *      - in: body
+ *        name: params
+ *        description: user email, user password
+ *        type: object
+ *        properties:
+ *          email:
+ *            type: string
+ *          password: 
+ *            type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
+app.post('/users/login', (req, res) => {
+    try {
+        const { email, password } = req.body
+        if (!(email && password)) {
+            res.status(400).send("Missing body parameters");
+        }
+        const checkUser = await Users.findOne({ email });
+        if (checkUser && (await bcrypt.compare(password, checkUser.password))) {
+            const token = jwt.sign({
+                id: checkUser._id, email
+            }, process.env.TOKEN_KEY);
+            checkUser.token = token;
+            res.status(200).json(checkUser);
+        } else {
+            res.status(400).send("Bad credentials");
+        }
+    } catch (err) {
+        console.log(err);
+    }
+});
 
 /** 
  * @swagger
@@ -259,16 +306,22 @@ app.post('/users', async (req, res) => {
  *        description: bad data request
 */
 
-app.put('/users/:id', (req, res) => {
-    Users.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true },
-        (err, userUpdated) => {
-            if (err) return res.status(400).send(err);
-            return res.send(userUpdated);
+app.put('/users/:id', auth, async (req, res) => {
+    try {
+        const userExist = await Users.findById(req.params.id);
+        if (userExist) {
+            if (userExist._id === req.user.id) {
+                const updatedUser = await Users.findByIdAndUpdate(req.params.id);
+                res.json(updatedUser);
+            } else {
+                res.status(403).json({ code: 403, error: "You dont have permisions to update this user" });
+            }
+        } else {
+            res.status(400).json({ code: 400, error: "This user doesnt exist" });
         }
-    )
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 
@@ -292,16 +345,21 @@ app.put('/users/:id', (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.delete('/users/:id', async (req, res) => {
+app.delete('/users/:id', auth, async (req, res) => {
     try {
-        await Users.findOneAndDelete({ _id: req.params.id }, function (err, User) {
-            if (err || User == null) {
-                res.status(204).json({ error: 'User doesnt exist in database' });
+        const userExist = await Users.findById(req.params.id);
+        if (userExist) {
+            if (userExist._id === req.user.id) {
+                const deletedUser = await Users.findByIdAndDelete(req.params.id);
+                res.json(deletedUser);
             } else {
-                res.status(200).json(User);
+                res.status(403).json({ code: 403, error: "You dont have permisions to delete this user" });
             }
-        });
-    } catch {
+        } else {
+            res.status(400).json({ code: 400, error: "This user doesnt exist" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -325,16 +383,12 @@ app.delete('/users/:id', async (req, res) => {
  *        description: bad data request
 */
 
-app.get('/posts', async (req, res) => {
+app.get('/posts', auth, async (req, res) => {
     try {
-        await Posts.find({}, function (err, User) {
-            if (err || User == null) {
-                res.status(204).json({ error: 'Post doesnt exist in database' });
-            } else {
-                res.status(200).json(User);
-            }
-        });
-    } catch {
+        const posts = await Posts.find({});
+        res.json(posts);
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -361,16 +415,16 @@ app.get('/posts', async (req, res) => {
  *        description: invalid token or not recieved
 */
 
-app.get('/posts/:id', async (req, res) => {
+app.get('/posts/:id', auth, async (req, res) => {
     try {
-        await Posts.find({ _id: req.params.id }, function (err, Post) {
-            if (err || Post == null) {
-                res.status(204).json({ error: 'Post doesnt exist in database' });
-            } else {
-                res.status(200).json(Post);
-            }
-        });
-    } catch {
+        const post = await Posts.findById(req.params.id);
+        if (post) {
+            res.json(post);
+        } else {
+            res.status(400).json({ code: 400, err: "Wrong post id" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -389,8 +443,6 @@ app.get('/posts/:id', async (req, res) => {
  *        description: user id, group id, post title, post information, post photo, post location, post contact info, post pet type
  *        type: object
  *        properties:
- *          id_user:
- *            type: string
  *          id_group: 
  *            type: string
  *          title: 
@@ -411,20 +463,31 @@ app.get('/posts/:id', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.post('/posts', async (req, res) => {
-    Posts.create({
-        id_user: req.body.id_user,
-        id_group: req.body.id_group,
-        title: req.body.title,
-        information: req.body.information,
-        photo: req.body.photo,
-        location: req.body.location,
-        contact_info: req.body.contact_info,
-        pet_type: req.body.pet_type,
-        resolved: false
-    }).then((createdPost) => {
-        res.send(createdPost);
-    })
+app.post('/posts', auth, async (req, res) => {
+    try {
+        const isPartOfGroup = await GroupUser.findOne({ req.body.id_group, id_user: req.user.id });
+        if (isPartOfGroup) {
+            const { id_group, title, information, photo, location, contact_info, pet_type } = req.body;
+            if (!(id_group && title && information && photo && location && contact_info && pet_type)) {
+                res.status(400).json({ code: 400, err: "you need at least: id_group, title, information, photo, location, contact_info, pet_type " });
+            } else {
+                const createdPost = await Posts.create({
+                    id_user: req.user.id,
+                    id_group,
+                    title,
+                    information,
+                    photo,
+                    location,
+                    contact_info,
+                    pet_type,
+                    resolved: false
+                });
+                res.json(createdPost);
+            }
+        }
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 /** 
@@ -468,16 +531,22 @@ app.post('/posts', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.put('/posts/:id', (req, res) => {
-    Posts.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true },
-        (err, updatedPost) => {
-            if (err) return res.status(500).send(err);
-            return res.send(updatedPost);
+app.put('/posts/:id', auth, async (req, res) => {
+    try {
+        const post = Posts.findById(req.params.id);
+        if (post) {
+            if (post.id_user === req.user.id) {
+                const updatedPost = Posts.findByIdAndUpdate(req.params.id, req.body);
+                res.json(updatedPost);
+            } else {
+                res.status(403).json({ code: 403, err: "You dont have permissions to do this" });
+            }
+        } else {
+            res.status(400).json({ code: 400, err: "Post no exist" });
         }
-    )
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 /** 
@@ -501,10 +570,23 @@ app.put('/posts/:id', (req, res) => {
  *        description: bad data request
 */
 
-app.delete('/posts/:id', async (req, res) => {
-    await Comments.deleteMany({ id_post: req.params.id });
-    await Posts.findOneAndDelete({ _id: req.params.id });
-    res.send('Deleted')
+app.delete('/posts/:id', auth, async (req, res) => {
+    try {
+        const post = Posts.findById(req.params.id);
+        if (post) {
+            if (post.id_user === req.user.id) {
+                await Comments.deleteMany({ id_post: req.params.id });
+                await Posts.findByIdAndDelete(req.params.id);
+                res.json({ mesage: "Post deleted" });
+            } else {
+                res.status(403).json({ code: 403, err: "You dont have permissions to do this" });
+            }
+        } else {
+            res.status(400).json({ code: 400, err: "Post no exist" });
+        }
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 /** 
@@ -524,16 +606,12 @@ app.delete('/posts/:id', async (req, res) => {
  *        description: invalid token
 */
 
-app.get('/groups', async (req, res) => {
+app.get('/groups', auth, async (req, res) => {
     try {
-        await Groups.find({}, function (err, Group) {
-            if (err || Group == null) {
-                res.status(204).json({ error: 'Group doesnt exist in database' });
-            } else {
-                res.status(200).json(Group);
-            }
-        });
-    } catch {
+        const groups = await Groups.find({});
+        res.json(groups);
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -559,16 +637,16 @@ app.get('/groups', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-app.get('/groups/:id', async (req, res) => {
+app.get('/groups/:id', auth, async (req, res) => {
     try {
-        await Groups.find({ _id: req.params.id }, function (err, Group) {
-            if (err || Group == null) {
-                res.status(204).json({ error: 'Group doesnt exist in database' });
-            } else {
-                res.status(200).json(Group);
-            }
-        });
-    } catch {
+        const group = await Groups.findById(req.params.id);
+        if (group) {
+            res.json(group);
+        } else {
+            res.status(400).json({ code: 400, err: "Wrong group id" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -595,16 +673,17 @@ app.get('/groups/:id', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-app.get('/groups/:id/posts', async (req, res) => {
+app.get('/groups/:id/posts', auth, async (req, res) => {
     try {
-        await Posts.find({ id_group: req.params.id }, function (err, Group) {
-            if (err || Group == null) {
-                res.status(204).json({ error: 'Group doesnt exist in database' });
-            } else {
-                res.status(200).json(Group);
-            }
-        });
-    } catch {
+        const isPartOfGroup = await GroupUser.findOne({ id_group: req.params.id, id_user: req.user.id });
+        if (isPartOfGroup) {
+            const posts = await Posts.find({ id_group: req.params.id });
+            res.json(posts);
+        } else {
+            res.status(403).json({ code: 403, err: "You cant see this groups posts" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -634,17 +713,31 @@ app.get('/groups/:id/posts', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.post('/groups', async (req, res) => {
-    const exist = await Groups.findOne({ name: req.body.name });
-    if (!exist) {
-        Groups.create({
-            name: req.body.name,
-            description: req.body.description,
-        }).then((createdGroup) => {
-            res.send(createdGroup);
-        })
-    } else {
-        res.send("Group already exists");
+app.post('/groups', auth, async (req, res) => {
+    try {
+        const { name, description } = req.body;
+        if (name && description) {
+            const exist = await Groups.findOne({ name: req.body.name });
+            if (!exist) {
+                const newGroup = await Groups.create({
+                    name,
+                    description,
+                    created_by: req.user.id
+                });
+                const newGroupUser = GroupUser.create({
+                    id_group: newGroup._id,
+                    id_user: req.user.id,
+                    permissions: "admin"
+                });
+                res.json({ newGroup, newGroupUser });
+            } else {
+                res.status(400).json({ code: 400, err: "Group already exists" });
+            }
+        } else {
+            res.status(400).json({ code: 400, err: "you need atleast name, and description" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -677,16 +770,23 @@ app.post('/groups', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.put('/groups/:id', (req, res) => {
-    Groups.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true },
-        (err, updatedGroup) => {
-            if (err) return res.status(500).send(err);
-            return res.send(updatedGroup);
+app.put('/groups/:id', auth, async (req, res) => {
+    try {
+        const group = await Groups.findById(req.params.id);
+        if (group) {
+            const permissions = await GroupUser.findOne({ id_group: req.params.id, id_user: req.user.id });
+            if (permissions && (permissions.permissions === "admin")) {
+                const updatedGroup = await Group.findByIdAndUpdate(req.params.id, req.body);
+                res.json(updatedGroup);
+            } else {
+                res.status(403).json({ code: 403, err: "You cant edit this group" });
+            }
+        } else {
+            res.status(400).json({ code: 400, err: "Group not existing" });
         }
-    )
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 /** 
@@ -710,34 +810,28 @@ app.put('/groups/:id', (req, res) => {
  *        description: bad data request
 */
 
-app.delete('/groups/:id', async (req, res) => {
+app.delete('/groups/:id', auth, async (req, res) => {
     try {
-        await GroupUser.deleteMany({ id_group: req.params.id }, function (err, Group) {
-            if (err || Group == null) {
-                res.status(204).json({ error: 'Group doesnt exist in database' });
+        const group = await Groups.findById(req.params.id);
+        if (group) {
+            const permissions = await GroupUser.findOne({ id_group: req.params.id, id_user: req.user.id });
+            if (permissions && (permissions.permissions === "admin")) {
+                await GroupUser.deleteMany({ id_group: req.params.id });
+                const posts = await Posts.find({ id_group: req.params.id });
+                posts.forEach(async (post) => {
+                    await Comments.deleteMany({ id_post: post._id });
+                });
+                await Posts.deleteMany({ id_group: req.params.id });
+                await Groups.findByIdAndDelete(req.params.id);
+                res.json({ message: "Group deleted" });
             } else {
-                res.status(200).json(Group);
+                res.status(403).json({ code: 403, err: "You dont have permisions to do this" });
             }
-        });
-        const posts = await Posts.find({ id_group: req.params.id });
-        posts.forEach(async (element) => {
-            await Comments.deleteMany({ id_post: element._id.str });
-        });
-        await Posts.deleteMany({ id_group: req.params.id }, function (err, Post) {
-            if (err || Post == null) {
-                res.status(204).json({ error: 'Post doesnt exist in database' });
-            } else {
-                res.status(200).json(Post);
-            }
-        });
-        await Groups.findByIdAndDelete({ _id: req.params.id }, function (err, Group) {
-            if (err || Group == null) {
-                res.status(204).json({ error: 'Group doesnt exist in database' });
-            } else {
-                res.status(200).json(Group);
-            }
-        });
-    } catch {
+        } else {
+            res.status(400).json({ code: 400, err: "Wrong group id" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -763,16 +857,16 @@ app.delete('/groups/:id', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-app.get('/groups/:id/permissions', async (req, res) => {
+app.get('/groups/:id/permissions', auth, async (req, res) => {
     try {
-        await GroupUser.find({ id_group: req.params.id }, function (err, Group) {
-            if (err || Group == null) {
-                res.status(204).json({ error: 'Group doesnt exist in database' });
-            } else {
-                res.status(200).json(Group);
-            }
-        });
-    } catch {
+        const permissions = await GroupUser.findOne({ id_group: req.params.id, id_user: req.user.id });
+        if (permissions) {
+            res.json(permissions);
+        } else {
+            res.status(403).json({ code: 403, id_group: req.params.id, id_user: req.user.id, permissions: "none" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -791,8 +885,6 @@ app.get('/groups/:id/permissions', async (req, res) => {
  *        description: user id
  *        type: object
  *        properties:
- *          id_user:
- *            type: string
  *          permission: 
  *            type: string
  *    responses:
@@ -801,18 +893,40 @@ app.get('/groups/:id/permissions', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.post('/groups/:id/permissions/:id_user', async (req, res) => {
-    const exist = await GroupUser.findOne({ id_group: req.params.id }, { id_user: req.params.id_user });
-    if (!exist) {
-        GroupUser.create({
-            id_group: req.params.id,
-            id_user: req.body.id_user,
-            permissions: true
-        }).then((createdComment) => {
-            res.send(createdComment);
-        })
-    } else {
-        res.send("GroupUser already exists");
+app.post('/groups/:id/permissions/:id_user', auth, async (req, res) => {
+    try {
+        const group = await Groups.findById(req.params.id);
+        if (group) {
+
+            const permissions = await GroupUser.findOne({ id_group: req.params.id, id_user: req.user.id });
+            if (permissions && (permissions.permissions === "admin")) {
+                const { permission } = req.body;
+                if (permission && (permission === "user" || permission === "admin")) {
+                    const exist = await GroupUser.findOne({ id_group: req.params.id, id_user: req.params.id_user });
+                    if (!exist) {
+                        const newGroupUser = await GroupUser.create({
+                            id_group: req.params.id,
+                            id_user: req.paramas.id_user,
+                            permissions: permission
+                        });
+                        res.json(newGroupUser);
+                    } else {
+                        const updatedGroupUser = await GroupUser.findOneAndUpdate({ id_group: req.params.id, id_user: req.params.id_user }, {
+                            permissions: permission
+                        });
+                        res.json(updatedGroupUser);
+                    }
+                } else {
+                    res.status(400).json({ code: 403, err: "You must send a permission" });
+                }
+            } else {
+                res.status(403).json({ code: 403, err: "You cant change this" });
+            }
+        } else {
+            res.status(400).json({ code: 400, err: "Wrong Group id" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -840,16 +954,27 @@ app.post('/groups/:id/permissions/:id_user', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.delete('/groups/:id/permissions/:id_permission', async (req, res) => {
+app.delete('/groups/:id/permissions/:id_permission', auth, async (req, res) => {
     try {
-        await GroupUser.findOneAndDelete({ id_post: req.params.id }, { _id: req.params.id_permission }, function (err, comment) {
-            if (err) {
-                res.send("No se ha podido eliminar el permiso");
+        const group = await Groups.findById(req.params.id);
+        if (group) {
+            const permissions = await GroupUser.findOne({ id_group: req.params.id, id_user: req.user.id });
+            if (permissions && (permissions.permissions === "admin")) {
+                const exist = await GroupUser.findById(req.params.id_permission);
+                if (exist) {
+                    const deletedGroupUser = await GroupUser.findByIdAndDelete(req.params.id_permission);
+                    res.json(deletedGroupUser);
+                } else {
+                    res.status(400).json({ code: 403, err: "This permission doesnt exist" });
+                }
             } else {
-                res.send("Eliminado correctamente");
+                res.status(403).json({ code: 403, err: "You cant change this" });
             }
-        });
-    } catch {
+        } else {
+            res.status(400).json({ code: 400, err: "Wrong Group id" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -878,18 +1003,26 @@ app.delete('/groups/:id/permissions/:id_permission', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.post('/groups/:id/subscribe/:id_user', async (req, res) => {
-    const exist = await GroupUser.findOne({ id_group: req.params.id }, { id_user: req.params.id_user });
-    if (!exist) {
-        GroupUser.create({
-            id_group: req.params.id,
-            id_user: req.body.id_user,
-            permissions: false
-        }).then((createdComment) => {
-            res.send(createdComment);
-        })
-    } else {
-        res.send("GroupUser already exists");
+app.post('/groups/:id/subscribe', auth, async (req, res) => {
+    try {
+        const group = await Groups.findById(req.params.id);
+        if (group) {
+            const exist = await GroupUser.findOne({ id_group: req.params.id, id_user: req.params.id_user });
+            if (!exist) {
+                const newGroupUser = await GroupUser.create({
+                    id_group: req.params.id,
+                    id_user: req.paramas.id_user,
+                    permissions: "user"
+                });
+                res.json(newGroupUser);
+            } else {
+                res.json(exist);
+            }
+        } else {
+            res.status(400).json({ code: 400, err: "Wrong Group id" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -917,16 +1050,23 @@ app.post('/groups/:id/subscribe/:id_user', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.delete('/groups/:id/subscribe/:id_permission', async (req, res) => {
+app.delete('/groups/:id/subscribe/', auth, async (req, res) => {
     try {
-        await GroupUser.findOneAndDelete({ id_post: req.params.id }, { _id: req.params.id_permission }, function (err, comment) {
-            if (err) {
-                res.send("No se ha podido eliminar el permiso");
-            } else {
-                res.send("Eliminado correctamente");
+        const group = await Groups.findById(req.params.id);
+        if (group) {
+            const exist = await GroupUser.findOne({ id_group: req.params.id, id_user: req.params.id_user });
+            if (exist) {
+                const deletedGrupUser = await GroupUser.findOneAndDelete({
+                    id_group: req.params.id,
+                    id_user: req.paramas.id_user
+                });
             }
-        });
-    } catch {
+            res.json({ message: "Unsubscribed" });
+        } else {
+            res.status(400).json({ code: 400, err: "Wrong Group id" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
 
@@ -952,16 +1092,22 @@ app.delete('/groups/:id/subscribe/:id_permission', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-app.get('/posts/:id/comments', async (req, res) => {
+app.get('/posts/:id/comments', auth, async (req, res) => {
     try {
-        await Comments.find({ id_post: req.params.id }, function (err, Post) {
-            if (err || Post == null) {
-                res.status(204).json({ error: 'Group doesnt exist in database' });
+        const post = await Posts.findById(req.params.id);
+        if (post) {
+            const isPartOfGroup = await GroupUser.findOne({ id_group: post.id_group, id_user: req.user.id });
+            if (isPartOfGroup) {
+                const comments = await Comments.find({ id_group: post.id_group });
+                res.json(comments);
             } else {
-                res.status(200).json(Post);
+                res.status(403).json({ code: 403, err: "You cant see this post comments" });
             }
-        });
-    } catch {
+        } else {
+            res.
+        }
+    } catch (err) {
+        res.status(400).json({ code: 400, err: "Wrong post id" });
     }
 });
 
@@ -990,20 +1136,32 @@ app.get('/posts/:id/comments', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.post('/posts/:id/comments', async (req, res) => {
-    await Posts.findOne({ _id: req.params.id }, function (err, User) {
-        if (err) {
-            res.send("No existe ese post");
+app.post('/posts/:id/comments', auth, async (req, res) => {
+    try {
+        const post = await Posts.findById(req.params.id);
+        if (post) {
+            const { comment } = req.body;
+            if (comment) {
+                const isPartOfGroup = await GroupUser.findOne({ id_group: post.id_group, id_user: req.user.id });
+                if (isPartOfGroup) {
+                    const newComment = await Comments.create({
+                        id_group: post.id_group,
+                        id_user: req.user.id,
+                        comment
+                    });
+                    res.json(newComment);
+                } else {
+                    res.status(403).json({ code: 403, err: "You cant see this post comments" });
+                }
+            } else {
+                res.status(400).json({ code: 400, err: "You must send a comment" });
+            }
         } else {
-            Comments.create({
-                id_post: req.params.id,
-                id_user: req.body.id_user,
-                comment: req.body.comment
-            }).then((createdComment) => {
-                res.send(createdComment);
-            })
+            res.status(400).json({ code: 400, err: "Wrong post id" });
         }
-    });
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 /** 
@@ -1032,13 +1190,28 @@ app.post('/posts/:id/comments', async (req, res) => {
 */
 app.delete('/posts/:id/comments/:id_comment', async (req, res) => {
     try {
-        Comments.findOneAndDelete({ id_post: req.params.id }, { _id: req.params.id_comment }, function (err, Group) {
-            if (err || Group == null) {
-                res.status(204).json({ error: 'Group doesnt exist in database' });
+        const post = await Posts.findById(req.params.id);
+        if (post) {
+            const isPartOfGroup = await GroupUser.findOne({ id_group: post.id_group, id_user: req.user.id });
+            if (isPartOfGroup) {
+                const comment = await Comments.findById(req.paramas.id_comment);
+                if (comment) {
+                    if (isPartOfGroup.permission === "admin" || comment.id_user === req.user.id) {
+                        const deletedComment = await Comment.findByIdAndDelete(req.paramas.id_comment);
+                        res.json({ message: "Comment deleted" });
+                    } else {
+                        res.status(403).json({ code: 403, err: "You cant delete this comment" });
+                    }
+                } else {
+                    res.status(400).json({ code: 400, err: "Wrong comment id" });
+                }
             } else {
-                res.status(200).json(Group);
+                res.status(403).json({ code: 403, err: "You cant access this posts comments" });
             }
-        });
-    } catch {
+        } else {
+            res.status(400).json({ code: 400, err: "Wrong post id" });
+        }
+    } catch (err) {
+        console.error(err);
     }
 });
