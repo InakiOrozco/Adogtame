@@ -330,7 +330,7 @@ app.get('/posts', async (req, res) => {
     try{
         await Posts.find({}, function(err, User){
             if(err || User==null){
-                res.status(204).json({error:'User doesnt exist in database'});
+                res.status(204).json({error:'Post doesnt exist in database'});
             }else{
                 res.status(200).json(User);
             }
@@ -366,7 +366,7 @@ app.get('/posts/:id', async (req, res) => {
     try{
        await Posts.find({ _id: req.params.id }, function(err, Post){
             if(err || Post==null){
-                res.status(204).json({error:'User doesnt exist in database'});
+                res.status(204).json({error:'Post doesnt exist in database'});
             }else{
                 res.status(200).json(Post);
             }
@@ -564,13 +564,12 @@ app.get('/groups/:id', async (req, res) => {
     try{
         await Groups.find({ _id: req.params.id }, function(err, Group){
             if(err || Group==null){
-                res.status(204).json({error:'User doesnt exist in database'});
+                res.status(204).json({error:'Group doesnt exist in database'});
             }else{
                 res.status(200).json(Group);
             }
         });
     } catch {
-        console.log("User doesnt exist in database");
     }
 });
 
