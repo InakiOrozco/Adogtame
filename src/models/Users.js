@@ -9,7 +9,8 @@ const user_schema = new Schema({
     date_birth: Date,
     tags: String,
     phone_number: String,
-    profile_picture: String
+    profile_picture: String,
+    token: String
 }, { timestamps: true });
 
 const user = mongoose.model('Users', user_schema);

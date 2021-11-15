@@ -243,7 +243,7 @@ app.post('/users', async (req, res) => {
  *      400:
  *        description: bad data request
 */
-app.post('/users/login', (req, res) => {
+app.post('/users/login', async (req, res) => {
     try {
         const { email, password } = req.body
         if (!(email && password)) {
@@ -349,7 +349,7 @@ app.delete('/users/:id', auth, async (req, res) => {
     try {
         const userExist = await Users.findById(req.params.id);
         if (userExist) {
-            if (userExist._id === req.user.id) {
+            if (userExist._id.toString() === req.user.id) {
                 const deletedUser = await Users.findByIdAndDelete(req.params.id);
                 res.json(deletedUser);
             } else {
@@ -465,7 +465,7 @@ app.get('/posts/:id', auth, async (req, res) => {
 */
 app.post('/posts', auth, async (req, res) => {
     try {
-        const isPartOfGroup = await GroupUser.findOne({ req.body.id_group, id_user: req.user.id });
+        const isPartOfGroup = await GroupUser.findOne({ id_group: req.body.id_group, id_user: req.user.id });
         if (isPartOfGroup) {
             const { id_group, title, information, photo, location, contact_info, pet_type } = req.body;
             if (!(id_group && title && information && photo && location && contact_info && pet_type)) {
@@ -639,11 +639,16 @@ app.get('/groups', auth, async (req, res) => {
 */
 app.get('/groups/:id', auth, async (req, res) => {
     try {
-        const group = await Groups.findById(req.params.id);
-        if (group) {
-            res.json(group);
+        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+
+            const group = await Groups.findById(req.params.id);
+            if (group) {
+                res.json(group);
+            } else {
+                res.status(400).json({ code: 400, err: "Wrong group id" });
+            }
         } else {
-            res.status(400).json({ code: 400, err: "Wrong group id" });
+            res.status(400).json({ code: 400, err: "A valid group id needed" });
         }
     } catch (err) {
         console.error(err);
@@ -772,17 +777,27 @@ app.post('/groups', auth, async (req, res) => {
 */
 app.put('/groups/:id', auth, async (req, res) => {
     try {
-        const group = await Groups.findById(req.params.id);
-        if (group) {
-            const permissions = await GroupUser.findOne({ id_group: req.params.id, id_user: req.user.id });
-            if (permissions && (permissions.permissions === "admin")) {
-                const updatedGroup = await Group.findByIdAndUpdate(req.params.id, req.body);
-                res.json(updatedGroup);
+        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+
+            const group = await Groups.findById(req.params.id);
+            if (group) {
+                const permissions = await GroupUser.findOne({ id_group: req.params.id, id_user: req.user.id });
+                if (permissions && (permissions.permissions === "admin")) {
+                    Groups.findByIdAndUpdate(req.params.id, req.body, (err, doc) => {
+                        if (!err) {
+                            res.json(doc);
+                        } else {
+                            res.status(400).json({ code: 400, err: "Error processing request" });
+                        }
+                    });
+                } else {
+                    res.status(403).json({ code: 403, err: "You cant edit this group" });
+                }
             } else {
-                res.status(403).json({ code: 403, err: "You cant edit this group" });
+                res.status(400).json({ code: 400, err: "Group not existing" });
             }
         } else {
-            res.status(400).json({ code: 400, err: "Group not existing" });
+            res.status(400).json({ code: 400, err: "A valid group id is needed" });
         }
     } catch (err) {
         console.error(err);
@@ -1011,7 +1026,7 @@ app.post('/groups/:id/subscribe', auth, async (req, res) => {
             if (!exist) {
                 const newGroupUser = await GroupUser.create({
                     id_group: req.params.id,
-                    id_user: req.paramas.id_user,
+                    id_user: req.user.id,
                     permissions: "user"
                 });
                 res.json(newGroupUser);
@@ -1104,10 +1119,10 @@ app.get('/posts/:id/comments', auth, async (req, res) => {
                 res.status(403).json({ code: 403, err: "You cant see this post comments" });
             }
         } else {
-            res.
+            res.status(400).json({ code: 400, err: "Wrong post id" });
         }
     } catch (err) {
-        res.status(400).json({ code: 400, err: "Wrong post id" });
+        console.err(err);
     }
 });
 
