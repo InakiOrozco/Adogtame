@@ -832,8 +832,8 @@ app.post('/groups/:id/subscribe', async (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.delete('/groups/:id/subscribe/:user_id', async (req, res) =>{
-    await GroupUser.findOneAndDelete({id_post: req.params.id}, {id_user: req.body.id_user}, function(err, comment){
+app.delete('/groups/:id/subscribe/:id_permission', async (req, res) =>{
+    await GroupUser.findOneAndDelete({id_post: req.params.id}, {_id: req.body.id_permission}, function(err, comment){
         if(err){
             res.send("No se ha podido eliminar la sucripción");
         }else{
