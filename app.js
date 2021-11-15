@@ -819,7 +819,7 @@ app.post('/groups/:id/permissions/:id_user', async (req, res) =>{
 
 /** 
  * @swagger
- * /groups/{id}/permissions/{id_permission}:
+ * /groups/{id}/permissions/{id_user}:
  *  delete:
  *    description: delete an existing permission
  *    parameters:
@@ -842,13 +842,16 @@ app.post('/groups/:id/permissions/:id_user', async (req, res) =>{
  *        description: bad data request
 */
 app.delete('/groups/:id/permissions/:id_permission', async (req, res) =>{
-    await GroupUser.findOneAndDelete({id_post: req.params.id}, {_id: req.params.id_permission}, function(err, permissions){
-        if(err){
-            res.send("No se ha podido eliminar el permiso");
-        }else{
-            res.send("Eliminado correctamente");
-        }
-    });
+    try{
+        await GroupUser.findOneAndDelete({id_post: req.params.id}, {_id: req.params.id_permission}, function(err, comment){
+            if(err){
+                res.send("No se ha podido eliminar el permiso");
+            }else{
+                res.send("Eliminado correctamente");
+            }
+        });
+    } catch {
+    }
 });
 
 /** 
