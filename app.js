@@ -694,7 +694,7 @@ app.get('/groups/:id/permissions', async (req, res) =>{
 
 /** 
  * @swagger
- * /group/{id}/permissions:
+ * /groups/{id}/permissions:
  *  post:
  *    description: create a new permission on a group
  *    parameters:
@@ -717,7 +717,7 @@ app.get('/groups/:id/permissions', async (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.post('/group/:id/permissions', async (req, res) =>{
+app.post('/groups/:id/permissions', async (req, res) =>{
     await GroupUser.findOne({ id_group: req.params.id }, function(err, User){
         if(err){
             res.send("No existe ese grupo");
