@@ -688,7 +688,7 @@ app.delete('/groups/:id', async (req, res) => {
  *      401:
  *        description: invalid token or not recieved
 */
-app.get('/group/:id/permissions', async (req, res) =>{
+app.get('/groups/:id/permissions', async (req, res) =>{
     res.send(await GroupUser.find({id_group: req.params.id}));
 });
 
