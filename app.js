@@ -712,13 +712,34 @@ app.put('/groups/:id', (req, res) => {
 */
 
 app.delete('/groups/:id', async (req, res) => {
-    await GroupUser.deleteMany({ id_group: req.params.id });
-    const posts = await Posts.find({ id_group: req.params.id });
-    posts.forEach(async (element) => {
-        await Comments.deleteMany({ id_post: element._id.str });
-    });
-    await Posts.deleteMany({ id_group: req.params.id });
-    await Groups.findAndDelete({ _id: req.params.id })
+    try{
+            await GroupUser.deleteMany({ id_group: req.params.id }, function(err, Group){
+            if(err || Group==null){
+                res.status(204).json({error:'Group doesnt exist in database'});
+            }else{
+                res.status(200).json(Group);
+            }
+        });
+        const posts = await Posts.find({ id_group: req.params.id });
+        posts.forEach(async (element) => {
+            await Comments.deleteMany({ id_post: element._id.str });
+        });
+        await Posts.deleteMany({ id_group: req.params.id }, function(err, Post){
+            if(err || Post==null){
+                res.status(204).json({error:'Post doesnt exist in database'});
+            }else{
+                res.status(200).json(Post);
+            }
+        });
+        await Groups.findByIdAndDelete({ _id: req.params.id }, function(err, Group){
+            if(err || Group==null){
+                res.status(204).json({error:'Group doesnt exist in database'});
+            }else{
+                res.status(200).json(Group);
+            }
+        });
+    } catch {
+    }
 });
 
 /** 
