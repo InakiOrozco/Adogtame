@@ -767,9 +767,45 @@ app.delete('/groups/:id/permissions/:id_permission', async (req, res) =>{
     });
 });
 
-//Pendiente
-app.post('/group/:id/subscribe', async (req, res) =>{
-
+/** 
+ * @swagger
+ * /groups/{id}/subscribe:
+ *  post:
+ *    description: create a new permission on a group
+ *    parameters:
+ *      - in: Header
+ *        Bearer: token
+ *        description: token 
+ *        type: string
+ *      - in: body
+ *        name: params
+ *        description: user id
+ *        type: object
+ *        properties:
+ *          id_user:
+ *            type: string
+ *          permission: 
+ *            type: string
+ *    responses:
+ *      200:
+ *        description: success response
+ *      400:
+ *        description: bad data request
+*/
+app.post('/groups/:id/subscribe', async (req, res) =>{
+    await GroupUser.findOne({ id_group: req.params.id }, function(err, User){
+        if(err){
+            res.send("No existe ese grupo");
+        }else{
+            GroupUser.create({
+                id_group: req.params.id,
+                id_user: req.body.id_user,
+                permission: false
+            }).then((createdComment) => {
+                res.send(createdComment);
+            })
+        }
+    });    
 });
 
 //Pendiente
