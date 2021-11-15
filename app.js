@@ -666,26 +666,6 @@ app.delete('/groups/:id', async (req, res) => {
     await Groups.findAndDelete({ _id: req.params.id })
 });
 
-/*
-GET /group/:id/permissions
-	Nos regresa los permisos del usuario logged en ese grupo
-POST /group/:id/permissions
-	body {userid, permissions}
-	Nos permite añadir permisos a un unsuario en el grupo, si el usuario logged tiene permisos para hacerlos
-DELETE /group/:id/permissions
-	Nos permite eliminar permisos a un usuario en el grupo, si el usuario logged tiene permisos para hacerlos
-
-POST /group/:id/subscribe
-	Añade a el usuario loggeado al grupo, con permisos basicos (groupuser collection)
-DELETE /group/:id/subscribe
-	Elimina al usuario loggeado del grupo (groupuser collection)
-
-GET /posts/:id/comments
-POST /posts/:id/comments
-GET /posts/:id/comments/:id
-DELETE /posts/:id/comments/:id
-*/
-
 /** 
  * @swagger
  * /groups/{id}/permissions:
