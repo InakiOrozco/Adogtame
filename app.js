@@ -735,7 +735,7 @@ app.post('/groups/:id/permissions', async (req, res) =>{
 
 /** 
  * @swagger
- * /group/{id}/permissions/{id_permission}:
+ * /groups/{id}/permissions/{id_permission}:
  *  delete:
  *    description: delete an existing permission
  *    parameters:
@@ -757,7 +757,7 @@ app.post('/groups/:id/permissions', async (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.delete('/group/:id/permissions/:id_permission', async (req, res) =>{
+app.delete('/groups/:id/permissions/:id_permission', async (req, res) =>{
     await GroupUser.findOneAndDelete({id_post: req.params.id}, {_id: req.params.id_permission}, function(err, permissions){
         if(err){
             res.send("No se ha podido eliminar el permiso");
