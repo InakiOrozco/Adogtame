@@ -79,8 +79,17 @@ app.get('/', (req, res) => { res.send('Adogtame API') });
  *        description: invalid token
 */
 app.get('/users', async (req, res) => {
-    res.send(await Users.find({}))
-});
+    try{
+        await Users.find({}, function(err, User){
+            if(err || User==null){
+                res.status(204).json({error:'User doesnt exist in database'});
+            }else{
+                res.status(200).json(User);
+            }
+        });
+    } catch {
+    }
+    });
 
 
 /** 
@@ -106,13 +115,16 @@ app.get('/users', async (req, res) => {
  *        description: invalid token or not recieved
 */
 app.get('/users/:id', async (req, res) => {
-    res.send(await Users.findOne({ _id: req.params.id }, function(err, User){
-        if(err){
-            res.send("No existe ese usuario");
-        }else{
-            res.send(User);
-        }
-    }));
+    try {
+        await Users.findOne({ _id: req.params.id }, function(err, User){
+            if(err || User==null){
+                res.status(204).json({error:'User doesnt exist in database'});
+            }else{
+                res.status(200).json(User);
+            }
+        });
+    } catch {
+    }
 });
 
 
@@ -254,7 +266,7 @@ app.put('/users/:id', (req, res) => {
         req.body,
         { new: true },
         (err, userUpdated) => {
-            if (err) return res.status(500).send(err);
+            if (err) return res.status(400).send(err);
             return res.send(userUpdated);
         }
     )
@@ -282,7 +294,17 @@ app.put('/users/:id', (req, res) => {
  *        description: bad data request
 */
 app.delete('/users/:id', async (req, res) => {
-    res.send(await Users.findOneAndDelete({ _id: req.params.id }));
+    try{
+        await Users.findOneAndDelete({ _id: req.params.id }, function(err, User){
+            if(err || User==null){
+                res.status(204).json({error:'User doesnt exist in database'});
+            }else{
+                res.status(200).json(User);
+            }
+        });
+    } catch {
+        console.log("User doesnt exist in database");
+    }
 });
 
 
@@ -306,7 +328,16 @@ app.delete('/users/:id', async (req, res) => {
 */
 
 app.get('/posts', async (req, res) => {
-    res.send(await Posts.find({}))
+    try{
+        await Posts.find({}, function(err, User){
+            if(err || User==null){
+                res.status(204).json({error:'User doesnt exist in database'});
+            }else{
+                res.status(200).json(User);
+            }
+        });
+    } catch {
+    }
 });
 
 /** 
@@ -333,13 +364,16 @@ app.get('/posts', async (req, res) => {
 */
 
 app.get('/posts/:id', async (req, res) => {
-    res.send(await Posts.find({ _id: req.params.id }, function(err, Post){
-        if(err){
-            res.send("No existe ese post");
-        }else{
-            res.send(Post);
-        }
-    }));
+    try{
+       await Posts.find({ _id: req.params.id }, function(err, Post){
+            if(err || Post==null){
+                res.status(204).json({error:'User doesnt exist in database'});
+            }else{
+                res.status(200).json(Post);
+            }
+        });
+    } catch {
+    }
 });
 
 /** 
@@ -493,7 +527,16 @@ app.delete('/posts/:id', async (req, res) => {
 */
 
 app.get('/groups', async (req, res) => {
-    res.send(await Groups.find({}))
+    try{
+        await Groups.find({}, function(err, Group){
+            if(err || Group==null){
+                res.status(204).json({error:'Group doesnt exist in database'});
+            }else{
+                res.status(200).json(Group);
+            }
+        });
+    } catch {
+    }
 });
 
 /** 
@@ -519,14 +562,19 @@ app.get('/groups', async (req, res) => {
  *        description: invalid token or not recieved
 */
 app.get('/groups/:id', async (req, res) => {
-    res.send(await Groups.find({ _id: req.params.id }, function(err, group){
-        if(err){
-            res.send("No existe ese grupo");
-        }else{
-            res.send(group);
-        }
-    }));
+    try{
+        await Groups.find({ _id: req.params.id }, function(err, Group){
+            if(err || Group==null){
+                res.status(204).json({error:'User doesnt exist in database'});
+            }else{
+                res.status(200).json(Group);
+            }
+        });
+    } catch {
+        console.log("User doesnt exist in database");
+    }
 });
+
 
 /** 
  * @swagger
@@ -551,7 +599,16 @@ app.get('/groups/:id', async (req, res) => {
  *        description: invalid token or not recieved
 */
 app.get('/groups/:id/posts', async (req, res) => {
-    res.send(await Posts.find({ id_group: req.params.id }));
+    try{
+        await Posts.find({ id_group: req.params.id }, function(err, Group){
+            if(err || Group==null){
+                res.status(204).json({error:'Group doesnt exist in database'});
+            }else{
+                res.status(200).json(Group);
+            }
+        });
+    } catch {
+    }
 });
 
 
@@ -689,7 +746,16 @@ app.delete('/groups/:id', async (req, res) => {
  *        description: invalid token or not recieved
 */
 app.get('/groups/:id/permissions', async (req, res) =>{
-    res.send(await GroupUser.find({id_group: req.params.id}));
+    try{
+        await GroupUser.find({id_group: req.params.id}, function(err, Group){
+            if(err || Group==null){
+                res.status(204).json({error:'Group doesnt exist in database'});
+            }else{
+                res.status(200).json(Group);
+            }
+        });
+    } catch {
+    }
 });
 
 /** 
@@ -865,7 +931,16 @@ app.delete('/groups/:id/subscribe/:id_permission', async (req, res) =>{
  *        description: invalid token or not recieved
 */
 app.get('/posts/:id/comments', async (req, res) =>{
-    res.send(await Comments.find({id_post: req.params.id}));
+    try{
+        await Comments.find({id_post: req.params.id}, function(err, Post){
+            if(err || Post==null){
+                res.status(204).json({error:'Group doesnt exist in database'});
+            }else{
+                res.status(200).json(Post);
+            }
+        });
+    } catch {
+    }
 });
 
 /** 
@@ -934,11 +1009,14 @@ app.post('/posts/:id/comments', async (req, res) =>{
  *        description: bad data request
 */
 app.delete('/posts/:id/comments/:id_comment', async (req, res) =>{
-    await Comments.findOneAndDelete({id_post: req.params.id}, {_id: req.params.id_comment}, function(err, comment){
-        if(err){
-            res.send("No se ha podido eliminar el comentario");
-        }else{
-            res.send("Eliminado correctamente");
-        }
-    });
+    try{
+        Comments.findOneAndDelete({id_post: req.params.id}, {_id: req.params.id_comment}, function(err, Group){
+            if(err || Group==null){
+                res.status(204).json({error:'Group doesnt exist in database'});
+            }else{
+                res.status(200).json(Group);
+            }
+        });
+    } catch {
+    }
 });
