@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
 		const decoded = jwt.verify(token, process.env.TOKEN_KEY);
 		req.user = decoded;
 	} catch (err) {
-		return res.status(400).json({ code: 400, err: "Error procession token" });
+		return res.status(400).json({ code: 400, err: "Error processing" });
 	}
 	return next();
 };
