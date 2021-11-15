@@ -856,7 +856,7 @@ app.delete('/groups/:id/permissions/:id_permission', async (req, res) =>{
 
 /** 
  * @swagger
- * /groups/{id}/subscribe:
+ * /groups/{id}/subscribe/{id_user}:
  *  post:
  *    description: create a new permission on a group
  *    parameters:
@@ -879,20 +879,19 @@ app.delete('/groups/:id/permissions/:id_permission', async (req, res) =>{
  *      400:
  *        description: bad data request
 */
-app.post('/groups/:id/subscribe', async (req, res) =>{
-    await GroupUser.findOne({ id_group: req.params.id }, function(err, User){
-        if(err){
-            res.send("No existe ese grupo");
-        }else{
-            GroupUser.create({
-                id_group: req.params.id,
-                id_user: req.body.id_user,
-                permission: false
-            }).then((createdComment) => {
-                res.send(createdComment);
-            })
-        }
-    });    
+app.post('/groups/:id/subscribe/:id_user', async (req, res) =>{
+    const exist = await GroupUser.findOne({id_group: req.params.id }, {id_user: req.params.id_user});
+    if (!exist) {
+        GroupUser.create({
+            id_group: req.params.id,
+            id_user: req.body.id_user,
+            permissions: false
+        }).then((createdComment) => {
+            res.send(createdComment);
+        })
+    } else {
+        res.send("GroupUser already exists");
+    }
 });
 
 /** 
