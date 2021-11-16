@@ -50,6 +50,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => {
         console.log("connected to db...")
         app.use('/api', router);
+        app.use('/', express.static(path.join(__dirname, "adogtame-front", "dist", "adogtame-front")));
         app.listen(port, () => {
 
 
@@ -57,6 +58,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
             console.log('App API is listening in port: ' + port);
             console.log('http://localhost:' + port + '/api/');
             console.log('Swagger Docs: ' + 'http://localhost:' + port + '/api/docs');
+            console.log('App on: ' + 'http://localhost:' + port);
         });
     })
     .catch((err) => console.log(err));
