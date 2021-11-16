@@ -2,10 +2,6 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-//Middlewares
-const auth = require('./src/middlewares/auth');
 //DB
 const mongoose = require('mongoose');
 
@@ -53,9 +49,9 @@ const uri = "mongodb+srv://" + process.env.DB + "?retryWrites=true&w=majority"
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => {
         console.log("connected to db...")
+        app.use('/api', router);
         app.listen(port, () => {
 
-            app.use('/api', router);
 
 
             console.log('App API is listening in port: ' + port);

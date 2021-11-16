@@ -8,6 +8,7 @@ const Posts = require('../models/Posts');
 const GroupUser = require('../models/GroupUser');
 const Comments = require('../models/Comments');
 
+require('dotenv').config();
 /** 
  * @swagger
  * /groups:
@@ -146,7 +147,8 @@ router.post('/groups', auth, async (req, res) => {
 				const newGroup = await Groups.create({
 					name,
 					description,
-					created_by: req.user.id
+					created_by: req.user.id,
+					photo
 				});
 				const newGroupUser = GroupUser.create({
 					id_group: newGroup._id,

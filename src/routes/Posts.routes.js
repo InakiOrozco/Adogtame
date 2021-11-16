@@ -6,6 +6,7 @@ const auth = require('../middlewares/auth');
 const Posts = require('../models/Posts');
 const GroupUser = require('../models/GroupUser');
 
+require('dotenv').config();
 /** 
  * @swagger
  * /posts:

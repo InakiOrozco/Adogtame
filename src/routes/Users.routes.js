@@ -2,10 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const auth = require('../middlewares/auth');
 const Posts = require('../models/Posts');
 const Users = require('../models/Users');
-const Comments = require('../models/Comments');
+
+require('dotenv').config();
+
 
 /** 
  * @swagger
@@ -54,11 +58,15 @@ router.get('/users', auth, async (req, res) => {
 */
 router.get('/users/:id', auth, async (req, res) => {
 	try {
-		const user = await Users.findById(req.params.id);
-		if (user) {
-			res.json(user);
+		if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+			const user = await Users.findById(req.params.id);
+			if (user) {
+				res.json(user);
+			} else {
+				res.status(400).json({ code: 400, error: "There is no user with this id" });
+			}
 		} else {
-			res.status(400).json({ code: 400, error: "There is no user with this id" });
+			res.status(400).json({ code: 400, error: "invalid user id" });
 		}
 	} catch (err) {
 		console.error(err);
@@ -254,8 +262,8 @@ router.put('/users/:id', auth, async (req, res) => {
 	try {
 		const userExist = await Users.findById(req.params.id);
 		if (userExist) {
-			if (userExist._id === req.user.id) {
-				const updatedUser = await Users.findByIdAndUpdate(req.params.id);
+			if (userExist._id.toString() === req.user.id) {
+				const updatedUser = await Users.findByIdAndUpdate(req.params.id, req.body);
 				res.json(updatedUser);
 			} else {
 				res.status(403).json({ code: 403, error: "You dont have permisions to update this user" });
