@@ -28,7 +28,6 @@ export class RegisterComponent implements OnInit {
     if(this.registerForm.valid){
       const values = this.registerForm.value;
       this.authService.register(values.email, values.password, values.name, values.last_name);
-      this.router.navigate(['/home']);
     }
   }
 
