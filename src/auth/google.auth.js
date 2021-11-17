@@ -8,13 +8,11 @@ const Users = require('../models/Users');
 
 
 passport.serializeUser((user, done) => {
-	console.log('no se on toy', user.token);
 	done(null, user.token);
 });
 
 passport.deserializeUser((token, done) => {
 
-	console.log('no se on toy 2.0', token);
 	done(null, token);
 })
 
@@ -29,7 +27,6 @@ passport.use(new GoogleStrategy({
 			id: user._id, email: user.email
 		}, process.env.TOKEN_KEY);
 		user.token = token;
-		console.log('usuario existe', user)
 		done(null, user);
 	} else {
 		const newUser = await Users.create({
@@ -43,7 +40,6 @@ passport.use(new GoogleStrategy({
 		}, process.env.TOKEN_KEY);
 
 		newUser.token = token;
-		console.log('usuario existe', user)
 		done(null, newUser);
 	}
 }));

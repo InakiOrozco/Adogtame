@@ -12,7 +12,6 @@ export class AuthService {
   googleAuth(){
     window.open(this.api_base_url + '/auth/google',"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
     let listener = window.addEventListener('message', (message) => {
-     //message will contain facebook user and details
      const user= message.data.user;
      this.saveToken(user.token);
      this.router.navigate(['/home']);
