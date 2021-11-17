@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const router = express.Router();
+const cors = require('cors')
 //DB
 const mongoose = require('mongoose');
 
@@ -49,8 +50,9 @@ const uri = "mongodb+srv://" + process.env.DB + "?retryWrites=true&w=majority"
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => {
         console.log("connected to db...")
+        app.use(cors());
         app.use('/api', router);
-        app.use('/', express.static(path.join(__dirname, "adogtame-front", "dist", "adogtame-front")));
+        app.use(express.static(path.join(__dirname, "adogtame-front", "dist", "adogtame-front")));
         app.listen(port, () => {
 
 
