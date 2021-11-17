@@ -10,6 +10,7 @@ Es necesario tener angular/cli instalado
 ```bash
 npm install -g @angular/cli
 ```
+Seguido de
 ```bash
 cd ./adogtame-front
 npm install
