@@ -21,6 +21,7 @@ import { MinipostComponent } from './layout/minipost/minipost.component';
 import { PostcardComponent } from './layout/postcard/postcard.component';
 import { CommentComponent } from './layout/comment/comment.component';
 import { CreatepostComponent } from './pages/createpost/createpost.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -41,11 +42,12 @@ import { CreatepostComponent } from './pages/createpost/createpost.component';
     MinipostComponent,
     PostcardComponent,
     CommentComponent,
-    CreatepostComponent
+    CreatepostComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule,
     HttpClientModule
   ],
   providers: [],
