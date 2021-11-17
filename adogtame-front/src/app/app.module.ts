@@ -21,6 +21,7 @@ import { MinipostComponent } from './layout/minipost/minipost.component';
 import { PostcardComponent } from './layout/postcard/postcard.component';
 import { CommentComponent } from './layout/comment/comment.component';
 import { CreatepostComponent } from './pages/createpost/createpost.component';
+import { GoogleLoginComponent } from './layout/google-login/google-login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -43,6 +44,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     PostcardComponent,
     CommentComponent,
     CreatepostComponent,
+    GoogleLoginComponent
   ],
   imports: [
     BrowserModule,
