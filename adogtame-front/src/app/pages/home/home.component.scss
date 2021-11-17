@@ -114,11 +114,13 @@
 }
 .container {
   max-width: 95%;
-  margin: 0 auto;
+  margin: auto;
   font-family: "Arial";
+  border: 1px solid black;
 }
 
 img {
+  border-radius: 50%;
   max-width: 100%;
   max-height: 100%;
 }
