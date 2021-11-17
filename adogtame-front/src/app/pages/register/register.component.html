@@ -1,1 +1,45 @@
-<p>register works!</p>
+<div id="main-container">
+  <div id="center-card">
+    <img src="../../../assets/banner.png" alt="Adogtame logo" />
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <input
+        type="text"
+        name="Email"
+        id="email"
+        placeholder="Email"
+        formControlName="email"
+      />
+      <input
+        type="password"
+        name="Password"
+        id="password"
+        placeholder="Password"
+        formControlName="password"
+      />
+      <input
+        type="password"
+        name="Repeat Password"
+        id="repeat-password"
+        placeholder="Repeat Password"
+        formControlName="repeatPassword"
+      />
+      <input
+        type="text"
+        name="name"
+        id="name"
+        placeholder="Name"
+        formControlName="name"
+      />
+      <input
+        type="text"
+        name="Last Name"
+        id="last_name"
+        placeholder="Last Name"
+        formControlName="lastName"
+      />
+      <button type="submit">LogIn</button>
+    </form>
+    <app-google-login></app-google-login>
+  </div>
+  <a routerLink="/login">Login</a>
+</div>
