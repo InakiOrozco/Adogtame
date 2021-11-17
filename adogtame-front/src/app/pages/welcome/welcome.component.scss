@@ -1,0 +1,19 @@
+#main-container {
+  #image-container {
+    margin: auto;
+    img {
+      width: 500px;
+    }
+  }
+  #links-container {
+    a {
+      font-size: 24px;
+      text-align: center;
+      display: block;
+      text-decoration: none;
+      border: 1px solid black;
+      color: white;
+      background-color: #49b5a8;
+    }
+  }
+}
