@@ -1,5 +1,6 @@
 <div>
-  <a routerLink="/">
+  <a routerLink="/home">
     <img src="../../../assets/banner.png" alt="Adogtame Logo" />
   </a>
+  <button *ngIf="logged" (click)="onClick()">Log Out</button>
 </div>
