@@ -50,7 +50,11 @@ passport.use(new GoogleStrategy({
 
 
 router.get('/redirect', passport.authenticate('google'), (req, res) => {
-	res.json(req.user);
+	var responseHTML = '<html><head><title>Main</title></head><body></body><script>res = %value%; window.opener.postMessage(res, "*");window.close();</script></html>'
+	responseHTML = responseHTML.replace('%value%', JSON.stringify({
+		user: req.user
+	}));
+	res.status(200).send(responseHTML);
 })
 
 router.get('/', passport.authenticate('google', {

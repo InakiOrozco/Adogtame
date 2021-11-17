@@ -7,6 +7,17 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   constructor(private http:HttpClient, private router:Router) {}
+  api_base_url = "http://localhost:3001/api"
+
+  googleAuth(){
+    window.open(this.api_base_url + '/auth/google',"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
+    let listener = window.addEventListener('message', (message) => {
+     //message will contain facebook user and details
+     const user= message.data.user;
+     this.saveToken(user.token);
+     this.router.navigate(['/home']);
+    });
+  }
 
   login(email:string, password:string){
     console.log(this.isLoggedIn());
@@ -19,7 +30,7 @@ export class AuthService {
       email:email, password: password
     };
     console.log(body);
-    this.http.post<any>("http://localhost:3001/api/users/login", body, httpOptions).subscribe({
+    this.http.post<any>(this.api_base_url+"/users/login", body, httpOptions).subscribe({
       next: data=>{ 
         console.log(data);
         if(data.token){
@@ -44,7 +55,7 @@ export class AuthService {
       email, password, name, last_name
     };
     console.log(body);
-    this.http.post<any>("http://localhost:3001/api/users", body, httpOptions).subscribe({
+    this.http.post<any>(this.api_base_url + "/users", body, httpOptions).subscribe({
       next: data=>{ 
         console.log(data);
         if(data.token){
