@@ -18,6 +18,6 @@ export class HeaderComponent implements OnInit {
   onClick():void {
     this.authService.removeToken();
     this.logged = this.authService.isLoggedIn();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/']);
   }
 }
