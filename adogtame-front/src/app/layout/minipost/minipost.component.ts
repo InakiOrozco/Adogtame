@@ -6,10 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./minipost.component.scss']
 })
 export class MinipostComponent implements OnInit {
+  //@Input() post: Post;
 
   constructor() { }
 
   ngOnInit(): void {
   }
-
 }
