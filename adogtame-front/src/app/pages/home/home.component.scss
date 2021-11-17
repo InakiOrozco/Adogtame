@@ -1,0 +1,150 @@
+@media screen and (min-width: 500px) {
+  .grid > .tb-col-12 {
+    float: left;
+    width: 100%;
+    background-color: lavender;
+  }
+  .grid > .tb-col-8 {
+    float: left;
+    width: 66.6666666667%;
+    background-color: lightyellow;
+  }
+  .grid > .tb-col-6 {
+    float: left;
+    width: 50%;
+    height: 600px;
+    background-color: lightcoral;
+  }
+  .grid > .tb-col-4 {
+    float: left;
+    width: 33.3333333333%;
+    background-color: lavender;
+  }
+  .grid > .tb-col-3 {
+    float: left;
+    width: 25%;
+    background-color: lavender;
+  }
+  .grid > .tb-col-2 {
+    float: left;
+    width: 16.6666666667%;
+    background-color: gray;
+  }
+  .grid > .tb-col-1 {
+    float: left;
+    width: 8.3333333333%;
+    background-color: blueviolet;
+  }
+}
+@media screen and (max-width: 500px) {
+  .grid > .mb-col-12 {
+    float: left;
+    width: 100%;
+    background-color: lightgreen;
+  }
+  .grid > .mb-col-8 {
+    float: left;
+    width: 66.6666666667%;
+    height: 600px;
+    background-color: cornflowerblue;
+  }
+  .grid > .mb-col-6 {
+    float: left;
+    width: 50%;
+    background-color: red;
+  }
+  .grid > .mb-col-4 {
+    float: left;
+    width: 33.3333333333%;
+    background-color: lavender;
+  }
+  .grid > .mb-col-3 {
+    float: left;
+    width: 25%;
+    background-color: lavender;
+  }
+  .grid > .mb-col-2 {
+    float: left;
+    width: 16.6666666667%;
+    background-color: gray;
+  }
+  .grid > .mb-col-1 {
+    float: left;
+    width: 8.3333333333%;
+    background-color: blueviolet;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .grid > .col-12 {
+    float: left;
+    width: 100%;
+    background-color: lightgreen;
+  }
+  .grid > .col-8 {
+    float: left;
+    width: 66.6666666667%;
+    background-color: lightyellow;
+  }
+  .grid > .col-6 {
+    float: left;
+    width: 50%;
+    background-color: red;
+  }
+  .grid > .col-4 {
+    float: left;
+    width: 33.3333333333%;
+    background-color: yellowgreen;
+  }
+  .grid > .col-3 {
+    float: left;
+    width: 25%;
+    height: 600px;
+    background-color: lavender;
+  }
+  .grid > .col-2 {
+    float: left;
+    width: 16.6666666667%;
+    background-color: gray;
+  }
+  .grid > .col-1 {
+    float: left;
+    width: 8.3333333333%;
+    background-color: blueviolet;
+  }
+}
+.container {
+  max-width: 95%;
+  margin: 0 auto;
+  font-family: "Arial";
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+button.primary {
+  background-color: gray;
+}
+
+.temas {
+  border: solid 1px red;
+}
+
+.temas > div {
+  text-align: center;
+  width: 100%;
+  background-color: lightblue;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+
+.ALIN {
+  text-align: center;
+}
+
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
