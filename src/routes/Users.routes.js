@@ -105,6 +105,49 @@ router.get('/users/:id/posts', auth, async (req, res) => {
 });
 
 
+
+/** 
+* @swagger
+* /users/login:
+*  post:
+*    description: login
+*    parameters:
+*      - in: body
+*        name: params
+*        description: user email, user password
+*        type: object
+*        properties:
+*          email:
+*            type: string
+*          password: 
+*            type: string
+*    responses:
+*      200:
+*        description: success response
+*      400:
+*        description: bad data request
+*/
+router.post('/users/login', async (req, res) => {
+	try {
+		const { email, password } = req.body
+		if (!(email && password)) {
+			res.status(400).send("Missing body parameters");
+		}
+		const checkUser = await Users.findOne({ email });
+		if (checkUser && (await bcrypt.compare(password, checkUser.password))) {
+			const token = jwt.sign({
+				id: checkUser._id, email
+			}, process.env.TOKEN_KEY);
+			checkUser.token = token;
+			res.status(200).json(checkUser);
+		} else {
+			res.status(400).send("Bad credentials");
+		}
+	} catch (err) {
+		console.log(err);
+	}
+});
+
 /** 
 * @swagger
 * /users:
@@ -152,6 +195,7 @@ router.post('/users', async (req, res) => {
 		if (userExist) {
 			res.status(409).json({ code: 400, error: "There is a username, with this email, try login in" });
 		} else {
+			console.log('why?', password)
 			const encryptedPassword = await bcrypt.hash(password, 10);
 			const newUser = await Users.create({
 				name,
@@ -173,49 +217,6 @@ router.post('/users', async (req, res) => {
 		console.error(err);
 	}
 });
-
-/** 
-* @swagger
-* /users/login:
-*  post:
-*    description: login
-*    parameters:
-*      - in: body
-*        name: params
-*        description: user email, user password
-*        type: object
-*        properties:
-*          email:
-*            type: string
-*          password: 
-*            type: string
-*    responses:
-*      200:
-*        description: success response
-*      400:
-*        description: bad data request
-*/
-router.post('/users/login', async (req, res) => {
-	try {
-		const { email, password } = req.body
-		if (!(email && password)) {
-			res.status(400).send("Missing body parameters");
-		}
-		const checkUser = await Users.findOne({ email });
-		if (checkUser && (await bcrypt.compare(password, checkUser.password))) {
-			const token = jwt.sign({
-				id: checkUser._id, email
-			}, process.env.TOKEN_KEY);
-			checkUser.token = token;
-			res.status(200).json(checkUser);
-		} else {
-			res.status(400).send("Bad credentials");
-		}
-	} catch (err) {
-		console.log(err);
-	}
-});
-
 /** 
 * @swagger
 * /users/{id}:
