@@ -114,10 +114,14 @@
 }
 .container {
   max-width: 95%;
-  margin: auto;
-  font-family: "Arial";
-  border: 1px solid whitesmoke;
-  box-shadow: 3px 3px grey;
+  margin: 50px;
+  font-family: "Times New Roman";
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+.minipost {
+  padding: 5%;
 }
 
 img {
