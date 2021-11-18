@@ -4,6 +4,13 @@
       width: 100%;
       background-color: whitesmoke;
     }
+
+    .grid > .tb-col-10{
+        float:left;
+        width: 80%;
+        background-color: whitesmoke;
+    }
+
     .grid > .tb-col-8 {
       float: left;
       width: 66.6666666667%;
@@ -42,6 +49,11 @@
       width: 100%;
       background-color: whitesmoke;
     }
+    .grid > .tb-col-10{
+        float:left;
+        width: 80%;
+        background-color: whitesmoke;
+    }
     .grid > .mb-col-8 {
       float: left;
       width: 66.6666666667%;
@@ -79,6 +91,11 @@
       float: left;
       width: 100%;
       background-color: whitesmoke;
+    }
+    .grid > .tb-col-10{
+        float:left;
+        width: 80%;
+        background-color: whitesmoke;
     }
     .grid > .col-8 {
       float: left;
@@ -162,7 +179,7 @@
   }
 
   .CENTER{
-      padding-left: 25%;
+      padding-left: 15%;
     }
   
   .clearfix::after {
