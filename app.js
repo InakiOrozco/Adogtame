@@ -16,7 +16,7 @@ const GroupsRouter = require('./src/routes/Groups.routes');
 const UsersRouter = require('./src/routes/Users.routes');
 const PostsRouter = require('./src/routes/Posts.routes');
 const passport = require('passport')
-ApiRouter.use(passport.initialize());
+ApiRouter.use('/auth', passport.initialize());
 const AuthRouter = require('./src/auth');
 
 //Swagger
@@ -45,7 +45,7 @@ ApiRouter.use(express.json());
 ApiRouter.get('/', (req, res) => { res.send('adogtame api') });
 ApiRouter.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 ApiRouter.use('/auth', AuthRouter);
-ApiRouter.use(passport.session());
+ApiRouter.use('/auth', passport.session());
 ApiRouter.use('/', GroupsRouter);
 ApiRouter.use('/', UsersRouter);
 ApiRouter.use('/', PostsRouter);
