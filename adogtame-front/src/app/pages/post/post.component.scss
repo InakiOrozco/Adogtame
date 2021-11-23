@@ -6,6 +6,19 @@ button, a {
     -webkit-border-radius: 20px;
   }
 
+input[type="text"] {
+    width: 200px;
+    height: 20px;
+    padding-right: 80px;
+}
+
+input[type="submit"] {
+    margin-left: -70px;
+    height: 20px;
+    width: 60px;
+    background-color: #49b5a8;
+}
+
 @media screen and (min-width: 500px) {
     .grid > .tb-col-12 {
       float: left;
