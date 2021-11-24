@@ -1,24 +1,18 @@
-
-//Routers
-const ApiRouter = require('express').Router();
-
-ApiRouter.get('/', (req, res) => { res.send('adogtame api') });
+const router = require('express').Router();
 
 const GroupsRouter = require('./Groups.routes');
-ApiRouter.use('/', GroupsRouter);
-
 const UsersRouter = require('./Users.routes');
-ApiRouter.use('/', UsersRouter);
-
 const PostsRouter = require('./Posts.routes');
-ApiRouter.use('/', PostsRouter);
-
-const passport = require('passport')
-ApiRouter.use('/auth', passport.initialize());
-const AuthRouter = require('../auth');
-ApiRouter.use('/auth', AuthRouter);
-ApiRouter.use('/auth', passport.session());
+const AuthRouter = require('./Auth.routes');
+const ImagesRouter = require('./Images.routes');
 
 
+router.get('/', (req, res) => { res.send('adogtame api') });
 
-module.exports = ApiRouter;
+router.use(GroupsRouter);
+router.use(UsersRouter);
+router.use(PostsRouter);
+router.use(AuthRouter);
+router.use(ImagesRouter);
+
+module.exports = router;
