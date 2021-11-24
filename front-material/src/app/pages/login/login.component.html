@@ -1,0 +1,24 @@
+<div>
+  <mat-card>
+    <mat-card-header>
+      <h2>Login</h2>
+    </mat-card-header>
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput type="email" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput type="password" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary">Login</button>
+    <mat-divider inset></mat-divider>
+    <google-button></google-button>
+    <mat-divider inset></mat-divider>
+    <mat-card-footer>
+      <p>You dont have an acount?</p>
+      <a mat-stroked-button routerLink="/register">Register</a>
+    </mat-card-footer>
+  </mat-card>
+</div>

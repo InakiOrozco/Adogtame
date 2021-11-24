@@ -1,0 +1,38 @@
+<mat-card>
+  <br />
+  <img
+    mat-card-image
+    src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png"
+    alt="Group photo"
+  />
+  <mat-card-title>{{ group.name }}</mat-card-title>
+  <mat-card-content>
+    <p>{{ group.description }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button
+      *ngIf="!isSubscribed"
+      mat-raised-button
+      color="accent"
+      (click)="toggleSubscribe()"
+    >
+      Subscribe to Group
+    </button>
+    <button
+      *ngIf="isSubscribed"
+      mat-flat-button
+      color="warn"
+      (click)="toggleSubscribe()"
+    >
+      Unsubscribe to Group
+    </button>
+  </mat-card-actions>
+</mat-card>
+<br />
+<button mat-raised-button color="primary" (click)="enableDialog()">
+  Create post
+</button>
+<div class="post-container">
+  <h2>This group posts</h2>
+  <mini-post *ngFor="let post of posts" [post]="post"></mini-post>
+</div>

@@ -1,0 +1,47 @@
+mat-card {
+  width: 90%;
+  margin: 2em auto;
+  mat-card-header {
+    mat-card-title {
+      a {
+        text-decoration: none;
+        color: black;
+        text-transform: capitalize;
+      }
+    }
+    mat-card-subtitle {
+      a {
+        text-decoration: none;
+        color: gray;
+        text-transform: capitalize;
+      }
+    }
+  }
+  mat-card-content {
+    img {
+      display: block;
+      max-width: 80%;
+      margin: auto;
+    }
+  }
+}
+.comment-container {
+  min-width: 300px;
+  max-width: 600px;
+  margin: 1em auto;
+}
+
+form {
+  width: 300px;
+  margin: auto;
+  mat-form-field {
+    display: block;
+    margin: auto;
+    width: 250px;
+  }
+  button {
+    display: block;
+    margin: auto;
+    width: 300px;
+  }
+}

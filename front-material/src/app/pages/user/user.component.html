@@ -1,0 +1,17 @@
+<mat-card>
+  <br />
+  <img mat-card-image src="{{ user.photo }}" alt="User {{ user.id }} photo" />
+  <mat-card-title>{{ user.full_name }}</mat-card-title>
+  <mat-card-content>
+    <mat-chip-list>
+      <mat-chip *ngFor="let tag of user.tags" color="primary" selected>{{
+        tag
+      }}</mat-chip>
+    </mat-chip-list>
+  </mat-card-content>
+</mat-card>
+<br />
+<div class="post-container">
+  <h2>User posts</h2>
+  <mini-post *ngFor="let post of posts" [post]="post"></mini-post>
+</div>

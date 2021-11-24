@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="pages-container">
+    <div class="your-pages-container">
+      <your-pages idUser="342234"></your-pages>
+    </div>
+    <div class="new-pages-container">
+      <new-pages idUser="243242"></new-pages>
+    </div>
+  </div>
+  <div class="post-container">
+    <h2>Your groups posts</h2>
+    <mini-post *ngFor="let post of posts" [post]="post"></mini-post>
+  </div>
+</div>

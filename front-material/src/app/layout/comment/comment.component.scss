@@ -1,0 +1,22 @@
+mat-card {
+  width: 90%;
+  margin: 1em auto;
+  mat-card-title {
+    a {
+      text-decoration: none;
+      color: black;
+      text-transform: capitalize;
+    }
+  }
+  mat-card-subtitle {
+    a {
+      text-decoration: none;
+      color: gray;
+      text-transform: capitalize;
+    }
+  }
+
+  a {
+    width: 100%;
+  }
+}

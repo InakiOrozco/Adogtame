@@ -1,0 +1,39 @@
+<mat-card>
+  <mat-card-header>
+    <img mat-card-avatar src="{{ post.photo }}" alt="User {{ post.id_user }}" />
+    <mat-card-title
+      ><a routerLink="/user/{{ post.id_user }}">
+        {{ post.id_user }}
+      </a></mat-card-title
+    >
+    <mat-card-subtitle>
+      <a routerLink="/group/{{ post.id_group }}">
+        {{ post.id_group }}
+      </a>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <img
+    mat-card-image
+    src="{{ post.photo }}"
+    alt="Photo of post {{ post.id_post }}"
+  />
+  <mat-card-content>
+    <p>
+      {{ post.information }}
+    </p>
+    <mat-list>
+      <mat-list-item
+        ><mat-icon>tag</mat-icon> {{ post.contact_info }}</mat-list-item
+      >
+      <mat-list-item
+        ><mat-icon>location_on</mat-icon> {{ post.location }}</mat-list-item
+      >
+      <mat-list-item
+        ><mat-icon>pets</mat-icon> {{ post.pet_type }}</mat-list-item
+      >
+    </mat-list>
+  </mat-card-content>
+  <mat-card-actions>
+    <a routerLink="/post/{{ post.id_post }}" mat-button>See post</a>
+  </mat-card-actions>
+</mat-card>

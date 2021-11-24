@@ -1,0 +1,17 @@
+<mat-toolbar color="primary">
+  <img src="../../../assets/banner.png" alt="Adogtame Logo" />
+  <span class="spacer"></span>
+  <div *ngIf="isLoggedIn" class="menu-container">
+    <button mat-icon-button aria-label="Menu" [matMenuTriggerFor]="menu">
+      <mat-icon>person</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <a mat-menu-item routerLink="/user/1"
+        ><mat-icon>person</mat-icon>My User</a
+      >
+      <button mat-menu-item color="warn" (click)="logOut()">
+        <mat-icon>logout</mat-icon>Log Out
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>
