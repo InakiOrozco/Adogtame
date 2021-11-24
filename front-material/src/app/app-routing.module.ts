@@ -7,15 +7,17 @@ import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { GroupComponent } from './pages/group/group.component';
 import { PostComponent } from './pages/post/post.component';
 import { UserComponent } from './pages/user/user.component';
+import { LoggedGuard } from './common/guards/logged.guard';
+import { AuthGuard } from './common/guards/auth.guard';
 
 const routes: Routes = [
-  {path:'', component: WelcomeComponent},
-  {path:'login', component: LoginComponent},
-  {path:'register', component: RegisterComponent},
-  {path:'home', component: HomeComponent},
-  {path:'group/:id', component: GroupComponent},
-  {path:'user/:id', component: UserComponent},
-  {path:'post/:id', component: PostComponent}
+  {path:'', component: WelcomeComponent, canActivate: [LoggedGuard]},
+  {path:'login', component: LoginComponent, canActivate: [LoggedGuard]},
+  {path:'register', component: RegisterComponent, canActivate: [LoggedGuard]},
+  {path:'home', component: HomeComponent, canActivate: [AuthGuard]},
+  {path:'group/:id', component: GroupComponent, canActivate: [AuthGuard]},
+  {path:'user/:id', component: UserComponent, canActivate: [AuthGuard]},
+  {path:'post/:id', component: PostComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
