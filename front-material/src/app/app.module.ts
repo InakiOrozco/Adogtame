@@ -33,6 +33,7 @@ import { CreatePostDialog, GroupComponent  } from './pages/group/group.component
 import { PostComponent } from './pages/post/post.component';
 import { UserComponent } from './pages/user/user.component';
 import { CommentComponent } from './layout/comment/comment.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { CommentComponent } from './layout/comment/comment.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     MatToolbarModule,
     MatIconModule,
