@@ -1,8 +1,11 @@
 const router = require('express').Router();
 require('dotenv').config();
+
 const passport = require('passport');
+
 const GoogleStrategy = require('passport-google-oauth20');
 const jwt = require('jsonwebtoken');
+
 const Users = require('../models/Users');
 
 
