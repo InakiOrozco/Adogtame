@@ -1,0 +1,38 @@
+<div>
+  <mat-card>
+    <mat-card-header>
+      <h2>Register</h2>
+    </mat-card-header>
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput type="email" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput type="password" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Repeat password</mat-label>
+      <input matInput type="password" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput type="text" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Last Name</mat-label>
+      <input matInput type="text" />
+    </mat-form-field>
+    Profile photo:
+    <input type="file" accept=".jpg,.png" />
+
+    <button mat-raised-button color="primary">Register</button>
+    <mat-divider inset></mat-divider>
+    <google-button></google-button>
+    <mat-divider inset></mat-divider>
+    <mat-card-footer>
+      <p>You already have an acount?</p>
+      <a mat-stroked-button routerLink="/login">Login</a>
+    </mat-card-footer>
+  </mat-card>
+</div>
