@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/common/services/auth.service';
 
 @Component({
   selector: 'google-button',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GoogleButtonComponent implements OnInit {
 
-  constructor() { }
+  constructor(private authService:AuthService) { }
 
   ngOnInit(): void {
+  }
+
+  onClick(){
+    this.authService.googleAuth();
   }
 
 }
