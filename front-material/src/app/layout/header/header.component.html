@@ -1,14 +1,23 @@
 <mat-toolbar color="primary">
-  <img src="../../../assets/banner.png" alt="Adogtame Logo" />
-  <span class="spacer"></span>
-  <div *ngIf="isLoggedIn" class="menu-container">
+  <img src="../../../assets/banner.png" alt="Adogtame Logo" routerLink="/" />
+  <span class="spacer"> </span>
+  <a mat-button routerLink="/user/{{ user._id }}">
+    <h2 *ngIf="user.isLoggedIn">{{ user.name }} {{ user.last_name }}</h2>
+  </a>
+  <a routerLink="/" mat-icon-button *ngIf="user.isLoggedIn"
+    ><mat-icon>home</mat-icon></a
+  >
+  <div *ngIf="user.isLoggedIn" class="menu-container">
     <button mat-icon-button aria-label="Menu" [matMenuTriggerFor]="menu">
-      <mat-icon>person</mat-icon>
+      <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <a mat-menu-item routerLink="/user/1"
+      <a mat-menu-item routerLink="/user/{{ user._id }}"
         ><mat-icon>person</mat-icon>My User</a
       >
+      <button mat-menu-item color="warn" (click)="logOut()">
+        <mat-icon>post_add</mat-icon>Create group
+      </button>
       <button mat-menu-item color="warn" (click)="logOut()">
         <mat-icon>logout</mat-icon>Log Out
       </button>
