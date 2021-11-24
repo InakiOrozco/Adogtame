@@ -3,7 +3,6 @@ require('dotenv').config();
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const jwt = require('jsonwebtoken');
-const bcryp = require('bcrypt');
 const Users = require('../models/Users');
 
 
@@ -56,6 +55,5 @@ router.get('/redirect', passport.authenticate('google'), (req, res) => {
 router.get('/', passport.authenticate('google', {
 	scope: ['profile', 'email']
 }));
-
 
 module.exports = router;
