@@ -86,10 +86,33 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
-  register(){
+  register(email:any, password:any, name:any, last_name:any, profile_picture:any){
+    const httpOptions = {
+      headers: new HttpHeaders({ 
+        'Access-Control-Allow-Origin':'*'
+      })
+    };
 
+    const formData = new FormData();
+    formData.append('image', profile_picture);
+
+    this.http.post<any>( apiURL + '/images', formData, httpOptions).subscribe( profile_picture_url =>{
+      if(profile_picture_url){
+
+        this.http.post<any>( apiURL + '/users', {email:email, password:password, name: name, last_name:last_name, profile_picture: profile_picture_url}, httpOptions).subscribe( data =>{
+          if(data){
+            if(data.token){
+              this.saveId(data._id);
+              this.saveToken(data.token);
+              data.isLoggedIn = true;
+              this.user$.next(data);
+              this.router.navigate(['/home']);
+            }
+          }
+        });
+      }
+    })
   }
-  
   saveId(id:string){
     localStorage.setItem('user_id', id);
   }

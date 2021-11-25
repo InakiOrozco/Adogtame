@@ -3,30 +3,52 @@
     <mat-card-header>
       <h2>Register</h2>
     </mat-card-header>
-    <mat-form-field>
-      <mat-label>Email</mat-label>
-      <input matInput type="email" />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Password</mat-label>
-      <input matInput type="password" />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Repeat password</mat-label>
-      <input matInput type="password" />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Name</mat-label>
-      <input matInput type="text" />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Last Name</mat-label>
-      <input matInput type="text" />
-    </mat-form-field>
-    Profile photo:
-    <input type="file" accept=".jpg,.png" />
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" name="email" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          type="password"
+          formControlName="password"
+          name="password"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Repeat password</mat-label>
+        <input
+          matInput
+          type="password"
+          formControlName="r_password"
+          name="r_password"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput type="text" formControlName="name" name="name" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Last Name</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="last_name"
+          name="last_name"
+        />
+      </mat-form-field>
+      Profile photo:
+      <input
+        type="file"
+        accept=".jpg,.png,.jpeg"
+        (change)="onFileChange($event)"
+      />
+      el archivo tiene que ser: jpg, jpeg o png
 
-    <button mat-raised-button color="primary">Register</button>
+      <button mat-raised-button color="primary" type="submit">Register</button>
+    </form>
     <mat-divider inset></mat-divider>
     <google-button></google-button>
     <mat-divider inset></mat-divider>
