@@ -16,13 +16,14 @@
     "Puppies",
     "Web"
   ],
-  "author": "Gustavo, Iñaky, Ana, Marcela",
+  "author": "Gustavo, Iñaki, Ana Denisse",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/InakiOrozco/Adogtame/issues"
   },
   "homepage": "https://github.com/InakiOrozco/Adogtame#readme",
   "dependencies": {
+    "aws-sdk": "^2.1036.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
@@ -31,6 +32,7 @@
     "mongodb": "^4.1.4",
     "mongoose": "^6.0.12",
     "multer": "^1.4.3",
+    "multer-s3": "^2.10.0",
     "passport": "^0.5.0",
     "passport-google-oauth20": "^2.0.0",
     "sass": "^1.43.4",
