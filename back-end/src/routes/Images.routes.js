@@ -3,39 +3,28 @@ const path = require('path');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
-const s3 = new aws.S3();
 
 aws.config.update({
 	secretAccessKey: process.env.DB_AWS_KEY,
-	accessKeyId: process.env.DB_AWS_KEY,
+	accessKeyId: process.env.DB_AWS_IDKEY,
 	region: 'us-east-1'
 });
 
-/*
-para guardar local
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, path.join(__dirname, '..', 'public', 'images'));
-	},
-	filename: (req, file, cb) => {
-		let extArray = file.mimetype.split("/");
-		let extension = extArray[extArray.length - 1];
-		cb(null, `${Date.now()}.${extension}`);
-	}
-});*/
+const s3 = new aws.S3();
 
 const upload = multer({
-    storage: multerS3({
-        s3: s3,
-        bucket: 'adogtame-fotos',
-        key: function (req, file, cb) {
-            console.log(file);
-            cb(null, Date.now()); //file key
-        }
-    }),
+	storage: multerS3({
+		s3: s3,
+		bucket: 'adogtame-fotos',
+		key: function (req, file, cb) {
+			let extArray = file.mimetype.split("/");
+			let extension = extArray[extArray.length - 1];
+			cb(null, `${Date.now()}.${extension}`); //file key
+		}
+	}),
 	dest: path.join(__dirname, '..', 'public', 'images'),
 	fileFilter: (req, file, cb) => {
-		if (file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
+		if (file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
 			cb(null, true);
 		} else {
 			cb(null, false);
@@ -45,7 +34,12 @@ const upload = multer({
 });
 
 router.get('/images/:image', (req, res) => {
-	res.sendFile(path.join(__dirname, '..', 'public', 'images', req.params.image));
+	var params = { Bucket: 'adogtame-fotos', Key: req.params.image };
+	s3.getObject(params, function (err, data) {
+		res.writeHead(200, { 'Content-Type': 'image/jpeg' });
+		res.write(data.Body, 'binary');
+		res.end(null, 'binary');
+	});
 });
 
 router.post('/images', upload.single('image'), (req, res) => {
