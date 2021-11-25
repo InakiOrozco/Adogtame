@@ -33,8 +33,8 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 ApiRouter.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
-const uri = "mongodb+srv://" + process.env.DB + "?retryWrites=true&w=majority"
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+const DB_URI = "mongodb+srv://" + process.env.DB_USER + ":" + process.env.DB_PASSWORD + "@" + process.env.DB_CLUSTER + ".hwczx.mongodb.net/" + process.env.DB_COLLECTION + "?retryWrites=true&w=majority";
+mongoose.connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => {
         console.log("connected to db...")
 
