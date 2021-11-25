@@ -1,13 +1,15 @@
 const express = require('express');
 const app = express();
 const cors = require('cors')
-require('dotenv').config();
-//DB
 const mongoose = require('mongoose');
+require('dotenv').config();
+
 //Puerto
 const port = process.env.PORT || 3000;
-//Routers
+
+//Importing Api router
 const ApiRouter = require('./src/routes/Api.routes');
+
 //Swagger
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
@@ -28,6 +30,7 @@ const swaggerOptions = {
     apis: ['./src/routes/*']
 }
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
 ApiRouter.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 const uri = "mongodb+srv://" + process.env.DB + "?retryWrites=true&w=majority"
