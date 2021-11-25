@@ -46,3 +46,5 @@ testem.log
 Thumbs.db
 
 back-end/src/public/images/*
+back-end/.env
+back-end/.env
