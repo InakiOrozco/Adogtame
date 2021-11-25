@@ -32,7 +32,7 @@ router.get('/images/:image', (req, res) => {
 
 router.post('/images', upload.single('image'), (req, res) => {
 	console.log('si jalo');
-	res.json(req.file);
+	res.json(req.file.filename);
 });
 
 module.exports = router;
