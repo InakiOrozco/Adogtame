@@ -12,6 +12,7 @@ aws.config.update({
 });
 
 /*
+para guardar local
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
 		cb(null, path.join(__dirname, '..', 'public', 'images'));
