@@ -47,7 +47,6 @@ export class AuthService {
               data.isLoggedIn = true;
               data.token = this.getToken();
               this.user$.next(data);
-              this.router.navigate(['/home']);
             }
           }
         })
@@ -98,8 +97,9 @@ export class AuthService {
 
     this.http.post<any>( apiURL + '/images', formData, httpOptions).subscribe( profile_picture_url =>{
       if(profile_picture_url){
-
-        this.http.post<any>( apiURL + '/users', {email:email, password:password, name: name, last_name:last_name, profile_picture: profile_picture_url}, httpOptions).subscribe( data =>{
+        const realPictureURL = apiURL + "/images/" + profile_picture_url;
+        this.http.post<any>( apiURL + '/users', {email:email, password:password, name: name, last_name:last_name, profile_picture: realPictureURL}, httpOptions).subscribe( data =>{
+          console.log(data);
           if(data){
             if(data.token){
               this.saveId(data._id);
