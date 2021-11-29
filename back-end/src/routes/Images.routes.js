@@ -36,9 +36,14 @@ const upload = multer({
 router.get('/images/:image', (req, res) => {
 	var params = { Bucket: 'adogtame-fotos', Key: req.params.image };
 	s3.getObject(params, function (err, data) {
-		res.writeHead(200, { 'Content-Type': 'image/jpeg' });
-		res.write(data.Body, 'binary');
-		res.end(null, 'binary');
+		if (!err) {
+			res.writeHead(200, { 'Content-Type': 'image/jpeg' });
+			res.write(data.Body, 'binary');
+			res.end(null, 'binary');
+		} else {
+			console.log(err)
+			res.status(400);
+		}
 	});
 });
 
