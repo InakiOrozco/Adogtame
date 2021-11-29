@@ -1,7 +1,10 @@
 <mat-card>
-  <br />
-  <img mat-card-image src="{{ user.photo }}" alt="User {{ user.id }} photo" />
-  <mat-card-title>{{ user.full_name }}</mat-card-title>
+  <img
+    mat-card-image
+    src="{{ user.profile_picture }}"
+    alt="User {{ user._id }} photo"
+  />
+  <mat-card-title>{{ user.name }} {{ user.last_name }}</mat-card-title>
   <mat-card-content>
     <mat-chip-list>
       <mat-chip *ngFor="let tag of user.tags" color="primary" selected>{{
