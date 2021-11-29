@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/common/services/auth.service';
 
 @Component({
   selector: 'your-pages',
@@ -8,8 +10,9 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 })
 export class YourPagesComponent implements OnInit {
 
-  @Input() idUser:string = '';
-
+  user$:Observable<any>;
+  user:any = {isLoggedIn:false};
+  
   groups:any = [
     {id:'321', name:"Guadalajara dsa"},
     {id:'321321', name:"Guadalajara nodsarte"},
@@ -19,9 +22,16 @@ export class YourPagesComponent implements OnInit {
     {id:'3524', name:"Guadalajara nodsadrte"}
   ]
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog,private authService: AuthService) {  
+      this.user$ = new Observable<Object>();
+  } 
 
   ngOnInit(): void {
+    this.user$ = this.authService.getUser$();
+    this.user$.subscribe(user => {  
+      if(user.token){
+        this.user = user}else{this.user.isLoggedIn = false}
+    });
   }
 
   enableDialog(){
