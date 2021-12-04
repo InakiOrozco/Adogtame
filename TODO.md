@@ -4,13 +4,15 @@
 
 - [ ] Get post of user on user/id page
 
-## /home
+## /home (Inaki)
 
-- [ ] Get grups user is subscribed to (your-pages component)
-- [ ] Get new groups a user is not subscribed to (new-pages component)
+- [ ] Get grups user is subscribed to (your-pages component) (Inaki)
+  - [ ] Create endpoint on back-end
+- [ ] Get new groups a user is not subscribed to (new-pages component) (Inaki)
+  - [ ] Create endpoint on back-end
 - [ ] Show posts of the groups a user is subscribed to.
-- [ ] Handle creation of new group (this is used fot both the 
-header button and the button on the your-pages component)
+  - [ ] Create endpoint on back-end
+- [ ] Handle creation of new group (this is used fot both the header button and the button on the your-pages component)
 
 ## /group
 
