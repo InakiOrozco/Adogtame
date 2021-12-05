@@ -140,7 +140,7 @@ router.get('/groups/:id/posts', auth, async (req, res) => {
 */
 router.post('/groups', auth, async (req, res) => {
 	try {
-		const { name, description } = req.body;
+		const { name, description, photo } = req.body;
 		if (name && description) {
 			const exist = await Groups.findOne({ name: req.body.name });
 			if (!exist) {
