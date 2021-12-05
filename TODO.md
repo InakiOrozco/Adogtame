@@ -2,7 +2,7 @@
 
 ## /user
 
-- [ ] Get post of user on user/id page
+- [x] Get post of user on user/id page
 
 ## /home (Inaki)
 

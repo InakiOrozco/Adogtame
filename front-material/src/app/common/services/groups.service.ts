@@ -1,28 +1,22 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 
 import { apiURL } from '../globals';
+import { AuthService } from './auth.service';
 
-export interface User {
+export interface Group {
   _id: string,
-	email: string,
-	password: string,
-	createdAt: string,
-	updatedAt: string,
-	__v: number,
-	name: string,
-	last_name: string,
-  profile_picture: string
-};
+  name:string,
+  description:string,
+  potho: string
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class UsersService {
+export class GroupsService {
 
-
-  httpOptions:any = {}
+  httpOptions:any = {};
 
   constructor(private authService: AuthService, private http:HttpClient) {
     this.httpOptions = {
@@ -33,12 +27,7 @@ export class UsersService {
     };
   }
 
-  getUserById(userID:string | any) {
-    return this.http.get<User>(apiURL + "/users/" + userID, this.httpOptions);
-  }
-  
-  getGroupsOfUser(userId:string | any){
-
+  getGroupById(groupID: string | any){
+    return this.http.get<Group>(apiURL + "/groups/" + groupID, this.httpOptions);
   }
 }
-

@@ -1,14 +1,14 @@
 <mat-card>
   <mat-card-header>
-    <img mat-card-avatar src="{{ post.photo }}" alt="User {{ post.id_user }}" />
+    <img mat-card-avatar src="{{ user.profile_picture }}" alt="User {{ user.name }}" />
     <mat-card-title
-      ><a routerLink="/user/{{ post.id_user }}">
-        {{ post.id_user }}
+      ><a routerLink="/user/{{ user.id_user }}">
+        {{ user.name }} {{user.last_name}}
       </a></mat-card-title
     >
     <mat-card-subtitle>
-      <a routerLink="/group/{{ post.id_group }}">
-        {{ post.id_group }}
+      <a routerLink="/group/{{ group._id }}">
+        {{ group.name }}
       </a>
     </mat-card-subtitle>
   </mat-card-header>
@@ -34,6 +34,6 @@
     </mat-list>
   </mat-card-content>
   <mat-card-actions>
-    <a routerLink="/post/{{ post.id_post }}" mat-button>See post</a>
+    <a routerLink="/post/{{ post._id }}" mat-button>See post</a>
   </mat-card-actions>
 </mat-card>
