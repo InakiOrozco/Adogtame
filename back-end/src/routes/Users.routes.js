@@ -113,6 +113,53 @@ router.get('/users/:id/groups', auth, async (req, res) => {
 
 /** 
 * @swagger
+* /users/{id}/groups/not_sub:
+*  get:
+*    description: return all the user post
+*    parameters:
+*      - in: Header
+*        Bearer: token
+*        description: token 
+*        type: string
+*      - in: path
+*        name: id
+*        description: user id 
+*        type: string
+*    responses:
+*      200:
+*        description: success response
+*      204:
+*        description: user doesn't exist in database
+*      401:
+*        description: invalid token or not recieved
+*/
+router.get('/users/:id/groups/not_sub', auth, async (req, res) => {
+	try {
+		let g = [];
+		const groupUser = await GroupUser.find({ id_user: req.params.id });
+		for (let x = 0; x<groupUser.length; x++){
+			g.push(await Groups.findById(groupUser[x].id_group));
+		}
+		try {
+			console.log(g, "-.-");
+			let f = [];
+			const groups = await Groups.find({});
+			for (let x = 0; x<groups.length; x++){
+				if(g.indexOf(groups[x])!=-1){
+					f.push(groups[x]);
+				}
+			}
+			res.json(f);
+		} catch (err) {
+			console.error(err);
+		}
+	} catch (err) {
+		console.error(err);
+	}
+});
+
+/** 
+* @swagger
 * /users/{id}/posts:
 *  get:
 *    description: return all the user post
