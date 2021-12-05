@@ -33,7 +33,7 @@ export class UsersService {
     };
   }
 
-  getUser(userID:string | any) {
+  getUserById(userID:string | any) {
     return this.http.get<User>(apiURL + "/users/" + userID, this.httpOptions);
   }
   
