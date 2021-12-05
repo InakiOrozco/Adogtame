@@ -7,6 +7,9 @@ const jwt = require('jsonwebtoken');
 const auth = require('../middlewares/auth');
 const Posts = require('../models/Posts');
 const Users = require('../models/Users');
+const Groups = require('../models/Groups');
+const GroupUser = require('../models/GroupUser');
+const groups = require('../models/Groups');
 
 require('dotenv').config();
 
@@ -75,6 +78,41 @@ router.get('/users/:id', auth, async (req, res) => {
 
 /** 
 * @swagger
+* /users/{id}/groups:
+*  get:
+*    description: return all the user post
+*    parameters:
+*      - in: Header
+*        Bearer: token
+*        description: token 
+*        type: string
+*      - in: path
+*        name: id
+*        description: user id 
+*        type: string
+*    responses:
+*      200:
+*        description: success response
+*      204:
+*        description: user doesn't exist in database
+*      401:
+*        description: invalid token or not recieved
+*/
+router.get('/users/:id/groups', auth, async (req, res) => {
+	try {
+		let groups = [];
+		const groupUser = await GroupUser.find({ id_user: req.params.id });
+		for (let x = 0; x<groupUser.length; x++){
+			groups.push(await Groups.findById(groupUser[x].id_group));
+		}
+		res.json(groups);
+	} catch (err) {
+		console.error(err);
+	}
+});
+
+/** 
+* @swagger
 * /users/{id}/posts:
 *  get:
 *    description: return all the user post
@@ -103,8 +141,6 @@ router.get('/users/:id/posts', auth, async (req, res) => {
 		console.error(err);
 	}
 });
-
-
 
 /** 
 * @swagger
@@ -195,7 +231,6 @@ router.post('/users', async (req, res) => {
 		if (userExist) {
 			res.status(409).json({ code: 400, error: "There is a username, with this email, try login in" });
 		} else {
-			console.log('why?', password)
 			const encryptedPassword = await bcrypt.hash(password, 10);
 			const newUser = await Users.create({
 				name,
