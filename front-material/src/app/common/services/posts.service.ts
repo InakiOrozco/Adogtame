@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 
 export interface Post {
   _id: string,
+  id_group:string,
   id_user: string,
   title: string,
   information: string,
@@ -34,5 +35,9 @@ export class PostsService {
 
   getPostsByUserId(userID: string | any){
     return this.http.get<Array<Post>>(apiURL + "/users/" + userID + "/posts", this.httpOptions);
+  }
+
+  getPostByPostId(postId: string | any){
+    return this.http.get<Post>(apiURL + "/posts/" + postId, this.httpOptions);
   }
 }
