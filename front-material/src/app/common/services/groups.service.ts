@@ -11,6 +11,13 @@ export interface Group {
   potho: string
 }
 
+export interface GroupUser {
+  _id:string,
+  id_group: string,
+  id_user: string,
+  permissions: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
