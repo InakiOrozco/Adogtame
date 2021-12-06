@@ -6,7 +6,7 @@
   <mat-card-content>
     <mat-list>
       <mat-list-item *ngFor="let group of groups">
-        <a mat-button routerLink="/group/{{ group.id }}"> {{ group.name }} </a>
+        <a mat-button routerLink="/group/{{ group._id }}"> {{ group.name }} </a>
       </mat-list-item>
     </mat-list>
   </mat-card-content>

@@ -150,12 +150,12 @@ router.post('/groups', auth, async (req, res) => {
 					created_by: req.user.id,
 					photo
 				});
-				const newGroupUser = GroupUser.create({
+				const newGroupUser = await GroupUser.create({
 					id_group: newGroup._id,
 					id_user: req.user.id,
 					permissions: "admin"
 				});
-				res.json({ newGroup, newGroupUser });
+				res.json(newGroup);
 			} else {
 				res.status(400).json({ code: 400, err: "Group already exists" });
 			}
@@ -299,7 +299,7 @@ router.get('/groups/:id/permissions', auth, async (req, res) => {
 		if (permissions) {
 			res.json(permissions);
 		} else {
-			res.status(403).json({ code: 403, id_group: req.params.id, id_user: req.user.id, permissions: "none" });
+			res.json({ permissions: "none" });
 		}
 	} catch (err) {
 		console.error(err);
@@ -416,7 +416,7 @@ router.delete('/groups/:id/permissions/:id_permission', auth, async (req, res) =
 
 /** 
 * @swagger
-* /groups/{id}/subscribe/{id_user}:
+* /groups/{id}/subscribe:
 *  post:
 *    description: create a new permission on a group
 *    parameters:
@@ -443,7 +443,8 @@ router.post('/groups/:id/subscribe', auth, async (req, res) => {
 	try {
 		const group = await Groups.findById(req.params.id);
 		if (group) {
-			const exist = await GroupUser.findOne({ id_group: req.params.id, id_user: req.params.id_user });
+			const exist = await GroupUser.findOne({ id_group: req.params.id, id_user: req.user.id });
+			console.log(exist)
 			if (!exist) {
 				const newGroupUser = await GroupUser.create({
 					id_group: req.params.id,
@@ -486,15 +487,15 @@ router.post('/groups/:id/subscribe', auth, async (req, res) => {
 *      400:
 *        description: bad data request
 */
-router.delete('/groups/:id/subscribe/', auth, async (req, res) => {
+router.delete('/groups/:id/subscribe', auth, async (req, res) => {
 	try {
 		const group = await Groups.findById(req.params.id);
 		if (group) {
-			const exist = await GroupUser.findOne({ id_group: req.params.id, id_user: req.params.id_user });
+			const exist = await GroupUser.findOne({ id_group: req.params.id, id_user: req.user.id });
 			if (exist) {
 				const deletedGrupUser = await GroupUser.findOneAndDelete({
 					id_group: req.params.id,
-					id_user: req.paramas.id_user
+					id_user: req.user.id
 				});
 			}
 			res.json({ message: "Unsubscribed" });

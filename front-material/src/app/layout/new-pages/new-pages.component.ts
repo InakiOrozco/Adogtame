@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { AuthService } from 'src/app/common/services/auth.service';
+import { GroupsService, Group} from 'src/app/common/services/groups.service';
 
 @Component({
   selector: 'new-pages',
@@ -6,20 +8,14 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./new-pages.component.scss']
 })
 export class NewPagesComponent implements OnInit {
-  @Input() idUser:string;
+  groups:Group | any
 
-  groups:any = [
-    {id:'321', name:"Guadalajara dsa"},
-    {id:'321321', name:"Guadalajara nodsarte"},
-    {id:'45354', name:"Guadalajara nordsate"},
-    {id:'675', name:"Guadalajara nodsadrte"},
-    {id:'7685', name:"Guadalajara ndsaorte"},
-    {id:'3524', name:"Guadalajara nodsadrte"}
-  ]
-
-  constructor() { }
+  constructor(private authService: AuthService, private groupService: GroupsService) { }
 
   ngOnInit(): void {
+    this.groupService.getNotSubGroupsByUserId(this.authService.getId()).subscribe(groups=>{
+      this.groups= groups;
+    })
   }
 
 }

@@ -46,4 +46,7 @@ export class PostsService {
     return this.http.get<Comment>(apiURL + "/posts/" + postId + "/comments", this.httpOptions);
   }
 
+  getPostFromSubscribedGroups(){
+    return this.http.get<Array<Post>>(apiURL + "/users/" + this.authService.getId() + "/groups/posts", this.httpOptions);
+  }
 }

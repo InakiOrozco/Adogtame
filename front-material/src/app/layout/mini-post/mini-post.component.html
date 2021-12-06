@@ -1,9 +1,13 @@
 <mat-card>
   <mat-card-header>
-    <img mat-card-avatar src="{{ user.profile_picture }}" alt="User {{ user.name }}" />
+    <img
+      mat-card-avatar
+      src="{{ user.profile_picture }}"
+      alt="User {{ user.name }}"
+    />
     <mat-card-title
-      ><a routerLink="/user/{{ user.id_user }}">
-        {{ user.name }} {{user.last_name}}
+      ><a routerLink="/user/{{ user._id }}">
+        {{ user.name }} {{ user.last_name }}
       </a></mat-card-title
     >
     <mat-card-subtitle>

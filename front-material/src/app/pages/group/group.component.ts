@@ -1,50 +1,63 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-
-interface Post {
-  id_post:string
-  id_group:String
-  id_user:string
-  title:string
-  information:string
-  photo:string
-  location:string
-  contact_info:string
-  pet_type:string
-  resolved:boolean
-}
-
+import { Group, GroupsService, GroupUser } from 'src/app/common/services/groups.service';
+import { Post } from 'src/app/common/services/posts.service';
 @Component({
   selector: 'group',
   templateUrl: './group.component.html',
   styleUrls: ['./group.component.scss']
 })
 export class GroupComponent implements OnInit {
-  group:any = {};
+
+  group:Group | any;
   isSubscribed:boolean = false;
 
-  posts:Array<Post> = [
-    {id_post: '1254', id_group:'78324',id_user: '312', title:'Titulo 1', information:'Informacion de prueba', photo:'https://dogtime.com/assets/uploads/2011/03/puppy-development.jpg', location: 'Mi casa', contact_info:'test@google.com', pet_type:'Dog', resolved:false},
-    {id_post: '254254', id_group:'7831',id_user: '231', title:'Titulo 1', information:'Informacion de prueba', photo:'https://dogtime.com/assets/uploads/2011/03/puppy-development.jpg', location: 'Mi casa', contact_info:'test@google.com', pet_type:'Dog', resolved:false},
-    {id_post: '245', id_group:'4387',id_user: '321', title:'Titulo 1', information:'Informacion de prueba', photo:'https://dogtime.com/assets/uploads/2011/03/puppy-development.jpg', location: 'Mi casa', contact_info:'test@google.com', pet_type:'Dog', resolved:false},
-    {id_post: '254', id_group:'387737457',id_user: '321', title:'Titulo 1', information:'Informacion de prueba', photo:'https://dogtime.com/assets/uploads/2011/03/puppy-development.jpg', location: 'Mi casa', contact_info:'test@google.com', pet_type:'Dog', resolved:false},
-    {id_post: '254', id_group:'4354',id_user: '32321', title:'Titulo 1', information:'Informacion de prueba', photo:'https://dogtime.com/assets/uploads/2011/03/puppy-development.jpg', location: 'Mi casa', contact_info:'test@google.com', pet_type:'Dog', resolved:false},
-    {id_post: '254254', id_group:'37837',id_user: '321321', title:'Titulo 1', information:'Informacion de prueba', photo:'https://dogtime.com/assets/uploads/2011/03/puppy-development.jpg', location: 'Mi casa', contact_info:'test@google.com', pet_type:'Dog', resolved:false},
-    {id_post: '24257', id_group:'387378387',id_user: '321321', title:'Titulo 1', information:'Informacion de prueba', photo:'https://dogtime.com/assets/uploads/2011/03/puppy-development.jpg', location: 'Mi casa', contact_info:'test@google.com', pet_type:'Dog', resolved:false},
-    {id_post: '7387', id_group:'3878',id_user: '321321', title:'Titulo 1', information:'Informacion de prueba', photo:'https://dogtime.com/assets/uploads/2011/03/puppy-development.jpg', location: 'Mi casa', contact_info:'test@google.com', pet_type:'Dog', resolved:false}
-  ]
+  posts:Array<Post> = []
 
-  constructor(private route: ActivatedRoute, public dialog: MatDialog) { }
+  constructor(private route: ActivatedRoute, public dialog: MatDialog, private groupsService: GroupsService) { }
 
   ngOnInit(): void {
-    this.group.id = this.route.snapshot.paramMap.get('id');
-    this.group.name = "Group with id: " + this.group.id;
-    this.group.description = "Description of group " + this.group.name;
+    const idGroup = this.route.snapshot.paramMap.get('id');
+    this.groupsService.getGroupById(idGroup).subscribe(group=>{
+      this.group = group;
+      this.groupsService.isSubscribed(this.group._id).subscribe(response => {
+        const groupUser = response as any;
+        console.log(groupUser)
+        if(groupUser.permissions === "none"){
+          this.isSubscribed = false;
+          console.log('false')
+        }else {
+          this.isSubscribed = true;
+          console.log('true')
+        }
+      })
+    })
   }
 
-  toggleSubscribe(){
-    this.isSubscribed = !this.isSubscribed;
+  subscribeToGroup(){
+    this.groupsService.subscribeToGroup(this.group._id).subscribe(nose =>{
+      const data = nose as any;
+      if(data._id){
+        this.isSubscribed = true;
+      }else {
+        this.isSubscribed = false;
+      }
+    })
+  }
+  unSubscribeToGroup(){
+    this.groupsService.unSubscribeToGroup(this.group._id).subscribe((message) => {
+      if(message){
+        this.groupsService.isSubscribed(this.group._id).subscribe(response => {
+          const groupUser = response as any;
+          if(groupUser.permissions === "none"){
+            this.isSubscribed = false;
+          }else {
+            this.isSubscribed = true;
+          }
+        })
+      }
+    })
   }
 
   enableDialog(){
