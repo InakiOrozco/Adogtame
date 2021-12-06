@@ -1,3 +1,3 @@
 'use strict';
 
-export const apiURL = 'http://localhost:3001/api';
+export const apiURL = 'https://adogtame-app.herokuapp.com/api';
