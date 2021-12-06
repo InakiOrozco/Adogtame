@@ -40,12 +40,8 @@
         />
       </mat-form-field>
       Profile photo:
-      <input
-        type="file"
-        accept=".jpg,.png,.jpeg"
-        (change)="onFileChange($event)"
-      />
-      el archivo tiene que ser: jpg, jpeg o png
+      <input type="file" accept=".jpeg" (change)="onFileChange($event)" />
+      el archivo tiene que ser: jpeg
 
       <button mat-raised-button color="primary" type="submit">Register</button>
     </form>

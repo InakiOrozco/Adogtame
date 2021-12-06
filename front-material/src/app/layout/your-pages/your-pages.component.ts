@@ -1,8 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Form, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/common/services/auth.service';
+<<<<<<< Updated upstream
 import { GroupsService, Group } from 'src/app/common/services/groups.service';
+=======
+import { Group, GroupsService } from 'src/app/common/services/groups.service';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'your-pages',
@@ -35,10 +41,35 @@ export class YourPagesComponent implements OnInit {
 
 export class CreateGroupDialog{
   
-  constructor(public dialog:MatDialogRef<CreateGroupDialog>){}
+  groupForm: FormGroup;
+
+  constructor(public dialog:MatDialogRef<CreateGroupDialog>, private groupService: GroupsService){
+    this.groupForm = new FormGroup({
+      name: new FormControl(null, [Validators.required]),
+      description: new FormControl(null, [Validators.required]),
+      photo: new FormControl(null, [Validators.required]),
+    })
+
+  }
 
   createPost(){
-    console.log('Creado');
-    this.dialog.close();
+    if(this.groupForm.valid){
+      const values = this.groupForm.value;
+      console.log(values);
+      // @ts-ignore
+      this.groupService.createGroup(values.name, values.description, values.photo);
+    }
+  }
+
+  onFileChange(event:any) {
+    const file = event.target.files[0];
+    const extencion = file.name.split('.').pop();
+    if(extencion === "jpg" || extencion === "jpeg" || extencion === "png"){
+      this.groupForm.patchValue({
+        photo: file
+      });
+    }else {
+      event.target.value = '';
+    }
   }
 }

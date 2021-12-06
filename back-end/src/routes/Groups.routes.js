@@ -156,6 +156,7 @@ router.post('/groups', auth, async (req, res) => {
 					permissions: "admin"
 				});
 				res.json({newGroup});
+				res.json(newGroup);
 			} else {
 				res.status(400).json({ code: 400, err: "Group already exists" });
 			}
