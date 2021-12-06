@@ -177,9 +177,7 @@ router.get('/users/:id/groups/not_sub', auth, async (req, res) => {
 		const list = groupUser.map(e => {
 			return e.id_group;
 		})
-		console.log(list);
 		const notSub = await Groups.find({ _id: { "$nin": list } });
-		console.log(notSub);
 		res.json(notSub);
 	} catch (err) {
 		console.error(err);
