@@ -12,7 +12,7 @@
   - [x] Create endpoint on back-end
 - [x] Show posts of the groups a user is subscribed to.
   - [x] Create endpoint on back-end
-- [ ] Handle creation of new group (this is used fot both the header button and the button on the your-pages component)
+- [x] Handle creation of new group (this is used fot both the header button and the button on the your-pages component)
 
 ## /group
 
@@ -24,5 +24,5 @@
 ## /post
 
 - [x] Load info of specific post
-- [ ] Load comments of post/id
-- [ ] Handle post comment
+- [x] Load comments of post/id
+- [x] Handle post comment
