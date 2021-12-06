@@ -4,11 +4,9 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/common/services/auth.service';
-<<<<<<< Updated upstream
-import { GroupsService, Group } from 'src/app/common/services/groups.service';
-=======
+
+
 import { Group, GroupsService } from 'src/app/common/services/groups.service';
->>>>>>> Stashed changes
 
 @Component({
   selector: 'your-pages',
@@ -57,7 +55,7 @@ export class CreateGroupDialog{
       const values = this.groupForm.value;
       console.log(values);
       // @ts-ignore
-      this.groupService.createGroup(values.name, values.description, values.photo);
+      this.groupService.createGroup(values.name, values.description, values.photo, this.dialog);
     }
   }
 

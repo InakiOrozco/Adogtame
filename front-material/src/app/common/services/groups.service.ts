@@ -57,8 +57,8 @@ export class GroupsService {
 
   isSubscribed(groupId:string | any) {
     return this.http.get<GroupUser>(apiURL + '/groups/' + groupId + '/permissions', this.httpOptions);
-  
-  createGroup(name:any, description:any, photo:any):any{
+  }
+  createGroup(name:any, description:any, photo:any,  dialog:any):any{
     const httpOptions = {
       headers: new HttpHeaders({ 
         'Access-Control-Allow-Origin':'*',
@@ -77,6 +77,7 @@ export class GroupsService {
         if(group._id){
           const newRoute = '/group/' + group._id;
           console.log(newRoute);
+          dialog.close();
           this.router.navigate([newRoute])
         }
       })
