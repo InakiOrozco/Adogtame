@@ -11,23 +11,19 @@ import { UsersService, User } from 'src/app/common/services/users.service';
 })
 export class CommentComponent implements OnInit {
   
-  @Input() post:Post | any;
   user:User | any;
   group:Group | any;
-  comment:Comment | any;
+  @Input() comment:Comment | any;
 
   constructor(private usersService: UsersService, private groupsService: GroupsService, private postsService: PostsService) { 
   }
 
   ngOnInit(): void {
-    this.usersService.getUserById(this.post.id_user).subscribe(user=>{
+    this.usersService.getUserById(this.comment.id_user).subscribe(user=>{
       this.user = user;
     })
-    this.groupsService.getGroupById(this.post.id_group).subscribe(group => {
+    this.groupsService.getGroupById(this.comment.id_group).subscribe(group => {
       this.group = group;
-    })
-    this.postsService.getPostByPostId(this.post._id).subscribe(post => {
-      this.post = post;
     })
   }
 
