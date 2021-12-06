@@ -9,6 +9,7 @@ import { PostComponent } from './pages/post/post.component';
 import { UserComponent } from './pages/user/user.component';
 import { LoggedGuard } from './common/guards/logged.guard';
 import { AuthGuard } from './common/guards/auth.guard';
+import { ForvidenComponent } from './pages/forviden/forviden.component';
 
 const routes: Routes = [
   {path:'', component: WelcomeComponent, canActivate: [LoggedGuard]},
@@ -17,7 +18,8 @@ const routes: Routes = [
   {path:'home', component: HomeComponent, canActivate: [AuthGuard]},
   {path:'group/:id', component: GroupComponent, canActivate: [AuthGuard]},
   {path:'user/:id', component: UserComponent, canActivate: [AuthGuard]},
-  {path:'post/:id', component: PostComponent, canActivate: [AuthGuard]}
+  {path:'post/:id', component: PostComponent, canActivate: [AuthGuard]},
+  {path:'**', component: ForvidenComponent}
 ];
 
 @NgModule({

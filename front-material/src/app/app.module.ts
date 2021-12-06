@@ -21,6 +21,7 @@ import { PostComponent } from './pages/post/post.component';
 import { UserComponent } from './pages/user/user.component';
 import { CommentComponent } from './layout/comment/comment.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ForvidenComponent } from './pages/forviden/forviden.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     PostComponent,
     UserComponent,
     CommentComponent,
-    CreateGroupDialog
+    CreateGroupDialog,
+    ForvidenComponent
   ],
   imports: [
     BrowserModule,
