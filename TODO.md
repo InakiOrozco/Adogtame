@@ -16,8 +16,8 @@
 
 ## /group
 
-- [ ] Load info of specific group
-- [ ] enable subscribe and unsubscribe to a group
+- [x] Load info of specific group
+- [x] enable subscribe and unsubscribe to a group
 - [ ] Get post of group on group/id page
 - [ ] Handle create post on a group
 
