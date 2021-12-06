@@ -22,7 +22,7 @@
       <input matInput type="text" formControlName="pet_type" />
     </mat-form-field>
     Photo:
-    <input type="file" accept=".jpeg" (change)="onFileChange($event)" />
+    <input type="file" accept=".jpeg,.jpg" (change)="onFileChange($event)" />
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-stroked-button color="warn" mat-dialog-close>Cancel</button>
