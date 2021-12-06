@@ -19,9 +19,9 @@ export class PostComponent implements OnInit {
   comments:Array<Comment> | any  = [];
   commentForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, private postsService:PostsService, private groupService:GroupsService, private usersService:UsersService, private commentService:CommentsService) {
+  constructor(private route: ActivatedRoute, private postsService:PostsService,private commentService:CommentsService, private groupService:GroupsService, private usersService:UsersService) {
     this.commentForm = new FormGroup({
-      information: new FormControl(null, [Validators.required]),
+      comment: new FormControl(null, [Validators.required]),
     });
    }
 
@@ -42,13 +42,15 @@ export class PostComponent implements OnInit {
 
   }
 
-  postComment(event:Event){
-    event.preventDefault()
-
+  postComment(){
+    console.log(this.commentForm.value)
     if(this.commentForm.valid){
       const values = this.commentForm.value;
       console.log(values);
-      this.postsService.postComment(values.information);
+      this.commentService.postComment(this.post._id, values.comment).subscribe(newComent => {
+        console.log(newComent)
+        this.comments.push(newComent);
+      })
     }
   }
 }

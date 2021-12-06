@@ -29,10 +29,15 @@
   </mat-card-content>
 </mat-card>
 <br />
-<form (submit)="postComment($event)">
+<form [formGroup]="commentForm" (ngSubmit)="postComment()">
   <mat-form-field>
     <mat-label>Comment</mat-label>
-    <textarea matInput maxlength="100" formControlInfo="information"></textarea>
+    <textarea
+      matInput
+      maxlength="100"
+      formControlName="comment"
+      name="comment"
+    ></textarea>
   </mat-form-field>
   <span class="spacer"></span>
   <button mat-raised-button color="primary" type="submit">Post comment</button>

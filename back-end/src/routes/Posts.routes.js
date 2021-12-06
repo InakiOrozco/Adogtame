@@ -310,12 +310,16 @@ router.post('/posts/:id/comments', auth, async (req, res) => {
 			const { comment } = req.body;
 			if (comment) {
 				const isPartOfGroup = await GroupUser.findOne({ id_group: post.id_group, id_user: req.user.id });
+				console.log(isPartOfGroup)
 				if (isPartOfGroup) {
+					console.log(isPartOfGroup.id_group)
 					const newComment = await Comments.create({
-						id_group: post.id_group,
+						id_group: isPartOfGroup.id_group,
+						id_post: post._id,
 						id_user: req.user.id,
 						comment
 					});
+					console.log(newComment)
 					res.json(newComment);
 				} else {
 					res.status(403).json({ code: 403, err: "You cant see this post comments" });

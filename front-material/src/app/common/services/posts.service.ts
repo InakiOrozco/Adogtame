@@ -46,21 +46,4 @@ export class PostsService {
     return this.http.get<Comment>(apiURL + "/posts/" + postId + "/comments", this.httpOptions);
   }
 
-  postComment(information:any){
-    const httpOptions = {
-      headers: new HttpHeaders({ 
-        'Access-Control-Allow-Origin':'*',
-        'x-access-token': this.authService.getToken()
-      })
-    };
-
-    this.http.post<any>( apiURL + '/post', {information: information}, httpOptions).subscribe( data =>{
-      console.log(data);
-      if(data){
-        if(data.token){
-          this.router.navigate(['/post' + data._id]);
-        }
-      }
-    })
-  }
 }
