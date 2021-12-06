@@ -32,7 +32,7 @@
 <form (submit)="postComment($event)">
   <mat-form-field>
     <mat-label>Comment</mat-label>
-    <textarea matInput maxlength="100"></textarea>
+    <textarea matInput maxlength="100" formControlInfo="information"></textarea>
   </mat-form-field>
   <span class="spacer"></span>
   <button mat-raised-button color="primary" type="submit">Post comment</button>

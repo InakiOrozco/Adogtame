@@ -4,6 +4,7 @@ import { Group, GroupsService } from 'src/app/common/services/groups.service';
 import { Post, PostsService } from 'src/app/common/services/posts.service';
 import { User, UsersService } from 'src/app/common/services/users.service';
 import { Comment, CommentsService } from 'src/app/common/services/comments.service';
+import { FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'post',
@@ -16,8 +17,13 @@ export class PostComponent implements OnInit {
   user:User | any;
   post:Post | any;
   comments:Array<Comment> | any  = [];
+  commentForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, private postsService:PostsService, private groupService:GroupsService, private usersService:UsersService, private commentService:CommentsService) { }
+  constructor(private route: ActivatedRoute, private postsService:PostsService, private groupService:GroupsService, private usersService:UsersService, private commentService:CommentsService) {
+    this.commentForm = new FormGroup({
+      information: new FormControl(null, [Validators.required]),
+    });
+   }
 
   ngOnInit(): void {
     const postId = this.route.snapshot.paramMap.get('id');
@@ -33,11 +39,16 @@ export class PostComponent implements OnInit {
         this.comments = comments;
       });
     })
+
   }
 
   postComment(event:Event){
     event.preventDefault()
-    console.log('test')
-  }
 
+    if(this.commentForm.valid){
+      const values = this.commentForm.value;
+      console.log(values);
+      this.postsService.postComment(values.information);
+    }
+  }
 }
