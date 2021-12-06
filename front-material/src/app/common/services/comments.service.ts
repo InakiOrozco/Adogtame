@@ -1,27 +1,23 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 
 import { apiURL } from '../globals';
+import { AuthService } from './auth.service';
 
-export interface User {
+export interface Post {
   _id: string,
-	email: string,
-	password: string,
-	createdAt: string,
-	updatedAt: string,
-	__v: number,
-	name: string,
-	last_name: string,
-  profile_picture: string
-};
+  id_user: string,
+  id_group: string,
+  id_post: string,
+  information: string,
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class UsersService {
+export class CommentsService {
 
-  httpOptions:any = {}
+  httpOptions:any = {};
 
   constructor(private authService: AuthService, private http:HttpClient) {
     this.httpOptions = {
@@ -32,12 +28,9 @@ export class UsersService {
     };
   }
 
-  getUserById(userID:string | any) {
-    return this.http.get<User>(apiURL + "/users/" + userID, this.httpOptions);
-  }
-  
-  getGroupsOfUser(userId:string | any){
-
+  getCommentsByPostId(postId: string | any){
+    return this.http.get<Array<Post>>(apiURL + "/posts/" + postId + "/comments", this.httpOptions)
   }
 }
 
+// /post/id_post/comment
