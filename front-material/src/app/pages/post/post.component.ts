@@ -29,7 +29,7 @@ export class PostComponent implements OnInit {
       this.usersService.getUserById(this.post.id_user).subscribe(user=>{
         this.user = user;
       });
-      this.commentService.getCommentsByPostId(this.comments).subscribe(comments =>{
+      this.commentService.getCommentsByPostId(this.post._id).subscribe(comments =>{
         this.comments = comments;
       });
     })
