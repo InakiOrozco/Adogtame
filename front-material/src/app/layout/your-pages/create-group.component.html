@@ -1,19 +1,23 @@
 <h2 mat-dialog-title>Create group</h2>
-<mat-dialog-content>
-  <mat-form-field>
-    <mat-label>Name of Group</mat-label>
-    <input matInput type="text" />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Description</mat-label>
-    <textarea matInput></textarea>
-  </mat-form-field>
-  Cover photo:
-  <input type="file" accept=".jpg,.png" />
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-stroked-button color="warn" mat-dialog-close>Cancel</button>
-  <button mat-raised-button color="primary" (click)="createPost()">
-    Create
-  </button>
-</mat-dialog-actions>
+<form [formGroup]="groupForm" (ngSubmit)="createPost()">
+  <mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Name of Group</mat-label>
+      <input matInput type="text" formControlName="name" name="name" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        name="description"
+      ></textarea>
+    </mat-form-field>
+    Cover photo:
+    <input type="file" accept=".jpeg" (change)="onFileChange($event)" />
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-stroked-button color="warn" mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary">Create</button>
+  </mat-dialog-actions>
+</form>
