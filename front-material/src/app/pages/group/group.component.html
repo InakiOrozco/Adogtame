@@ -1,10 +1,6 @@
 <mat-card>
   <br />
-  <img
-    mat-card-image
-    src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png"
-    alt="Group photo"
-  />
+  <img mat-card-image src="{{ group.photo }}" alt="Group photo" />
   <mat-card-title>{{ group.name }}</mat-card-title>
   <mat-card-content>
     <p>{{ group.description }}</p>
@@ -14,7 +10,7 @@
       *ngIf="!isSubscribed"
       mat-raised-button
       color="accent"
-      (click)="toggleSubscribe()"
+      (click)="subscribeToGroup()"
     >
       Subscribe to Group
     </button>
@@ -22,7 +18,7 @@
       *ngIf="isSubscribed"
       mat-flat-button
       color="warn"
-      (click)="toggleSubscribe()"
+      (click)="unSubscribeToGroup()"
     >
       Unsubscribe to Group
     </button>
