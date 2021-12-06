@@ -444,7 +444,6 @@ router.post('/groups/:id/subscribe', auth, async (req, res) => {
 		const group = await Groups.findById(req.params.id);
 		if (group) {
 			const exist = await GroupUser.findOne({ id_group: req.params.id, id_user: req.user.id });
-			console.log(exist)
 			if (!exist) {
 				const newGroupUser = await GroupUser.create({
 					id_group: req.params.id,
