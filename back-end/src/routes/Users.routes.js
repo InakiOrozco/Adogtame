@@ -135,15 +135,14 @@ router.get('/users/:id/groups', auth, async (req, res) => {
 */
 router.get('/users/:id/groups/posts', auth, async (req, res) => {
 	try {
-		let posts = [];
 		const groupUser = await GroupUser.find({ id_user: req.params.id });
-		for (let x = 0; x < groupUser.length; x++) {
-			let post = await Posts.find({ id_group: groupUser[x].id_group });
-			if (posts.indexOf(post) == -1 && post.length != 0) {
-				posts.push(post)
-			}
-		}
-		res.json(posts);
+		const list = groupUser.map(e => {
+			return e.id_group;
+		})
+		console.log(list)
+		const nose = await Posts.find({ id_group: { "$in": list } }).sort({ createdAt: -1 });
+		console.log(nose);
+		res.json(nose);
 	} catch (err) {
 		console.error(err);
 	}

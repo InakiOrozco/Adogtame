@@ -46,6 +46,9 @@ export class GroupComponent implements OnInit {
       const data = nose as any;
       if(data._id){
         this.isSubscribed = true;
+        this.postsService.getPostsByGroupId(this.group._id).subscribe(post=>{
+          this.posts= post;
+        })
       }else {
         this.isSubscribed = false;
       }

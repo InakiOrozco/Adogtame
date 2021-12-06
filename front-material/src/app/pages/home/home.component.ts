@@ -14,8 +14,6 @@ export class HomeComponent implements OnInit {
     this.postsService.getPostFromSubscribedGroups().subscribe(posts => {
       if(posts){
         this.posts = posts;
-        this.posts = this.posts[0];
-        console.log(this.posts);
       }
     })
   }

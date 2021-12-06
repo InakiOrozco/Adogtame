@@ -50,6 +50,7 @@ export class PostComponent implements OnInit {
       this.commentService.postComment(this.post._id, values.comment).subscribe(newComent => {
         console.log(newComent)
         this.comments.push(newComent);
+        this.commentForm.reset();
       })
     }
   }

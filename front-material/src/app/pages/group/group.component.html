@@ -25,10 +25,16 @@
   </mat-card-actions>
 </mat-card>
 <br />
-<button mat-raised-button color="primary" (click)="enableDialog()">
+<button
+  *ngIf="isSubscribed"
+  mat-raised-button
+  color="primary"
+  (click)="enableDialog()"
+>
   Create post
 </button>
 <div class="post-container">
   <h2>This group posts</h2>
-  <mini-post *ngFor="let post of posts" [post]="post"></mini-post>
+  <h3 *ngIf="!isSubscribed">Subscribe to see the posts</h3>
+  <mini-post #elseblock *ngFor="let post of posts" [post]="post"></mini-post>
 </div>
