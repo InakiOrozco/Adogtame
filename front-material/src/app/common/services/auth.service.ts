@@ -83,6 +83,7 @@ export class AuthService {
     this.removeId();
     this.user$.next(new Object());
     this.router.navigate(['/']);
+    location.reload();
   }
 
   register(email:any, password:any, name:any, last_name:any, profile_picture:any){

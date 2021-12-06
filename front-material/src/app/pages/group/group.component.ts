@@ -23,10 +23,13 @@ export class GroupComponent implements OnInit {
       this.group = group;
       this.groupsService.isSubscribed(this.group._id).subscribe(response => {
         const groupUser = response as any;
+        console.log(groupUser)
         if(groupUser.permissions === "none"){
           this.isSubscribed = false;
+          console.log('false')
         }else {
           this.isSubscribed = true;
+          console.log('true')
         }
       })
     })

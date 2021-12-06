@@ -9,7 +9,6 @@ const Posts = require('../models/Posts');
 const Users = require('../models/Users');
 const Groups = require('../models/Groups');
 const GroupUser = require('../models/GroupUser');
-const groups = require('../models/Groups');
 
 require('dotenv').config();
 
@@ -102,7 +101,7 @@ router.get('/users/:id/groups', auth, async (req, res) => {
 	try {
 		let groups = [];
 		const groupUser = await GroupUser.find({ id_user: req.params.id });
-		for (let x = 0; x<groupUser.length; x++){
+		for (let x = 0; x < groupUser.length; x++) {
 			groups.push(await Groups.findById(groupUser[x].id_group));
 		}
 		res.json(groups);
@@ -137,15 +136,12 @@ router.get('/users/:id/groups', auth, async (req, res) => {
 router.get('/users/:id/groups/posts', auth, async (req, res) => {
 	try {
 		let posts = [];
-		const groupUser = await GroupUser.find({id_user: req.params.id });
-		for (let x = 0; x<groupUser.length; x++){
-			let post = await Posts.find({id_group : groupUser[x].id_group});
-			console.log(typeof post);
-			console.log(post.length);
-			if(posts.indexOf(post)==-1 && post.length != 0){
+		const groupUser = await GroupUser.find({ id_user: req.params.id });
+		for (let x = 0; x < groupUser.length; x++) {
+			let post = await Posts.find({ id_group: groupUser[x].id_group });
+			if (posts.indexOf(post) == -1 && post.length != 0) {
 				posts.push(post)
 			}
-
 		}
 		res.json(posts);
 	} catch (err) {
@@ -177,13 +173,12 @@ router.get('/users/:id/groups/posts', auth, async (req, res) => {
 */
 router.get('/users/:id/groups/not_sub', auth, async (req, res) => {
 	try {
-		let g = [];
 		const groupUser = await GroupUser.find({ id_user: req.params.id });
-		const list = groupUser.map(e =>{
+		const list = groupUser.map(e => {
 			return e.id_group;
 		})
-
-		const notSub = await groups.find({_id: {"$not": {"$all":list}}})
+		console.log(list);
+		const notSub = await Groups.find({ _id: { "$nin": list } });
 		console.log(notSub);
 		res.json(notSub);
 	} catch (err) {
