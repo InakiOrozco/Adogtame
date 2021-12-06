@@ -14,6 +14,7 @@ export class CommentComponent implements OnInit {
   @Input() post:Post | any;
   user:User | any;
   group:Group | any;
+  comment:Comment | any;
 
   constructor(private usersService: UsersService, private groupsService: GroupsService, private postsService: PostsService) { 
   }

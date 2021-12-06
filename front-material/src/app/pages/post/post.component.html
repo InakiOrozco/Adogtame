@@ -39,5 +39,5 @@
 </form>
 <br />
 <div class="comment-container">
-  <comment></comment>
+  <comment *ngFor="let comment of comments" [comments]="comment"></comment>
 </div>

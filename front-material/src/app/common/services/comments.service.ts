@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { apiURL } from '../globals';
 import { AuthService } from './auth.service';
 
-export interface Post {
+export interface Comment {
   _id: string,
   id_user: string,
   id_group: string,
@@ -29,8 +29,6 @@ export class CommentsService {
   }
 
   getCommentsByPostId(postId: string | any){
-    return this.http.get<Array<Post>>(apiURL + "/posts/" + postId + "/comments", this.httpOptions);
+    return this.http.get<Array<Comment>>(apiURL + "/posts/" + postId + "/comments", this.httpOptions);
   }
 }
-
-// /post/id_post/comment

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Group, GroupsService } from 'src/app/common/services/groups.service';
 import { Post, PostsService } from 'src/app/common/services/posts.service';
 import { User, UsersService } from 'src/app/common/services/users.service';
+import { Comment, CommentsService } from 'src/app/common/services/comments.service';
 
 @Component({
   selector: 'post',
@@ -14,8 +15,9 @@ export class PostComponent implements OnInit {
   group:Group | any;
   user:User | any;
   post:Post | any;
+  comments:Array<Comment> | any  = [];
 
-  constructor(private route: ActivatedRoute, private postsService:PostsService, private groupService:GroupsService, private usersService:UsersService) { }
+  constructor(private route: ActivatedRoute, private postsService:PostsService, private groupService:GroupsService, private usersService:UsersService, private commentService:CommentsService) { }
 
   ngOnInit(): void {
     const postId = this.route.snapshot.paramMap.get('id');
@@ -26,6 +28,9 @@ export class PostComponent implements OnInit {
       });
       this.usersService.getUserById(this.post.id_user).subscribe(user=>{
         this.user = user;
+      });
+      this.commentService.getCommentsByPostId(this.comments).subscribe(comments =>{
+        this.comments = comments;
       });
     })
   }
