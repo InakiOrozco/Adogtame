@@ -2,20 +2,21 @@
   <mat-card-header>
     <img
       mat-card-avatar
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png"
-      alt="User photo"
+      src="{{ user.profile_picture }}"
+      alt="User {{ user.name }}"
     />
-    <mat-card-title><a routerLink="/user/15"> User </a></mat-card-title>
+    <mat-card-title
+      ><a routerLink="/user/{{ user.id_user }}">
+        {{ user.name }} {{ user.last_name }}
+      </a></mat-card-title
+    >
     <mat-card-subtitle>
-      <a routerLink="/group/15"> Group </a>
+      <a routerLink="/group/{{ group.id }}"> {{ group.name }} </a>
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <p>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odio iure minus
-      natus sequi? Tempora, inventore possimus tenetur magnam ipsum aspernatur
-      reprehenderit ab voluptates nulla maxime nesciunt nemo, necessitatibus
-      repellendus nobis?
+      {{ comment.comment }}
     </p>
   </mat-card-content>
 </mat-card>

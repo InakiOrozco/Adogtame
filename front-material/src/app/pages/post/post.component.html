@@ -15,7 +15,7 @@
     <br />
     <mat-chip-list>
       <mat-chip>
-        <mat-icon>tag</mat-icon>
+        <mat-icon>phone</mat-icon>
         {{ post.contact_info }}
       </mat-chip>
       <mat-chip>
@@ -29,15 +29,20 @@
   </mat-card-content>
 </mat-card>
 <br />
-<form (submit)="postComment($event)">
+<form [formGroup]="commentForm" (ngSubmit)="postComment()">
   <mat-form-field>
     <mat-label>Comment</mat-label>
-    <textarea matInput maxlength="100"></textarea>
+    <textarea
+      matInput
+      maxlength="100"
+      formControlName="comment"
+      name="comment"
+    ></textarea>
   </mat-form-field>
   <span class="spacer"></span>
   <button mat-raised-button color="primary" type="submit">Post comment</button>
 </form>
 <br />
 <div class="comment-container">
-  <comment></comment>
+  <comment *ngFor="let comment of comments" [comment]="comment"></comment>
 </div>

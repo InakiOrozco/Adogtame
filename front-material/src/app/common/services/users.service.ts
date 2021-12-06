@@ -21,7 +21,6 @@ export interface User {
 })
 export class UsersService {
 
-
   httpOptions:any = {}
 
   constructor(private authService: AuthService, private http:HttpClient) {
