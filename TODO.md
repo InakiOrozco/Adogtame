@@ -19,10 +19,12 @@
 - [x] Load info of specific group
 - [x] enable subscribe and unsubscribe to a group
 - [x] Get post of group on group/id page
-- [ ] Handle create post on a group
+- [x] Handle create post on a group
 
 ## /post
 
 - [x] Load info of specific post
 - [x] Load comments of post/id
 - [x] Handle post comment
+
+Deploy
