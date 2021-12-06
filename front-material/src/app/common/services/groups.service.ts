@@ -34,13 +34,20 @@ export class GroupsService {
     };
   }
 
+  getGroupsByUserId(userID: string){
+    return this.http.get<Group>(apiURL+"/users/"+userID + "/groups", this.httpOptions);
+  }
+
+  getNotSubGroupsByUserId(userID: string){
+    return this.http.get<Group>(apiURL+"/users/"+userID + "/groups/not_sub", this.httpOptions);
+  }
+
   getGroupById(groupID: string | any){
     return this.http.get<Group>(apiURL + "/groups/" + groupID, this.httpOptions);
   }
 
   subscribeToGroup(groupId:string | any){
     return this.http.post<GroupUser>(apiURL + "/groups/" + groupId + "/subscribe", {}, this.httpOptions);
-
   }
 
   unSubscribeToGroup(groupId:string | any){
