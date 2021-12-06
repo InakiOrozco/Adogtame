@@ -11,6 +11,13 @@ export interface Group {
   potho: string
 }
 
+export interface GroupUser {
+  _id:string,
+  id_group: string,
+  id_user: string,
+  permissions: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -29,5 +36,18 @@ export class GroupsService {
 
   getGroupById(groupID: string | any){
     return this.http.get<Group>(apiURL + "/groups/" + groupID, this.httpOptions);
+  }
+
+  subscribeToGroup(groupId:string | any){
+    return this.http.post<GroupUser>(apiURL + "/groups/" + groupId + "/subscribe", {}, this.httpOptions);
+
+  }
+
+  unSubscribeToGroup(groupId:string | any){
+    return this.http.delete(apiURL + "/groups/" + groupId + "/subscribe", this.httpOptions);
+  }
+
+  isSubscribed(groupId:string | any) {
+    return this.http.get<GroupUser>(apiURL + '/groups/' + groupId + '/permissions', this.httpOptions);
   }
 }
