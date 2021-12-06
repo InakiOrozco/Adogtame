@@ -9,9 +9,9 @@
 - [ ] Get grups user is subscribed to (your-pages component) (Inaki)
   - [x] Create endpoint on back-end
 - [ ] Get new groups a user is not subscribed to (new-pages component) (Inaki)
-  - [ ] Create endpoint on back-end
+  - [x] Create endpoint on back-end
 - [ ] Show posts of the groups a user is subscribed to.
-  - [ ] Create endpoint on back-end
+  - [x] Create endpoint on back-end
 - [ ] Handle creation of new group (this is used fot both the header button and the button on the your-pages component)
 
 ## /group
