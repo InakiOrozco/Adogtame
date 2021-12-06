@@ -23,6 +23,6 @@
 
 ## /post
 
-- [ ] Load info of specific post
+- [x] Load info of specific post
 - [ ] Load comments of post/id
 - [ ] Handle post comment
