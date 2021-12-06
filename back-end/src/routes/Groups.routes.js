@@ -150,12 +150,12 @@ router.post('/groups', auth, async (req, res) => {
 					created_by: req.user.id,
 					photo
 				});
-				const newGroupUser = GroupUser.create({
+				const newGroupUser = await GroupUser.create({
 					id_group: newGroup._id,
 					id_user: req.user.id,
 					permissions: "admin"
 				});
-				res.json({ newGroup, newGroupUser });
+				res.json({newGroup});
 			} else {
 				res.status(400).json({ code: 400, err: "Group already exists" });
 			}
