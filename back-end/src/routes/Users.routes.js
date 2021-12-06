@@ -80,7 +80,7 @@ router.get('/users/:id', auth, async (req, res) => {
 * @swagger
 * /users/{id}/groups:
 *  get:
-*    description: return all the user post
+*    description: return all the user groups
 *    parameters:
 *      - in: Header
 *        Bearer: token
@@ -179,21 +179,13 @@ router.get('/users/:id/groups/not_sub', auth, async (req, res) => {
 	try {
 		let g = [];
 		const groupUser = await GroupUser.find({ id_user: req.params.id });
-		for (let x = 0; x<groupUser.length; x++){
-			g.push(await Groups.findById(groupUser[x].id_group));
-		}
-		try {
-			let f = [];
-			const groups = await Groups.find({});
-			for (let x = 0; x<groups.length; x++){
-				if(g.indexOf(groups[x])!=-1){
-					f.push(groups[x]);
-				}
-			}
-			res.json(f);
-		} catch (err) {
-			console.error(err);
-		}
+		const list = groupUser.map(e =>{
+			return e.id_group;
+		})
+
+		const notSub = await groups.find({_id: {"$not": {"$all":list}}})
+		console.log(notSub);
+		res.json(notSub);
 	} catch (err) {
 		console.error(err);
 	}

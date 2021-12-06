@@ -6,9 +6,9 @@
 
 ## /home (Inaki)
 
-- [ ] Get grups user is subscribed to (your-pages component) (Inaki)
+- [x] Get grups user is subscribed to (your-pages component) (Inaki)
   - [x] Create endpoint on back-end
-- [ ] Get new groups a user is not subscribed to (new-pages component) (Inaki)
+- [x] Get new groups a user is not subscribed to (new-pages component) (Inaki)
   - [x] Create endpoint on back-end
 - [x] Show posts of the groups a user is subscribed to.
   - [x] Create endpoint on back-end
