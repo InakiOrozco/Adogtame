@@ -29,7 +29,7 @@ export class CommentsService {
   }
 
   getCommentsByPostId(postId: string | any){
-    return this.http.get<Array<Post>>(apiURL + "/posts/" + postId + "/comments", this.httpOptions)
+    return this.http.get<Array<Post>>(apiURL + "/posts/" + postId + "/comments", this.httpOptions);
   }
 }
 
