@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Group, GroupsService, GroupUser } from 'src/app/common/services/groups.service';
-import { Post } from 'src/app/common/services/posts.service';
+import { PostsService, Post } from 'src/app/common/services/posts.service';
 @Component({
   selector: 'group',
   templateUrl: './group.component.html',
@@ -13,14 +13,19 @@ export class GroupComponent implements OnInit {
   group:Group | any;
   isSubscribed:boolean = false;
 
-  posts:Array<Post> = []
+  posts:Post | any;
 
-  constructor(private route: ActivatedRoute, public dialog: MatDialog, private groupsService: GroupsService) { }
+  constructor(private route: ActivatedRoute, public dialog: MatDialog, private groupsService: GroupsService, private post: PostsService) { }
 
   ngOnInit(): void {
     const idGroup = this.route.snapshot.paramMap.get('id');
     this.groupsService.getGroupById(idGroup).subscribe(group=>{
       this.group = group;
+
+      this.post.getPostsByGroupId(this.group._id).subscribe(post=>{
+        this.posts= post;
+      })
+
       this.groupsService.isSubscribed(this.group._id).subscribe(response => {
         const groupUser = response as any;
         console.log(groupUser)
