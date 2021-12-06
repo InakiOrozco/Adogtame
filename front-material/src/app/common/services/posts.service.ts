@@ -53,4 +53,31 @@ export class PostsService {
   getPostFromSubscribedGroups(){
     return this.http.get<Array<Post>>(apiURL + "/users/" + this.authService.getId() + "/groups/posts", this.httpOptions);
   }
+
+  createPost(title:string, information:string,location:string,contact_info:string, pet_type:string, photo: any, dialog:any, group:string){
+    const httpOptions = {
+      headers: new HttpHeaders({ 
+        'Access-Control-Allow-Origin':'*',
+        'x-access-token': this.authService.getToken()
+      })
+    };
+
+    const formData = new FormData();
+    formData.append('image', photo);
+
+    this.http.post<any>( apiURL + '/images', formData, httpOptions).subscribe( photo_url =>{
+      const real_photo_url = apiURL + "/images/" + photo_url;
+      console.log('Help', real_photo_url);
+      this.http.post<Post>( apiURL + '/posts', {id_group: group, title:title, information:information, location:location, contact_info:contact_info, pet_type:pet_type, photo: real_photo_url}, httpOptions).subscribe(post => {
+        console.log('Help', post);
+        if(post._id){
+          const newRoute = '/post/' + post._id;
+          console.log(newRoute);
+          dialog.close();
+          this.router.navigate([newRoute])
+        }
+      })
+    })
+  }
 }
+
