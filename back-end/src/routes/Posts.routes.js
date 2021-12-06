@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const auth = require('../middlewares/auth');
 const Posts = require('../models/Posts');
 const GroupUser = require('../models/GroupUser');
+const Comments = require('../models/Comments');
 
 require('dotenv').config();
 /** 
@@ -261,12 +262,10 @@ router.delete('/posts/:id', auth, async (req, res) => {
 router.get('/posts/:id/comments', auth, async (req, res) => {
 	try {
 		const post = await Posts.findById(req.params.id);
-		console.log(post);
 		if (post) {
 			const isPartOfGroup = await GroupUser.findOne({ id_group: post.id_group, id_user: req.user.id });
-			console.log(isPartOfGroup);
 			if (isPartOfGroup) {
-				const comments = await Comments.find({ id_post: request.params.id });
+				const comments = await Comments.find({ id_post: req.params.id })
 				res.json(comments);
 			} else {
 				res.status(403).json({ code: 403, err: "You cant see this post comments" });
