@@ -37,6 +37,10 @@ export class PostsService {
     return this.http.get<Array<Post>>(apiURL + "/users/" + userID + "/posts", this.httpOptions);
   }
 
+  getPostsByGroupId(groupID: string | any){
+    return this.http.get<Array<Post>>(apiURL + "/groups/" + groupID + "/posts", this.httpOptions);
+  }
+
   getPostByPostId(postId: string | any){
     return this.http.get<Post>(apiURL + "/posts/" + postId, this.httpOptions);
   }
