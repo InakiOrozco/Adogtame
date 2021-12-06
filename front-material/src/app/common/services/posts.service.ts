@@ -40,4 +40,8 @@ export class PostsService {
   getPostByPostId(postId: string | any){
     return this.http.get<Post>(apiURL + "/posts/" + postId, this.httpOptions);
   }
+
+  getPostFromSubscribedGroups(){
+    return this.http.get<Array<Post>>(apiURL + "/users/" + this.authService.getId() + "/groups/posts", this.httpOptions);
+  }
 }
